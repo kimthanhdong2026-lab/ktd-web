@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { CRITERIA, TIMELINE, OFFICES } from '@/lib/constants'
+import { CRITERIA, TIMELINE } from '@/lib/constants'
 
 export const metadata = {
   title: 'Giới thiệu | Kim Thành Đông',
