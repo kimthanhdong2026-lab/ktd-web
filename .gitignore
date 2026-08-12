@@ -37,3 +37,7 @@ yarn-error.log*
 # Misc
 .cache/
 dist/
+*.tsbuildinfo
+
+# Bản giải nén của file handoff — bản .zip gốc đã được theo dõi trong repo
+handoff-extracted/

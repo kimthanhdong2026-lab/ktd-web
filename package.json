@@ -8,36 +8,24 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "seed": "ts-node scripts/seed-supabase.ts",
-    "import:images": "ts-node scripts/import-images.ts",
-    "import:catalogs": "ts-node scripts/import-catalogs.ts",
-    "import:text": "ts-node scripts/import-text.ts"
+    "typecheck": "tsc --noEmit",
+    "optimize:assets": "node scripts/optimize-assets.mjs"
   },
   "dependencies": {
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "next": "^14.2.3",
-    "@supabase/supabase-js": "^2.43.4",
     "typescript": "^5.3.3",
     "tailwindcss": "^3.4.1",
     "autoprefixer": "^10.4.17",
-    "postcss": "^8.4.32",
-    "sharp": "^0.33.0",
-    "xlsx": "^0.18.5",
-    "commander": "^12.0.0",
-    "chalk": "^5.3.0",
-    "cli-progress": "^3.12.0",
-    "dotenv": "^16.4.5",
-    "zod": "^3.22.4"
+    "postcss": "^8.4.32"
   },
   "devDependencies": {
     "@types/node": "^20.10.6",
     "@types/react": "^18.2.48",
     "@types/react-dom": "^18.2.18",
-    "@typescript-eslint/eslint-plugin": "^6.17.0",
-    "@typescript-eslint/parser": "^6.17.0",
     "eslint": "^8.56.0",
     "eslint-config-next": "^14.2.3",
-    "ts-node": "^10.9.2"
+    "sharp": "^0.33.0"
   }
 }

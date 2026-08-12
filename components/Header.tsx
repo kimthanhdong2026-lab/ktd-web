@@ -1,112 +1,164 @@
 'use client'
 
-import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { COMPANY_PHONE, COMPANY_EMAIL } from '@/lib/constants'
+import Image from 'next/image'
+import { usePathname } from 'next/navigation'
+import { useEffect, useState } from 'react'
+import { useStore } from './StoreProvider'
+import {
+  COMPANY_EMAIL,
+  COMPANY_HOTLINE,
+  COMPANY_HOTLINE_TEL,
+  NAV_ITEMS,
+} from '@/lib/constants'
+import { cx } from '@/lib/utils'
 
-interface HeaderProps {
-  onSearchClick?: () => void
-  onRfqClick?: () => void
-  cartCount?: number
-}
+export function Header() {
+  const pathname = usePathname()
+  const { openSearch, openRfq, cartCount, showToast } = useStore()
+  const [scrolled, setScrolled] = useState(false)
+  const [mobileNavOpen, setMobileNavOpen] = useState(false)
 
-export function Header({ onSearchClick, onRfqClick, cartCount = 0 }: HeaderProps) {
-  const [showUtility, setShowUtility] = useState(true)
-  const [headerShadow, setHeaderShadow] = useState('none')
-
+  // Drives the shadow only. Deliberately nothing that changes layout height:
+  // toggling the header's height from a scroll handler fights Chrome's scroll
+  // anchoring and oscillates around the threshold.
   useEffect(() => {
-    const handleScroll = () => {
-      setHeaderShadow(window.scrollY > 0 ? '0 2px 8px rgba(0,38,63,0.1)' : 'none')
-    }
-    window.addEventListener('scroll', handleScroll, { passive: true })
-    return () => window.removeEventListener('scroll', handleScroll)
+    const onScroll = () => setScrolled(window.scrollY > 8)
+    onScroll()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
+  useEffect(() => {
+    setMobileNavOpen(false)
+  }, [pathname])
+
+  const isActive = (href: string) =>
+    href === '/' ? pathname === '/' : pathname.startsWith(href)
+
   return (
-    <header className="sticky top-0 z-60 bg-white">
-      {/* Utility Bar */}
-      {showUtility && (
-        <div className="bg-ktd-navy text-ktd-light-blue text-xs">
-          <div className="max-w-7xl mx-auto px-8 py-1.5 flex items-center justify-between gap-6">
-            <div className="flex items-center gap-6">
-              <a href={`tel:${COMPANY_PHONE}`} className="text-ktd-light-blue hover:opacity-80 flex items-center gap-1">
-                ☎ {COMPANY_PHONE}
-              </a>
-              <a href={`mailto:${COMPANY_EMAIL}`} className="text-ktd-light-blue hover:opacity-80 flex items-center gap-1">
-                ✉ {COMPANY_EMAIL}
-              </a>
-              <span className="text-ktd-navy/60">Giao hàng toàn quốc</span>
-            </div>
-            <div className="flex items-center gap-4">
-              <button
-                onClick={() => alert('Bản tiếng Anh đang được xây dựng — sẽ bàn giao ở giai đoạn P1.')}
-                className="border border-ktd-navy/30 text-ktd-light-blue rounded px-2 py-1 text-xs font-semibold hover:border-ktd-light-blue"
-              >
-                EN
-              </button>
-              <div className="flex gap-3 text-ktd-navy/60 font-semibold">
-                <a href="#" className="hover:text-ktd-light-blue">f</a>
-                <a href="#" className="hover:text-ktd-light-blue">▶</a>
-              </div>
+    <>
+      {/* Utility bar: static, so it simply scrolls away and the main bar below
+          takes over as the sticky row — spec B5.3, no JS and no layout thrash. */}
+      <div className="hidden bg-ktd-800 text-[13px] text-ktd-100 md:block">
+        <div className="container-ktd flex items-center justify-between gap-6 py-[5px]">
+          <div className="flex items-center gap-6">
+            <a href={`tel:${COMPANY_HOTLINE_TEL}`} className="text-ktd-100 hover:text-white">
+              ☎ {COMPANY_HOTLINE}
+            </a>
+            <a href={`mailto:${COMPANY_EMAIL}`} className="text-ktd-100 hover:text-white">
+              ✉ {COMPANY_EMAIL}
+            </a>
+            <span className="hidden text-[#6b93b5] lg:inline">Giao hàng toàn quốc</span>
+          </div>
+          <div className="flex items-center gap-4">
+            <button
+              type="button"
+              onClick={() => showToast('Bản tiếng Anh đang được xây dựng — sẽ bàn giao ở giai đoạn P1.')}
+              className="rounded-sm border border-[#2e5a80] px-2.5 py-[3px] text-xs font-semibold tracking-[0.05em] text-ktd-100 hover:bg-[#2e5a80]"
+            >
+              VI | EN
+            </button>
+            <div className="flex gap-3 font-semibold text-[#6b93b5]">
+              <a href="https://www.facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="text-[#6b93b5] hover:text-white">f</a>
+              <a href="https://www.youtube.com" target="_blank" rel="noopener noreferrer" aria-label="YouTube" className="text-[#6b93b5] hover:text-white">▶</a>
             </div>
           </div>
         </div>
-      )}
+      </div>
 
-      {/* Main Header */}
-      <div style={{ boxShadow: headerShadow }} className="border-t-4 border-b-4 border-ktd-red transition-shadow">
-        <div className="max-w-7xl mx-auto px-8 py-1.5 flex items-center gap-7">
-          {/* Logo */}
-          <Link href="/" className="flex-shrink-0">
-            <div className="relative w-12 h-9">
-              <div className="bg-white rounded px-2 py-1 text-center">
-                <span className="text-ktd-dark font-bold text-sm">KTĐ</span>
-              </div>
-            </div>
+      <header
+        className={cx(
+          'sticky top-0 z-50 border-y-[3px] border-quote bg-white transition-shadow duration-150',
+          scrolled && 'shadow-header'
+        )}
+      >
+        <div className="container-ktd flex items-center gap-4 py-1.5 lg:gap-7">
+          <Link href="/" className="flex-shrink-0" aria-label="Kim Thành Đông — trang chủ">
+            <Image
+              src="/assets/ktd-logo.webp"
+              alt="Kim Thành Đông"
+              width={560}
+              height={177}
+              priority
+              className="h-[34px] w-auto"
+            />
           </Link>
 
-          {/* Navigation */}
-          <nav className="flex gap-1">
-            {[
-              { label: 'TRANG CHỦ', href: '/' },
-              { label: 'GIỚI THIỆU', href: '/gioi-thieu' },
-              { label: 'SẢN PHẨM', href: '/san-pham' },
-              { label: 'TIN TỨC', href: '/tin-tuc' },
-              { label: 'LIÊN HỆ', href: '/lien-he' },
-            ].map((item) => (
+          <nav className="ml-2 hidden gap-1 lg:flex" aria-label="Điều hướng chính">
+            {NAV_ITEMS.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
-                className="px-3 py-2 text-sm font-semibold text-ktd-dark rounded hover:bg-ktd-light transition-colors"
+                className={cx(
+                  'rounded-md px-3 py-[7px] text-sm font-semibold transition-colors hover:bg-ktd-50',
+                  isActive(item.href) ? 'text-ktd-600' : 'text-ink-700'
+                )}
+                aria-current={isActive(item.href) ? 'page' : undefined}
               >
                 {item.label}
               </Link>
             ))}
           </nav>
 
-          {/* Actions */}
-          <div className="ml-auto flex items-center gap-3">
+          <div className="ml-auto flex items-center gap-2 md:gap-3">
             <button
-              onClick={onSearchClick}
-              className="flex items-center gap-2 bg-ktd-light border border-ktd-light/50 rounded-lg px-4 py-2 text-sm text-ktd-dark hover:border-ktd-dark transition-colors"
+              type="button"
+              onClick={() => openSearch('')}
+              className="flex min-h-[44px] items-center gap-2 rounded-md border border-[#e2e7ec] bg-ink-100 px-3 text-[13px] text-ink-500 hover:border-ktd-600 hover:text-ktd-600 md:min-w-[200px] md:px-4"
+              aria-label="Mở ô tìm kiếm sản phẩm"
             >
-              <span className="text-base">🔍</span>
-              <span className="hidden sm:inline">Tìm kiếm</span>
+              <span aria-hidden="true">🔍</span>
+              <span className="hidden md:inline">Tìm kiếm sản phẩm</span>
             </button>
+
             <button
-              onClick={onRfqClick}
-              className="relative flex items-center gap-2 bg-ktd-red text-white rounded-lg px-4 py-2 text-sm font-semibold hover:bg-red-700 transition-colors shadow-lg hover:shadow-xl"
+              type="button"
+              onClick={() => openRfq()}
+              className="relative flex min-h-[44px] items-center gap-2 rounded-md bg-quote px-4 text-[13px] font-semibold text-white shadow-cta transition-colors hover:bg-quote-700 md:px-[18px]"
             >
               Báo giá
               {cartCount > 0 && (
-                <span className="absolute -top-2 -right-2 bg-red-800 text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center border-2 border-white">
+                <span className="absolute -right-2 -top-2 flex h-[19px] min-w-[19px] items-center justify-center rounded-full border-2 border-white bg-quote-700 px-[3px] text-[11px] font-bold text-white">
                   {cartCount}
                 </span>
               )}
             </button>
+
+            <button
+              type="button"
+              onClick={() => setMobileNavOpen((v) => !v)}
+              className="flex h-11 w-11 items-center justify-center rounded-md text-ink-700 lg:hidden"
+              aria-expanded={mobileNavOpen}
+              aria-label="Mở menu"
+            >
+              <span className="text-xl" aria-hidden="true">{mobileNavOpen ? '✕' : '☰'}</span>
+            </button>
           </div>
         </div>
-      </div>
-    </header>
+
+        {mobileNavOpen && (
+          <nav className="border-t border-hairline bg-white lg:hidden" aria-label="Điều hướng chính">
+            <div className="container-ktd flex flex-col py-2">
+              {NAV_ITEMS.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={cx(
+                    'py-3 text-sm font-semibold',
+                    isActive(item.href) ? 'text-ktd-600' : 'text-ink-700'
+                  )}
+                >
+                  {item.label}
+                </Link>
+              ))}
+              <a href={`tel:${COMPANY_HOTLINE_TEL}`} className="border-t border-hairline py-3 text-sm text-ink-500">
+                ☎ {COMPANY_HOTLINE}
+              </a>
+            </div>
+          </nav>
+        )}
+      </header>
+    </>
   )
 }

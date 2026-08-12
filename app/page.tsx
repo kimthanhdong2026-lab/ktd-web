@@ -1,58 +1,335 @@
-'use client'
+import Link from 'next/link'
+import Image from 'next/image'
+import { HeroSearch } from '@/components/home/HeroSearch'
+import { FeaturedProducts } from '@/components/home/FeaturedProducts'
+import { QuoteButton } from '@/components/QuoteButton'
+import { BRANDS, CATEGORIES, NEWS, countByCategory } from '@/lib/ktd-data'
+import { SECTOR_CARDS, WHY_ITEMS, ZALO_URL } from '@/lib/constants'
 
-import { HomePage } from './page-home'
-import { LayoutWrapper } from './layout-wrapper'
-
-// Mock data
-const mockProducts = Array.from({ length: 26 }, (_, i) => ({
-  id: i + 1,
-  part_number: `PART-${String(i + 1).padStart(5, '0')}`,
-  slug: `san-pham-${i + 1}`,
-  name_vi: `Sản phẩm công nghiệp ${i + 1}`,
-  name_en: `Industrial Product ${i + 1}`,
-  brand_id: (i % 5) + 1,
-  category_id: (i % 9) + 1,
-  series_name: `Series A`,
-  origin: 'Quốc tế',
-  short_desc_vi: 'Mô tả ngắn sản phẩm',
-  is_featured: i < 6,
-  sort_order: i,
-  created_at: new Date().toISOString(),
-  updated_at: new Date().toISOString(),
-  brandName: ['Martor', 'Morrisflex', 'ATA', 'Tecna', 'Helical'][i % 5],
-  categoryName: ['Dụng cụ cắt gọt', 'Dụng cụ khí nén', 'Dụng cụ an toàn', 'Thiết bị đo', 'Thiết bị nâng hạ', 'Kẹp & gá', 'Đánh dấu', 'Hóa chất', 'Siết lực'][i % 9],
-}))
-
-const mockBrands = [
-  { id: 1, slug: 'martor', name_vi: 'Martor', name_en: 'Martor', origin: 'Đức', sort_order: 0 },
-  { id: 2, slug: 'morrisflex', name_vi: 'Morrisflex', name_en: 'Morrisflex', origin: 'Quốc tế', sort_order: 1 },
-  { id: 3, slug: 'ata', name_vi: 'ATA', name_en: 'ATA', origin: 'Quốc tế', sort_order: 2 },
-  { id: 4, slug: 'tecna', name_vi: 'Tecna', name_en: 'Tecna', origin: 'Ý', sort_order: 3 },
-  { id: 5, slug: 'helical', name_vi: 'Helical', name_en: 'Helical', origin: 'Mỹ', sort_order: 4 },
+const HERO_STATS = [
+  { num: '13+', label: 'Năm kinh nghiệm' },
+  { num: String(BRANDS.length), label: 'Thương hiệu chính hãng' },
+  { num: '3', label: 'Kho hàng toàn quốc' },
 ]
 
-const mockCategories = [
-  { id: 1, slug: 'cat-got', name_vi: 'Dụng cụ cắt gọt', name_en: 'Cutting Tools', sort_order: 0, icon: '🔧' },
-  { id: 2, slug: 'khi-nen', name_vi: 'Dụng cụ khí nén', name_en: 'Pneumatic Tools', sort_order: 1, icon: '💨' },
-  { id: 3, slug: 'an-toan', name_vi: 'Dụng cụ an toàn', name_en: 'Safety Tools', sort_order: 2, icon: '🛡️' },
-  { id: 4, slug: 'do-kiem', name_vi: 'Thiết bị đo & kiểm tra', name_en: 'Measuring Equipment', sort_order: 3, icon: '📐' },
-  { id: 5, slug: 'nang-ha', name_vi: 'Thiết bị nâng hạ', name_en: 'Lifting Equipment', sort_order: 4, icon: '🏗️' },
-  { id: 6, slug: 'kep-ga', name_vi: 'Kẹp, gá & khuôn mẫu', name_en: 'Clamps & Fixtures', sort_order: 5, icon: '🗜️' },
-  { id: 7, slug: 'danh-dau', name_vi: 'Đánh dấu & truy xuất', name_en: 'Marking Tools', sort_order: 6, icon: '🔖' },
-  { id: 8, slug: 'hoa-chat', name_vi: 'Hóa chất & bôi trơn', name_en: 'Chemicals & Lubricants', sort_order: 7, icon: '🧪' },
-  { id: 9, slug: 'siet-luc', name_vi: 'Siết lực & taro', name_en: 'Torque & Threading', sort_order: 8, icon: '⚙️' },
-]
-
-const mockNews = [
-  { id: 1, slug: 'tin-1', title_vi: 'Giới thiệu sản phẩm mới từ Martor', category_vi: 'Tin công ty', excerpt_vi: 'KTĐ vừa công bố loạt sản phẩm mới từ Martor...', published_at: '2026-08-10' },
-  { id: 2, slug: 'tin-2', title_vi: 'Hướng dẫn chọn đúng dao an toàn', category_vi: 'Kiến thức kỹ thuật', excerpt_vi: 'Cách chọn dao an toàn phù hợp...', published_at: '2026-08-08' },
-  { id: 3, slug: 'tin-3', title_vi: 'Tối ưu hóa hiệu quả sản xuất', category_vi: 'Giải pháp ứng dụng', excerpt_vi: 'Nhà máy giảm chi phí 30%...', published_at: '2026-08-05' },
-]
-
-export default function Home() {
+export default function HomePage() {
   return (
-    <LayoutWrapper products={mockProducts} brands={mockBrands} categories={mockCategories}>
-      <HomePage products={mockProducts} brands={mockBrands} categories={mockCategories} news={mockNews} />
-    </LayoutWrapper>
+    <>
+      {/* ---------- 1. Hero ---------- */}
+      <section className="relative flex min-h-[85vh] items-center overflow-hidden bg-ktd-900 pb-16 pt-12 md:min-h-[calc(90vh-108px)]">
+        <div
+          className="absolute inset-0 opacity-70"
+          style={{
+            backgroundImage: 'repeating-linear-gradient(135deg,#012c48 0 24px,#00263F 24px 48px)',
+          }}
+          aria-hidden="true"
+        />
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              'linear-gradient(120deg,rgba(0,38,63,.92) 0%,rgba(0,38,63,.72) 45%,rgba(0,63,108,.45) 100%)',
+          }}
+          aria-hidden="true"
+        />
+
+        <div className="container-ktd relative">
+          <div className="max-w-[820px]">
+            <p className="mb-6 inline-flex items-center gap-2 rounded-full border border-[rgba(199,223,239,.25)] bg-[rgba(199,223,239,.12)] px-3.5 py-1.5 text-xs font-semibold tracking-[0.04em] text-ktd-100">
+              CÔNG NGHỆ TOÀN CẦU · KỸ THUẬT BẢN ĐỊA · GIAO HÀNG NHANH
+            </p>
+
+            <h1 className="mb-5 font-display text-display-1 text-white">
+              Thiết bị công nghiệp
+              <br />
+              cho nhà máy Việt Nam
+            </h1>
+
+            <p className="mb-8 max-w-[620px] text-base leading-relaxed text-ktd-100">
+              {BRANDS.length} thương hiệu quốc tế chính hãng · Kỹ sư tư vấn kỹ thuật · Báo giá trong
+              24 giờ.
+            </p>
+
+            <HeroSearch />
+
+            <div className="mb-14 flex flex-wrap gap-3.5">
+              <Link href="/san-pham" className="btn-primary">
+                Xem sản phẩm
+              </Link>
+              <QuoteButton />
+            </div>
+
+            <dl className="flex flex-wrap gap-x-10 gap-y-6 border-t border-[rgba(199,223,239,.18)] pt-8 md:gap-x-14">
+              {HERO_STATS.map((s) => (
+                <div key={s.label}>
+                  <dt className="sr-only">{s.label}</dt>
+                  <dd>
+                    <span className="block font-display text-[40px] font-bold leading-none text-white">
+                      {s.num}
+                    </span>
+                    <span className="mt-1.5 block text-[13px] uppercase tracking-[0.06em] text-[#8fb3cf]">
+                      {s.label}
+                    </span>
+                  </dd>
+                </div>
+              ))}
+            </dl>
+          </div>
+        </div>
+
+        <div className="absolute bottom-6 left-1/2 hidden -translate-x-1/2 animate-scroll-hint text-xs tracking-[0.1em] text-[#6b93b5] md:block">
+          ↓ CUỘN XUỐNG
+        </div>
+      </section>
+
+      {/* ---------- 2. Brand strip ---------- */}
+      <section className="bg-white py-14 md:py-24">
+        <div className="container-ktd">
+          <div className="mb-12 text-center">
+            <p className="label-caps mb-3 text-ktd-600">Phân phối chính hãng</p>
+            <h2 className="font-display text-h2 text-ink-900">
+              {BRANDS.length} thương hiệu quốc tế chúng tôi phân phối
+            </h2>
+          </div>
+
+          <ul className="grid grid-cols-3 gap-3 sm:grid-cols-4 md:gap-4 lg:grid-cols-6">
+            {BRANDS.map((b) => (
+              <li key={b.slug}>
+                <Link
+                  href={`/san-pham?brand=${b.slug}`}
+                  className="flex h-full flex-col items-center gap-2.5 rounded-[10px] border border-[#e2e7ec] bg-white px-3.5 pb-3.5 pt-4 transition duration-200 hover:-translate-y-0.5 hover:border-ktd-600 hover:shadow-md"
+                >
+                  <span className="relative flex h-14 w-full items-center justify-center overflow-hidden rounded-md bg-white">
+                    {b.logo ? (
+                      <Image
+                        src={b.logo}
+                        alt={`Logo ${b.name}`}
+                        width={160}
+                        height={56}
+                        className="max-h-11 w-auto max-w-[88%] object-contain grayscale transition duration-200 hover:grayscale-0"
+                      />
+                    ) : (
+                      <>
+                        <span
+                          className="absolute inset-0 opacity-70"
+                          style={{
+                            backgroundImage:
+                              'repeating-linear-gradient(135deg,#eef1f4 0 8px,#F7F9FB 8px 16px)',
+                          }}
+                          aria-hidden="true"
+                        />
+                        <span className="relative font-mono text-[9px] tracking-[0.08em] text-[#b3bcc5]">
+                          LOGO
+                        </span>
+                      </>
+                    )}
+                  </span>
+                  <span className="flex flex-col items-center gap-0.5">
+                    <span className="text-center font-display text-[15px] font-bold leading-tight text-ink-700">
+                      {b.name}
+                    </span>
+                    <span className="text-[11px] text-[#9aa3ad]">{b.origin}</span>
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+
+          <div className="mt-10 text-center">
+            <Link href="/san-pham" className="btn-ghost text-ktd-600">
+              Xem tất cả sản phẩm theo thương hiệu →
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* ---------- 3. Categories ---------- */}
+      <section className="bg-ktd-50 py-14 md:py-24">
+        <div className="container-ktd">
+          <h2 className="mb-10 text-center font-display text-h2 text-ink-900">
+            Bạn đang cần loại thiết bị nào?
+          </h2>
+          <ul className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4 lg:gap-5">
+            {CATEGORIES.map((c) => (
+              <li key={c.slug}>
+                <Link
+                  href={`/san-pham?category=${c.slug}`}
+                  className="flex h-full flex-col rounded-[10px] border border-[#dbe6f0] bg-white p-5 transition duration-200 hover:-translate-y-0.5 hover:border-ktd-600 hover:shadow-md md:p-6"
+                >
+                  <span
+                    className="mb-4 flex h-12 w-12 items-center justify-center rounded-[10px] bg-ktd-50 text-[22px]"
+                    aria-hidden="true"
+                  >
+                    {c.icon}
+                  </span>
+                  <span className="mb-1.5 font-display text-[17px] font-semibold text-ink-900 md:text-lg">
+                    {c.name}
+                  </span>
+                  <span className="text-[13px] text-ink-500">
+                    {countByCategory(c.slug)} sản phẩm
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
+      {/* ---------- 4. Sectors ---------- */}
+      <section className="overflow-hidden bg-ktd-900 pb-4 pt-12 md:pt-14">
+        <div className="container-ktd">
+          <p className="label-caps mb-3 text-[#4f7ea3]">Lĩnh vực phục vụ</p>
+          <h2 className="mb-7 max-w-[640px] font-display text-h2 text-white">
+            Đồng hành cùng 8 ngành công nghiệp trọng điểm
+          </h2>
+        </div>
+        <ul className="flex snap-x snap-mandatory gap-5 overflow-x-auto px-5 pb-3 sm:px-6 md:px-8 lg:px-10">
+          {SECTOR_CARDS.map((s) => (
+            <li
+              key={s.name}
+              className="relative h-[304px] w-[300px] flex-none snap-start overflow-hidden rounded-lg bg-[#012c48] sm:w-[340px]"
+            >
+              <span className="placeholder-hatch-dark absolute inset-0 opacity-60" aria-hidden="true" />
+              <span
+                className="absolute inset-0"
+                style={{
+                  background:
+                    'linear-gradient(180deg,rgba(0,38,63,0) 40%,rgba(0,38,63,.95) 100%)',
+                }}
+                aria-hidden="true"
+              />
+              <span className="absolute left-4 top-4 font-mono text-[10px] tracking-[0.08em] text-[#4f7ea3]">
+                [ ẢNH NGÀNH ]
+              </span>
+              <span className="absolute bottom-0 left-0 right-0 p-7">
+                <span className="mb-2 block font-display text-[22px] font-semibold text-white">
+                  {s.name}
+                </span>
+                <span className="block text-sm leading-relaxed text-ktd-100">{s.desc}</span>
+              </span>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      {/* ---------- 5. Featured products ---------- */}
+      <FeaturedProducts />
+
+      {/* ---------- 6. Why KTĐ ---------- */}
+      <section className="bg-ktd-50 py-14 md:py-24">
+        <div className="container-ktd">
+          <h2 className="mb-10 text-center font-display text-h2 text-ink-900">
+            Vì sao chọn Kim Thành Đông
+          </h2>
+          <ul className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            {WHY_ITEMS.map((w) => (
+              <li key={w.title} className="rounded-xl bg-white p-6 md:p-8">
+                <span
+                  className="mb-5 flex h-[52px] w-[52px] items-center justify-center rounded-xl bg-ktd-50 text-2xl"
+                  aria-hidden="true"
+                >
+                  {w.icon}
+                </span>
+                <h3 className="mb-2.5 font-display text-[19px] font-semibold text-ink-900">
+                  {w.title}
+                </h3>
+                <p className="text-sm leading-relaxed text-ink-500">{w.body}</p>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
+      {/* ---------- 7. Technical services ---------- */}
+      <section className="bg-white py-14 md:py-24">
+        <div className="container-ktd grid items-center gap-10 lg:grid-cols-2 lg:gap-14">
+          <div className="placeholder-hatch relative flex aspect-[4/3] items-center justify-center overflow-hidden rounded-lg bg-ink-100">
+            <span className="relative font-mono text-xs text-[#9aa3ad]">
+              [ ẢNH KỸ SƯ TẠI NHÀ MÁY ]
+            </span>
+          </div>
+          <div>
+            <p className="label-caps mb-3 text-ktd-600">Dịch vụ kỹ thuật</p>
+            <h2 className="mb-5 font-display text-h2 text-ink-900">
+              Không chỉ bán thiết bị — chúng tôi đồng hành kỹ thuật
+            </h2>
+            <ul className="mb-8 flex flex-col gap-4">
+              {[
+                ['Tư vấn lựa chọn thiết bị', 'Kỹ sư phân tích bài toán gia công và đề xuất đúng thông số, đúng vật liệu phôi.'],
+                ['Bảo dưỡng & sửa chữa máy móc', 'Hỗ trợ bảo trì định kỳ, thay thế phụ tùng chính hãng, kéo dài tuổi thọ thiết bị.'],
+                ['Hỗ trợ kỹ thuật tại nhà máy', 'Đội ngũ có mặt tại xưởng để hướng dẫn vận hành và xử lý sự cố.'],
+              ].map(([title, body]) => (
+                <li key={title} className="flex gap-3">
+                  <span className="mt-1 text-ktd-600" aria-hidden="true">▸</span>
+                  <span>
+                    <span className="block font-display text-[17px] font-semibold text-ink-900">
+                      {title}
+                    </span>
+                    <span className="block text-sm leading-relaxed text-ink-500">{body}</span>
+                  </span>
+                </li>
+              ))}
+            </ul>
+            <Link href="/lien-he" className="btn-secondary">
+              Liên hệ kỹ sư
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* ---------- 8. News ---------- */}
+      <section className="bg-ktd-50 py-14 md:py-24">
+        <div className="container-ktd">
+          <div className="mb-9 flex flex-wrap items-end justify-between gap-4">
+            <h2 className="font-display text-h2 text-ink-900">Tin tức &amp; Giải pháp</h2>
+            <Link href="/tin-tuc" className="btn-ghost text-ktd-600">
+              Xem tất cả tin tức →
+            </Link>
+          </div>
+          <ul className="grid gap-6 md:grid-cols-3">
+            {NEWS.slice(0, 3).map((n) => (
+              <li key={n.slug}>
+                <Link
+                  href={`/tin-tuc/${n.slug}`}
+                  className="block h-full overflow-hidden rounded-xl border border-hairline bg-white transition duration-200 hover:shadow-md"
+                >
+                  <span className="placeholder-hatch relative flex aspect-video items-center justify-center bg-ink-100">
+                    <span className="relative font-mono text-[11px] text-[#9aa3ad]">[ ẢNH 16:9 ]</span>
+                  </span>
+                  <span className="block p-5 md:p-6">
+                    <span className="label-caps mb-2.5 block text-ktd-600">{n.cat}</span>
+                    <span className="mb-3 block font-display text-[19px] font-semibold leading-snug text-ink-900">
+                      {n.title}
+                    </span>
+                    <span className="block text-[13px] text-[#9aa3ad]">{n.date}</span>
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
+      {/* ---------- 9. Closing CTA ---------- */}
+      <section className="bg-ktd-600 px-5 py-11 text-center">
+        <div className="mx-auto max-w-[760px]">
+          <h2 className="mb-4 font-display text-h2 text-white">Không tìm thấy sản phẩm bạn cần?</h2>
+          <p className="mb-8 text-lg leading-relaxed text-ktd-100">
+            Gửi yêu cầu — kỹ sư của chúng tôi phản hồi trong vòng 24 giờ làm việc.
+          </p>
+          <div className="flex flex-wrap justify-center gap-3.5">
+            <QuoteButton />
+            <a
+              href={ZALO_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn bg-white text-ktd-600 hover:bg-ktd-50"
+            >
+              Chat Zalo
+            </a>
+          </div>
+        </div>
+      </section>
+    </>
   )
 }

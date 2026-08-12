@@ -1,289 +1,370 @@
 'use client'
 
-import { useState } from 'react'
-import { PROVINCES } from '@/lib/constants'
-import { isValidPhone, isValidEmail, generateRFQCode } from '@/lib/utils'
+import { useRouter } from 'next/navigation'
+import { useEffect, useState } from 'react'
+import { useStore } from './StoreProvider'
+import { brandName, getProductByPart } from '@/lib/ktd-data'
+import { COMPANY_HOTLINE, COMPANY_HOTLINE_TEL, PROVINCES, ZALO_URL } from '@/lib/constants'
 
-interface CartItem {
-  partNumber: string
-  name: string
-  brand: string
-  qty: number
-}
-
-interface RFQModalProps {
-  isOpen: boolean
-  onClose: () => void
-  cart: CartItem[]
-  onRemoveFromCart?: (partNumber: string) => void
-  onUpdateQty?: (partNumber: string, delta: number) => void
-  onProductsClick?: () => void
-}
-
-interface FormData {
+interface FormState {
   name: string
   company: string
   phone: string
   email: string
   province: string
   note: string
+  agree: boolean
 }
 
-export function RFQModal({ isOpen, onClose, cart, onRemoveFromCart, onUpdateQty, onProductsClick }: RFQModalProps) {
-  const [rfqSent, setRfqSent] = useState(false)
-  const [rfqCode, setRfqCode] = useState('')
-  const [formData, setFormData] = useState<FormData>({
-    name: '',
-    company: '',
-    phone: '',
-    email: '',
-    province: '',
-    note: '',
-  })
-  const [errors, setErrors] = useState<Partial<Record<keyof FormData, string>>>({})
-  const [triedSubmit, setTriedSubmit] = useState(false)
+const EMPTY_FORM: FormState = {
+  name: '', company: '', phone: '', email: '', province: '', note: '', agree: false,
+}
 
-  const validateField = (field: keyof FormData, value: string): string | undefined => {
-    if (field === 'name') {
-      if (!value.trim()) return 'Vui lòng nhập họ tên'
-      if (value.trim().length < 2) return 'Họ tên phải có ít nhất 2 ký tự'
+const EMAIL_RE = /^[^@\s]+@[^@\s]+\.[^@\s]+$/
+
+/** RFQ-YYMMDD-NNN, e.g. RFQ-260805-014 (spec C7.2). */
+function makeRequestCode(): string {
+  const d = new Date()
+  const pad = (n: number) => String(n).padStart(2, '0')
+  const seq = String(Math.floor(Math.random() * 900) + 100)
+  return `RFQ-${String(d.getFullYear()).slice(2)}${pad(d.getMonth() + 1)}${pad(d.getDate())}-${seq}`
+}
+
+export function RFQModal() {
+  const router = useRouter()
+  const { rfqOpen, rfqNote, closeRfq, cart, setQty, removeFromCart, showToast } = useStore()
+
+  const [form, setForm] = useState<FormState>(EMPTY_FORM)
+  const [touched, setTouched] = useState<Record<string, boolean>>({})
+  const [tried, setTried] = useState(false)
+  const [sentCode, setSentCode] = useState<string | null>(null)
+  const [sentSummary, setSentSummary] = useState('')
+
+  // Carry over the prefilled note when opened from "nhờ kỹ sư tìm giúp".
+  useEffect(() => {
+    if (rfqOpen && rfqNote) setForm((f) => (f.note ? f : { ...f, note: rfqNote }))
+  }, [rfqOpen, rfqNote])
+
+  useEffect(() => {
+    if (rfqOpen) {
+      setSentCode(null)
+      setTried(false)
     }
-    if (field === 'phone') {
-      if (!value.trim()) return 'Vui lòng nhập số điện thoại'
-      if (!isValidPhone(value)) return 'Số điện thoại chưa hợp lệ'
-    }
-    if (field === 'email') {
-      if (value.trim() && !isValidEmail(value)) return 'Email chưa hợp lệ'
-    }
-    return undefined
+  }, [rfqOpen])
+
+  if (!rfqOpen) return null
+
+  const set = <K extends keyof FormState>(key: K, value: FormState[K]) =>
+    setForm((f) => ({ ...f, [key]: value }))
+
+  const errors = {
+    name: !form.name.trim() ? 'Vui lòng nhập họ tên' : '',
+    company: !form.company.trim() ? 'Vui lòng nhập tên công ty' : '',
+    phone: !form.phone.trim() ? 'Vui lòng nhập số điện thoại' : '',
+    email: !form.email.trim()
+      ? 'Vui lòng nhập email'
+      : !EMAIL_RE.test(form.email)
+        ? 'Email chưa hợp lệ'
+        : '',
   }
+  const hasErrors = Object.values(errors).some(Boolean)
 
-  const handleChange = (field: keyof FormData, value: string) => {
-    setFormData((prev) => ({ ...prev, [field]: value }))
-    const error = validateField(field, value)
-    setErrors((prev) => ({ ...prev, [field]: error }))
+  const showError = (field: keyof typeof errors) =>
+    (tried || touched[field]) && errors[field] ? errors[field] : ''
+
+  const fieldClass = (field: keyof typeof errors) =>
+    `w-full rounded-md border px-3.5 py-2.5 text-[15px] outline-none focus:border-ktd-600 ${
+      showError(field) ? 'border-quote' : 'border-ink-300'
+    }`
+
+  const submit = () => {
+    setTried(true)
+    if (hasErrors) return
+    const units = cart.reduce((s, c) => s + c.qty, 0)
+    setSentSummary(
+      cart.length ? `${cart.length} sản phẩm · ${units} đơn vị` : 'Yêu cầu tư vấn chung'
+    )
+    setSentCode(makeRequestCode())
+    // Wiring to the Lead Dispatcher inbox (email + DB + Zalo/Telegram ping)
+    // lands with the backend task — spec D7.
   }
-
-  const validate = (): boolean => {
-    const newErrors: Partial<Record<keyof FormData, string>> = {}
-    newErrors.name = validateField('name', formData.name)
-    newErrors.phone = validateField('phone', formData.phone)
-    newErrors.email = validateField('email', formData.email)
-
-    setErrors(newErrors)
-    return !Object.values(newErrors).some((e) => e)
-  }
-
-  const handleSubmit = async () => {
-    setTriedSubmit(true)
-    if (!validate()) return
-
-    // TODO: Call API to submit RFQ
-    const code = generateRFQCode()
-    setRfqCode(code)
-    setRfqSent(true)
-  }
-
-  const handleClose = () => {
-    if (!rfqSent) {
-      onClose()
-    } else {
-      // Reset form
-      setRfqSent(false)
-      setFormData({ name: '', company: '', phone: '', email: '', province: '', note: '' })
-      setErrors({})
-      setTriedSubmit(false)
-      onClose()
-    }
-  }
-
-  if (!isOpen) return null
 
   return (
     <div
-      className="fixed inset-0 z-110 bg-ktd-dark/70 backdrop-blur-sm flex items-start justify-center pt-10 pb-8 px-4 overflow-y-auto"
-      onClick={handleClose}
+      onClick={closeRfq}
+      className="fixed inset-0 z-[110] flex animate-fadeup items-start justify-center overflow-y-auto bg-[rgba(0,38,63,.72)] px-4 py-[5vh] backdrop-blur-[4px]"
     >
       <div
-        className="w-full max-w-2xl bg-white rounded-2xl shadow-2xl overflow-hidden animate-fadeup"
         onClick={(e) => e.stopPropagation()}
+        role="dialog"
+        aria-modal="true"
+        aria-label="Yêu cầu báo giá"
+        className="w-full max-w-[640px] overflow-hidden rounded-2xl bg-white shadow-overlay"
       >
-        {/* Success Screen */}
-        {rfqSent && (
-          <div className="px-10 py-14 text-center">
-            <div className="w-18 h-18 rounded-full bg-green-50 text-green-500 text-5xl flex items-center justify-center mx-auto mb-6">
+        {sentCode ? (
+          <div className="px-6 py-12 text-center md:px-10">
+            <div className="mx-auto mb-6 flex h-[72px] w-[72px] items-center justify-center rounded-full bg-[#e8f7ee] text-[34px] text-success">
               ✓
             </div>
-            <h2 className="text-2xl font-bold text-ktd-dark mb-3">Đã gửi yêu cầu báo giá!</h2>
-            <p className="text-ktd-dark/70 mb-2">Chúng tôi sẽ liên hệ quý khách hàng trong thời gian sớm nhất. Trân trọng cảm ơn.</p>
-            <div className="bg-blue-50 rounded px-4 py-3 text-ktd-blue font-mono text-sm inline-block my-4">
-              Mã yêu cầu: {rfqCode}
-            </div>
-            <div className="text-sm text-ktd-dark/60 mb-8">{cart.length} sản phẩm · {cart.reduce((sum, item) => sum + item.qty, 0)} đơn vị</div>
-            <div className="flex gap-3 justify-center">
+            <h2 className="mb-3 font-display text-[28px] font-bold text-ink-900">
+              Đã gửi yêu cầu báo giá!
+            </h2>
+            <p className="mb-2 text-base text-ink-500">
+              Chúng tôi sẽ liên hệ quý khách hàng trong thời gian sớm nhất. Trân trọng cảm ơn.
+            </p>
+            <p className="my-4 inline-block rounded-md bg-ktd-50 px-4 py-3 font-mono text-[15px] text-ktd-600">
+              Mã yêu cầu: {sentCode}
+            </p>
+            <p className="mb-7 text-sm text-ink-500">{sentSummary}</p>
+            <div className="flex flex-wrap justify-center gap-3">
               <button
+                type="button"
                 onClick={() => {
-                  handleClose()
-                  onProductsClick?.()
+                  closeRfq()
+                  router.push('/san-pham')
                 }}
-                className="bg-ktd-blue text-white rounded px-7 py-3 font-semibold hover:bg-blue-700"
+                className="btn-primary"
               >
                 Tiếp tục xem sản phẩm
               </button>
               <button
-                onClick={handleClose}
-                className="bg-white border-2 border-ktd-light text-ktd-dark rounded px-7 py-3 font-semibold hover:bg-ktd-light"
+                type="button"
+                onClick={closeRfq}
+                className="btn border-[1.5px] border-ink-300 text-ink-700 hover:bg-ink-100"
               >
                 Đóng
               </button>
             </div>
           </div>
-        )}
-
-        {/* Form Screen */}
-        {!rfqSent && (
+        ) : (
           <>
-            <div className="px-8 py-6 border-b border-ktd-light/80 flex items-start justify-between">
+            <div className="flex items-start justify-between gap-4 border-b border-[#eef1f4] px-6 py-5 md:px-8">
               <div>
-                <h2 className="text-xl font-bold text-ktd-dark mb-1">Yêu cầu báo giá</h2>
-                <p className="text-sm text-ktd-dark/60">Chúng tôi sẽ phản hồi sớm nhất.</p>
+                <h2 className="mb-1.5 font-display text-2xl font-bold text-ink-900">
+                  Yêu cầu báo giá
+                </h2>
+                <p className="text-sm text-ink-500">
+                  Kỹ sư của chúng tôi phản hồi trong 15–30 phút giờ hành chính.
+                </p>
               </div>
               <button
-                onClick={handleClose}
-                className="bg-ktd-light text-ktd-dark/60 rounded px-2 py-1 text-lg hover:text-ktd-dark"
+                type="button"
+                onClick={closeRfq}
+                aria-label="Đóng"
+                className="h-9 w-9 flex-shrink-0 rounded-md bg-ink-100 text-base text-ink-500 hover:bg-ink-300"
               >
                 ✕
               </button>
             </div>
 
-            <div className="px-8 py-6 max-h-96 overflow-y-auto">
-              {/* Cart Section */}
-              <div className="mb-6">
-                <div className="text-xs font-bold uppercase text-ktd-dark mb-3">DANH SÁCH SẢN PHẨM</div>
-                {cart.length > 0 ? (
-                  <div className="space-y-2 mb-4">
-                    {cart.map((item) => (
-                      <div key={item.partNumber} className="flex items-center gap-3 bg-ktd-light rounded-lg p-3">
-                        <div className="flex-1">
-                          <div className="font-semibold text-sm text-ktd-dark">{item.name}</div>
-                          <div className="text-xs text-ktd-dark/60 font-mono">{item.partNumber}</div>
+            <div className="max-h-[64vh] overflow-y-auto px-6 py-6 md:px-8">
+              <p className="label-caps mb-3 text-ink-900">Danh sách sản phẩm</p>
+
+              {cart.length > 0 ? (
+                <ul className="mb-4 flex flex-col gap-2.5">
+                  {cart.map((line) => {
+                    const p = getProductByPart(line.part)
+                    return (
+                      <li
+                        key={line.part}
+                        className="flex flex-wrap items-center gap-3 rounded-[10px] bg-ink-100 px-3.5 py-3"
+                      >
+                        <div className="min-w-[140px] flex-1">
+                          <div className="font-display text-sm font-semibold text-ink-900">
+                            {p ? p.name : line.part}
+                          </div>
+                          <div className="mt-0.5 font-mono text-xs text-ink-500">
+                            {line.part}
+                            {p ? ` · ${brandName(p.brand)}` : ''}
+                          </div>
                         </div>
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-1.5">
                           <button
-                            onClick={() => onUpdateQty?.(item.partNumber, -1)}
-                            className="w-7 h-7 border border-ktd-light/80 bg-white rounded text-ktd-dark hover:border-ktd-blue"
+                            type="button"
+                            onClick={() => setQty(line.part, -1)}
+                            aria-label={`Giảm số lượng ${line.part}`}
+                            className="h-8 w-8 rounded-md border border-ink-300 bg-white text-base text-ink-700 hover:border-ktd-600"
                           >
                             −
                           </button>
-                          <span className="w-8 text-center font-semibold text-sm">{item.qty}</span>
+                          <span className="w-8 text-center text-sm font-semibold">{line.qty}</span>
                           <button
-                            onClick={() => onUpdateQty?.(item.partNumber, 1)}
-                            className="w-7 h-7 border border-ktd-light/80 bg-white rounded text-ktd-dark hover:border-ktd-blue"
+                            type="button"
+                            onClick={() => setQty(line.part, 1)}
+                            aria-label={`Tăng số lượng ${line.part}`}
+                            className="h-8 w-8 rounded-md border border-ink-300 bg-white text-base text-ink-700 hover:border-ktd-600"
                           >
                             +
                           </button>
                         </div>
                         <button
-                          onClick={() => onRemoveFromCart?.(item.partNumber)}
-                          className="text-ktd-dark/40 hover:text-ktd-dark text-lg"
+                          type="button"
+                          onClick={() => removeFromCart(line.part)}
+                          aria-label={`Xóa ${line.part}`}
+                          className="p-1 text-lg text-ink-500 hover:text-quote"
                         >
                           ✕
                         </button>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="bg-ktd-light border border-dashed border-ktd-light/80 rounded-lg p-5 text-center text-sm text-ktd-dark/60 mb-4">
-                    Chưa có sản phẩm. Thêm sản phẩm từ trang danh mục, hoặc mô tả nhu cầu ở ô bên dưới.
-                  </div>
-                )}
+                      </li>
+                    )
+                  })}
+                </ul>
+              ) : (
+                <p className="mb-3.5 rounded-[10px] border border-dashed border-ink-300 bg-ink-100 p-5 text-center text-sm text-ink-500">
+                  Chưa có sản phẩm. Thêm sản phẩm từ trang danh mục, hoặc mô tả nhu cầu ở ô bên dưới.
+                </p>
+              )}
+
+              <div className="mb-7 flex flex-col gap-2.5 sm:flex-row">
                 <button
+                  type="button"
                   onClick={() => {
-                    handleClose()
-                    onProductsClick?.()
+                    closeRfq()
+                    router.push('/san-pham')
                   }}
-                  className="w-full border-2 border-ktd-blue text-ktd-blue rounded px-4 py-2 text-sm font-semibold hover:bg-blue-50"
+                  className="btn-secondary flex-1 text-sm"
                 >
                   + Thêm sản phẩm khác
                 </button>
+                <button
+                  type="button"
+                  onClick={() => showToast('Tính năng đính kèm file sẽ hoạt động khi backend lên sóng.')}
+                  className="btn border border-ink-300 flex-1 text-sm text-ink-700 hover:bg-ink-100"
+                >
+                  ⬆ Đính kèm danh sách
+                </button>
               </div>
 
-              {/* Contact Fields */}
-              <div className="mb-4">
-                <div className="text-xs font-bold uppercase text-ktd-dark mb-3">THÔNG TIN LIÊN HỆ</div>
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <label className="block text-xs text-ktd-dark mb-1.5">Họ và tên *</label>
-                    <input
-                      value={formData.name}
-                      onChange={(e) => handleChange('name', e.target.value)}
-                      onBlur={() => setTriedSubmit(true)}
-                      placeholder="Nguyễn Văn A"
-                      className={`w-full border rounded px-3 py-2 text-sm outline-none ${
-                        triedSubmit && errors.name ? 'border-ktd-red' : 'border-ktd-light/80 focus:border-ktd-blue'
-                      }`}
-                    />
-                    {triedSubmit && errors.name && <div className="text-xs text-ktd-red mt-1">{errors.name}</div>}
-                  </div>
-                  <div>
-                    <label className="block text-xs text-ktd-dark mb-1.5">Công ty</label>
-                    <input
-                      value={formData.company}
-                      onChange={(e) => handleChange('company', e.target.value)}
-                      placeholder="ABC Corp"
-                      className="w-full border border-ktd-light/80 rounded px-3 py-2 text-sm outline-none focus:border-ktd-blue"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-xs text-ktd-dark mb-1.5">Số điện thoại *</label>
-                    <input
-                      value={formData.phone}
-                      onChange={(e) => handleChange('phone', e.target.value)}
-                      onBlur={() => setTriedSubmit(true)}
-                      placeholder="0914 897 227"
-                      className={`w-full border rounded px-3 py-2 text-sm outline-none ${
-                        triedSubmit && errors.phone ? 'border-ktd-red' : 'border-ktd-light/80 focus:border-ktd-blue'
-                      }`}
-                    />
-                    {triedSubmit && errors.phone && <div className="text-xs text-ktd-red mt-1">{errors.phone}</div>}
-                  </div>
-                  <div>
-                    <label className="block text-xs text-ktd-dark mb-1.5">Email</label>
-                    <input
-                      value={formData.email}
-                      onChange={(e) => handleChange('email', e.target.value)}
-                      onBlur={() => setTriedSubmit(true)}
-                      placeholder="name@company.com"
-                      type="email"
-                      className={`w-full border rounded px-3 py-2 text-sm outline-none ${
-                        triedSubmit && errors.email ? 'border-ktd-red' : 'border-ktd-light/80 focus:border-ktd-blue'
-                      }`}
-                    />
-                    {triedSubmit && errors.email && <div className="text-xs text-ktd-red mt-1">{errors.email}</div>}
-                  </div>
+              <p className="label-caps mb-3.5 text-ink-900">Thông tin liên hệ</p>
+
+              <div className="mb-3.5 grid gap-3.5 sm:grid-cols-2">
+                <div>
+                  <label htmlFor="rfq-name" className="mb-1.5 block text-[13px] text-ink-700">
+                    Họ và tên *
+                  </label>
+                  <input
+                    id="rfq-name"
+                    value={form.name}
+                    onChange={(e) => set('name', e.target.value)}
+                    onBlur={() => setTouched((t) => ({ ...t, name: true }))}
+                    aria-invalid={!!showError('name')}
+                    className={fieldClass('name')}
+                  />
+                  {showError('name') && (
+                    <p className="mt-1 text-xs text-quote">⚠ {showError('name')}</p>
+                  )}
+                </div>
+
+                <div>
+                  <label htmlFor="rfq-company" className="mb-1.5 block text-[13px] text-ink-700">
+                    Công ty *
+                  </label>
+                  <input
+                    id="rfq-company"
+                    value={form.company}
+                    onChange={(e) => set('company', e.target.value)}
+                    onBlur={() => setTouched((t) => ({ ...t, company: true }))}
+                    aria-invalid={!!showError('company')}
+                    className={fieldClass('company')}
+                  />
+                  {showError('company') && (
+                    <p className="mt-1 text-xs text-quote">⚠ {showError('company')}</p>
+                  )}
+                </div>
+
+                <div>
+                  <label htmlFor="rfq-phone" className="mb-1.5 block text-[13px] text-ink-700">
+                    Số điện thoại *
+                  </label>
+                  <input
+                    id="rfq-phone"
+                    type="tel"
+                    inputMode="tel"
+                    value={form.phone}
+                    onChange={(e) => set('phone', e.target.value)}
+                    onBlur={() => setTouched((t) => ({ ...t, phone: true }))}
+                    aria-invalid={!!showError('phone')}
+                    className={fieldClass('phone')}
+                  />
+                  {showError('phone') && (
+                    <p className="mt-1 text-xs text-quote">⚠ {showError('phone')}</p>
+                  )}
+                </div>
+
+                <div>
+                  <label htmlFor="rfq-email" className="mb-1.5 block text-[13px] text-ink-700">
+                    Email *
+                  </label>
+                  <input
+                    id="rfq-email"
+                    type="email"
+                    value={form.email}
+                    onChange={(e) => set('email', e.target.value)}
+                    onBlur={() => setTouched((t) => ({ ...t, email: true }))}
+                    aria-invalid={!!showError('email')}
+                    className={fieldClass('email')}
+                  />
+                  {showError('email') && (
+                    <p className="mt-1 text-xs text-quote">⚠ {showError('email')}</p>
+                  )}
                 </div>
               </div>
 
-              {/* Note */}
+              <div className="mb-3.5">
+                <label htmlFor="rfq-province" className="mb-1.5 block text-[13px] text-ink-700">
+                  Tỉnh/Thành phố
+                </label>
+                <select
+                  id="rfq-province"
+                  value={form.province}
+                  onChange={(e) => set('province', e.target.value)}
+                  className="w-full rounded-md border border-ink-300 bg-white px-3.5 py-2.5 text-[15px] outline-none focus:border-ktd-600"
+                >
+                  <option value="">— Chọn —</option>
+                  {PROVINCES.map((p) => (
+                    <option key={p} value={p}>
+                      {p}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
               <div className="mb-4">
-                <label className="block text-xs text-ktd-dark mb-1.5">Ghi chú</label>
+                <label htmlFor="rfq-note" className="mb-1.5 block text-[13px] text-ink-700">
+                  Ghi chú kỹ thuật
+                </label>
                 <textarea
-                  value={formData.note}
-                  onChange={(e) => setFormData((prev) => ({ ...prev, note: e.target.value }))}
+                  id="rfq-note"
+                  value={form.note}
+                  onChange={(e) => set('note', e.target.value)}
                   placeholder="Yêu cầu riêng, thời hạn giao, thông số cần tư vấn…"
-                  className="w-full border border-ktd-light/80 rounded px-3 py-2 text-sm outline-none focus:border-ktd-blue resize-none h-20"
+                  className="min-h-[80px] w-full resize-y rounded-md border border-ink-300 px-3.5 py-2.5 text-[15px] outline-none focus:border-ktd-600"
                 />
               </div>
-            </div>
 
-            {/* Submit Button */}
-            <div className="px-8 py-4 border-t border-ktd-light/80">
-              <button
-                onClick={handleSubmit}
-                className="w-full bg-ktd-red text-white rounded-lg px-4 py-3 font-semibold hover:bg-red-700 transition-colors"
-              >
+              <label className="mb-5 flex items-start gap-2.5 text-sm text-ink-700">
+                <input
+                  type="checkbox"
+                  checked={form.agree}
+                  onChange={(e) => set('agree', e.target.checked)}
+                  className="mt-0.5 h-4 w-4 accent-ktd-600"
+                />
+                Tôi đồng ý để Kim Thành Đông liên hệ tư vấn.
+              </label>
+
+              <button type="button" onClick={submit} className="btn-quote w-full">
                 GỬI YÊU CẦU BÁO GIÁ
               </button>
+
+              <p className="mt-4 flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-sm text-ink-500">
+                <span>Hoặc liên hệ ngay:</span>
+                <a href={`tel:${COMPANY_HOTLINE_TEL}`} className="font-semibold">
+                  ☎ {COMPANY_HOTLINE}
+                </a>
+                <a href={ZALO_URL} target="_blank" rel="noopener noreferrer" className="font-semibold">
+                  💬 Zalo
+                </a>
+              </p>
             </div>
           </>
         )}

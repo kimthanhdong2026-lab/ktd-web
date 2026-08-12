@@ -1,98 +1,107 @@
+import type { Metadata } from 'next'
 import Link from 'next/link'
+import { notFound } from 'next/navigation'
+import { QuoteButton } from '@/components/QuoteButton'
+import { NEWS, PRODUCTS, brandName, productSlug } from '@/lib/ktd-data'
 
-const mockArticle = {
-  id: 1,
-  slug: 'tin-1',
-  title_vi: 'Giới thiệu sản phẩm mới từ Martor',
-  category_vi: 'Tin công ty',
-  excerpt_vi: 'Kim Thành Đông vừa công bố loạt sản phẩm mới nhập khẩu từ Martor, nhà sản xuất dao an toàn hàng đầu thế giới.',
-  content_vi: `Kim Thành Đông vừa công bố loạt sản phẩm mới nhập khẩu từ Martor, nhà sản xuất dao an toàn hàng đầu thế giới. Các sản phẩm này được thiết kế đặc biệt cho công nghiệp Việt Nam, kèm hỗ trợ kỹ thuật địa phương.
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://kimthanhdong.vn'
 
-Trong tháng 8/2026, KTĐ sẽ khai trương hai điểm phân phối mới tại Hà Nội và Đà Nẵng, mở rộng mạng lưới hỗ trợ khách hàng.
-
-Các sản phẩm mới bao gồm:
-- Dao an toàn SECUPRO series
-- Dao rút lưỡi SECUNORM
-- Dao giấu lưỡi SECUMAX
-
-Tất cả đều được chứng nhận GS (Gütesiegel Sicherheit) và tuân thủ tiêu chuẩn ANSI Z535.
-
-Khách hàng quan tâm vui lòng liên hệ ngay để nhận báo giá đặc biệt.`,
-  published_at: '2026-08-10',
+interface PageProps {
+  params: { slug: string }
 }
 
-const relatedProducts = [
-  { part: 'PART-00001', name: 'SECUPRO MARTEGO' },
-  { part: 'PART-00002', name: 'SECUNORM 380' },
-  { part: 'PART-00003', name: 'SECUMAX 150' },
-]
-
-export const metadata = {
-  title: `${mockArticle.title_vi} | Kim Thành Đông`,
-  description: mockArticle.excerpt_vi,
+export function generateStaticParams() {
+  return NEWS.map((n) => ({ slug: n.slug }))
 }
 
-export default function ArticlePage() {
+export function generateMetadata({ params }: PageProps): Metadata {
+  const article = NEWS.find((n) => n.slug === params.slug)
+  if (!article) return { title: 'Không tìm thấy bài viết' }
+  return {
+    title: article.title,
+    description: article.excerpt.slice(0, 155),
+    alternates: { canonical: `/tin-tuc/${params.slug}` },
+  }
+}
+
+export default function ArticlePage({ params }: PageProps) {
+  const article = NEWS.find((n) => n.slug === params.slug)
+  if (!article) notFound()
+
+  const related = PRODUCTS.slice(0, 3)
+
+  const schema = {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'Article',
+        headline: article.title,
+        description: article.excerpt,
+        articleSection: article.cat,
+        inLanguage: 'vi-VN',
+        publisher: { '@id': `${SITE_URL}/#organization` },
+      },
+      {
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          { '@type': 'ListItem', position: 1, name: 'Trang chủ', item: SITE_URL },
+          { '@type': 'ListItem', position: 2, name: 'Tin tức', item: `${SITE_URL}/tin-tuc` },
+          { '@type': 'ListItem', position: 3, name: article.title, item: `${SITE_URL}/tin-tuc/${params.slug}` },
+        ],
+      },
+    ],
+  }
+
   return (
-    <main className="max-w-3xl mx-auto px-8 py-12">
-      {/* Breadcrumb */}
-      <div className="text-sm text-ktd-dark/70 mb-8 flex gap-2">
-        <Link href="/" className="hover:text-ktd-blue">Trang chủ</Link>
-        <span>/</span>
-        <Link href="/tin-tuc" className="hover:text-ktd-blue">Tin tức</Link>
-      </div>
+    <article className="mx-auto max-w-prose px-5 pb-16 pt-10 md:pb-24">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+      />
 
-      {/* Meta */}
-      <div className="text-xs font-bold uppercase text-ktd-blue mb-4 tracking-widest">
-        {mockArticle.category_vi}
-      </div>
+      <nav aria-label="Breadcrumb" className="mb-6 text-body-sm text-ink-500">
+        <Link href="/">Trang chủ</Link> / <Link href="/tin-tuc">Tin tức</Link>
+      </nav>
 
-      {/* Title */}
-      <h1 className="text-4xl font-bold font-vietnam text-ktd-dark mb-3 leading-tight">
-        {mockArticle.title_vi}
+      <p className="label-caps mb-3.5 text-ktd-600">{article.cat}</p>
+      <h1 className="mb-4 font-display text-[30px] font-bold leading-tight text-ink-900 md:text-[38px]">
+        {article.title}
       </h1>
+      <p className="mb-8 text-sm text-[#9aa3ad]">{article.date}</p>
 
-      {/* Date */}
-      <div className="text-sm text-ktd-dark/60 mb-8">
-        {new Date(mockArticle.published_at).toLocaleDateString('vi-VN')}
+      <div className="placeholder-hatch relative mb-8 flex aspect-video items-center justify-center overflow-hidden rounded-lg bg-ink-100">
+        <span className="relative font-mono text-xs text-[#9aa3ad]">[ ẢNH BÀI VIẾT ]</span>
       </div>
 
-      {/* Featured Image */}
-      <div className="aspect-video bg-ktd-light rounded-lg mb-12 border border-ktd-light/80"></div>
+      <p className="mb-5 text-lg leading-[1.8] text-ink-700">{article.excerpt}</p>
+      <p className="mb-5 text-[17px] leading-[1.8] text-ink-700">
+        Nội dung chi tiết của bài viết sẽ được đội ngũ kỹ thuật Kim Thành Đông biên soạn, tập trung
+        vào ứng dụng thực tế tại nhà máy và hướng dẫn lựa chọn thiết bị phù hợp.
+      </p>
 
-      {/* Content */}
-      <div className="prose prose-lg max-w-none mb-12">
-        {mockArticle.content_vi.split('\n\n').map((para, idx) => (
-          <p key={idx} className="text-lg text-ktd-dark/80 leading-relaxed mb-6">
-            {para}
-          </p>
-        ))}
-      </div>
-
-      {/* Divider */}
-      <div className="border-t border-ktd-light/80 pt-8 mb-8">
-        {/* Related Products */}
-        <h3 className="text-2xl font-bold font-vietnam text-ktd-dark mb-6">Sản phẩm liên quan</h3>
-        <div className="grid grid-cols-3 gap-4">
-          {relatedProducts.map((product) => (
-            <Link key={product.part} href={`/san-pham/${product.part.toLowerCase()}`}>
-              <div className="border border-ktd-light/80 rounded-lg p-4 hover:shadow-md transition-all">
-                <div className="font-bold text-sm text-ktd-dark mb-2 line-clamp-2">
-                  {product.name}
-                </div>
-                <div className="font-mono text-xs text-ktd-blue">
-                  {product.part}
-                </div>
-              </div>
-            </Link>
+      <section className="mt-10 border-t border-hairline pt-8">
+        <h2 className="mb-5 font-display text-[22px] font-bold text-ink-900">Sản phẩm liên quan</h2>
+        <ul className="grid gap-4 sm:grid-cols-3">
+          {related.map((p) => (
+            <li key={p.part}>
+              <Link
+                href={`/san-pham/${productSlug(p)}`}
+                className="block h-full rounded-[10px] border border-hairline p-4 transition hover:shadow-md"
+              >
+                <span className="mb-1.5 block font-display text-[15px] font-semibold leading-tight text-ink-900">
+                  {p.name}
+                </span>
+                <span className="part-no block text-[13px] text-ktd-600">{p.part}</span>
+                <span className="mt-1 block text-xs text-ink-500">{brandName(p.brand)}</span>
+              </Link>
+            </li>
           ))}
-        </div>
-      </div>
+        </ul>
+      </section>
 
-      {/* CTA */}
-      <button className="bg-ktd-red text-white rounded-lg px-8 py-3 font-semibold hover:bg-red-700 transition-colors shadow-lg">
-        Yêu cầu báo giá
-      </button>
-    </main>
+      <div className="mt-8">
+        <QuoteButton />
+      </div>
+    </article>
   )
 }

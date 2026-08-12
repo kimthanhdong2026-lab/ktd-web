@@ -1,97 +1,116 @@
+import type { Metadata } from 'next'
 import Link from 'next/link'
-import { CRITERIA, TIMELINE } from '@/lib/constants'
+import { ABOUT_CRITERIA, ABOUT_TIMELINE, COMPANY_HOTLINE, COMPANY_HOTLINE_TEL, OFFICES } from '@/lib/constants'
 
-export const metadata = {
-  title: 'Giới thiệu | Kim Thành Đông',
-  description: 'Đồng hành cùng công nghiệp Việt Nam từ 2011. 21 thương hiệu quốc tế, kỹ sư tư vấn, giao hàng nhanh.',
+export const metadata: Metadata = {
+  title: 'Giới thiệu — Đồng hành cùng công nghiệp Việt Nam từ 2011',
+  description:
+    'Công ty TNHH Kim Thành Đông thành lập 2011, hơn 13 năm cung cấp thiết bị công nghiệp, vật tư máy móc và giải pháp kỹ thuật cho nhà máy tại Việt Nam.',
+  alternates: { canonical: '/gioi-thieu' },
 }
 
 export default function AboutPage() {
   return (
-    <main>
-      {/* Hero */}
-      <section className="bg-white py-16 px-8 text-center">
-        <div className="max-w-4xl mx-auto">
-          <h1 className="text-5xl font-bold font-vietnam text-ktd-blue mb-4">
+    <>
+      <section className="bg-white px-5 py-8 md:py-10">
+        <div className="container-ktd text-center">
+          <h1 className="font-display text-h1 leading-tight text-ktd-600">
             Đồng hành cùng công nghiệp Việt Nam từ 2011
           </h1>
         </div>
       </section>
 
-      {/* Company History */}
-      <section className="py-20 px-8 max-w-4xl mx-auto">
-        <p className="text-xl text-ktd-dark/80 mb-6 leading-relaxed">
-          Công ty TNHH Kim Thành Đông thành lập năm 2011, đến nay đã hơn 13 năm cung cấp thiết bị công nghiệp, vật tư máy móc và giải pháp kỹ thuật cho các nhà máy thuộc nhiều ngành: chế tạo máy, điện tử, ô tô, hàng không, đóng tàu, hóa chất và năng lượng.
+      <section className="mx-auto max-w-[900px] px-5 py-12 md:py-20">
+        <p className="mb-6 text-[19px] leading-[1.75] text-ink-700">
+          Công ty TNHH Kim Thành Đông thành lập năm 2011, đến nay đã hơn 13 năm cung cấp thiết bị
+          công nghiệp, vật tư máy móc và giải pháp kỹ thuật cho các nhà máy thuộc nhiều ngành: chế
+          tạo máy, điện tử, ô tô, hàng không, đóng tàu, hóa chất và năng lượng.
         </p>
-        <p className="text-lg text-ktd-dark/70 leading-relaxed">
-          Là nhà phân phối và nhà cung cấp giải pháp kỹ thuật — không phải nhà sản xuất — KTĐ mang công nghệ toàn cầu về gần hơn với kỹ sư và nhà máy Việt Nam, kèm dịch vụ hỗ trợ kỹ thuật bản địa và giao hàng nhanh.
+        <p className="text-[17px] leading-[1.75] text-ink-500">
+          Là nhà phân phối và nhà cung cấp giải pháp kỹ thuật — không phải nhà sản xuất — KTĐ mang
+          công nghệ toàn cầu về gần hơn với kỹ sư và nhà máy Việt Nam, kèm dịch vụ hỗ trợ kỹ thuật
+          bản địa và giao hàng nhanh.
         </p>
       </section>
 
-      {/* Vision & Mission */}
-      <section className="py-20 px-8 max-w-4xl mx-auto">
-        <div className="grid grid-cols-2 gap-8">
-          <div className="bg-ktd-light rounded-xl p-8">
-            <h3 className="text-2xl font-bold font-vietnam text-ktd-blue mb-4">Tầm nhìn</h3>
-            <p className="text-ktd-dark/80 leading-relaxed">
-              Trở thành đối tác cung ứng thiết bị công nghiệp và giải pháp kỹ thuật hàng đầu, được tin tưởng bởi các nhà máy trong và ngoài nước tại Việt Nam.
+      <section className="container-ktd pb-16 md:pb-20">
+        <div className="grid gap-6 md:grid-cols-2">
+          <div className="rounded-lg bg-ktd-50 p-8 md:p-10">
+            <h2 className="mb-4 font-display text-2xl font-bold text-ktd-600">Tầm nhìn</h2>
+            <p className="text-base leading-relaxed text-ink-700">
+              Trở thành đối tác cung ứng thiết bị công nghiệp và giải pháp kỹ thuật hàng đầu, được
+              tin tưởng bởi các nhà máy trong và ngoài nước tại Việt Nam.
             </p>
           </div>
-
-          <div className="bg-ktd-light rounded-xl p-8">
-            <h3 className="text-2xl font-bold font-vietnam text-ktd-blue mb-4">Sứ mệnh</h3>
-            <p className="text-ktd-dark/80 leading-relaxed">
-              Cung cấp sản phẩm chính hãng, giải pháp kỹ thuật tối ưu và dịch vụ nhanh chóng, giúp khách hàng nâng cao hiệu quả sản xuất và tiết kiệm chi phí.
+          <div className="rounded-lg bg-ktd-50 p-8 md:p-10">
+            <h2 className="mb-4 font-display text-2xl font-bold text-ktd-600">Sứ mệnh</h2>
+            <p className="text-base leading-relaxed text-ink-700">
+              Cung cấp sản phẩm chính hãng, giải pháp kỹ thuật tối ưu và dịch vụ nhanh chóng, giúp
+              khách hàng nâng cao hiệu quả sản xuất và tiết kiệm chi phí.
             </p>
           </div>
         </div>
       </section>
 
-      {/* Core Criteria */}
-      <section className="py-20 px-8 max-w-4xl mx-auto">
-        <h2 className="text-3xl font-bold font-vietnam text-ktd-dark mb-12">5 tiêu chí hoạt động</h2>
-        <div className="grid grid-cols-5 gap-4">
-          {CRITERIA.map((item) => (
-            <div key={item.n} className="bg-white border border-ktd-light/80 rounded-lg p-6 text-center">
-              <div className="text-4xl font-bold text-ktd-light-blue mb-3">{item.n}</div>
-              <p className="text-sm text-ktd-dark/80 leading-snug">{item.t}</p>
-            </div>
+      <section className="container-ktd pb-16 md:pb-20">
+        <h2 className="mb-8 font-display text-[26px] font-bold text-ink-900 md:text-3xl">
+          5 tiêu chí hoạt động
+        </h2>
+        <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+          {ABOUT_CRITERIA.map((c) => (
+            <li key={c.n} className="rounded-xl border border-hairline bg-white p-5 md:p-6">
+              <span className="mb-3 block font-display text-[28px] font-bold text-ktd-100">
+                {c.n}
+              </span>
+              <span className="block text-[15px] leading-relaxed text-ink-700">{c.t}</span>
+            </li>
           ))}
-        </div>
+        </ul>
       </section>
 
-      {/* Timeline */}
-      <section className="py-20 px-8 bg-ktd-light">
-        <div className="max-w-4xl mx-auto">
-          <h2 className="text-3xl font-bold font-vietnam text-ktd-dark mb-12">Chặng đường phát triển</h2>
-          <div className="flex gap-6 overflow-x-auto pb-4">
-            {TIMELINE.map((item) => (
-              <div key={item.year} className="flex-shrink-0 w-56 border-l-4 border-ktd-blue pl-6 py-2">
-                <div className="text-2xl font-bold font-vietnam text-ktd-blue mb-2">{item.year}</div>
-                <p className="text-sm text-ktd-dark/80 leading-relaxed">{item.text}</p>
-              </div>
-            ))}
-          </div>
-        </div>
+      <section className="container-ktd pb-16 md:pb-20">
+        <h2 className="mb-8 font-display text-[26px] font-bold text-ink-900 md:text-3xl">
+          Chặng đường phát triển
+        </h2>
+        <ol className="flex gap-4 overflow-x-auto pb-3">
+          {ABOUT_TIMELINE.map((t) => (
+            <li key={t.year} className="w-[220px] flex-none border-t-[3px] border-ktd-600 pt-4">
+              <span className="mb-2 block font-display text-[22px] font-bold text-ktd-600">
+                {t.year}
+              </span>
+              <span className="block text-[15px] leading-relaxed text-ink-700">{t.text}</span>
+            </li>
+          ))}
+        </ol>
       </section>
 
-      {/* CTA Section */}
-      <section className="bg-ktd-blue py-8 px-8 text-center text-white flex items-center justify-center gap-6 flex-wrap">
-        <div className="flex-1 min-w-xs">
-          <h3 className="text-lg font-bold font-vietnam mb-1">
-            Quý khách liên hệ với chúng tôi — hotline{' '}
-            <a href="tel:0914897227" className="underline hover:opacity-80">
-              0914 897 227
-            </a>
-          </h3>
-        </div>
-        <Link
-          href="/lien-he"
-          className="bg-white text-ktd-blue px-8 py-3 rounded font-semibold hover:bg-ktd-light transition-colors whitespace-nowrap"
-        >
+      <section className="container-ktd pb-16 md:pb-20">
+        <h2 className="mb-8 font-display text-[26px] font-bold text-ink-900 md:text-3xl">
+          Năng lực &amp; hạ tầng
+        </h2>
+        <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {OFFICES.map((o) => (
+            <li key={o.name} className="rounded-xl border border-hairline bg-white p-6">
+              <span className="mb-2 block font-display text-base font-semibold text-ktd-600">
+                {o.name}
+              </span>
+              <span className="block text-sm leading-relaxed text-ink-700">{o.addr}</span>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <section className="flex flex-wrap items-center justify-center gap-6 bg-ktd-600 px-5 py-6">
+        <h2 className="font-display text-xl font-bold text-white">
+          Quý khách liên hệ với chúng tôi — hotline{' '}
+          <a href={`tel:${COMPANY_HOTLINE_TEL}`} className="border-b border-white/45 text-white">
+            {COMPANY_HOTLINE}
+          </a>
+        </h2>
+        <Link href="/lien-he" className="btn bg-white text-ktd-600 hover:bg-ktd-50">
           Liên hệ ngay
         </Link>
       </section>
-    </main>
+    </>
   )
 }

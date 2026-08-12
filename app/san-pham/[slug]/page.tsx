@@ -1,258 +1,203 @@
+import type { Metadata } from 'next'
 import Link from 'next/link'
+import { notFound } from 'next/navigation'
 import { ProductCard } from '@/components/ProductCard'
+import { ProductGallery } from '@/components/products/ProductGallery'
+import { ProductTabs } from '@/components/products/ProductTabs'
+import { CatalogButton } from '@/components/products/CatalogButton'
+import { QuoteButton } from '@/components/QuoteButton'
+import {
+  PRODUCTS,
+  brandName,
+  categoryName,
+  getProductBySlug,
+  productSlug,
+} from '@/lib/ktd-data'
+import { COMPANY_HOTLINE, COMPANY_HOTLINE_TEL, ZALO_URL } from '@/lib/constants'
 
-// Mock data
-const mockProduct = {
-  id: 1,
-  part_number: 'PART-00001',
-  slug: 'san-pham-1',
-  name_vi: 'SECUPRO MARTEGO',
-  name_en: 'SECUPRO MARTEGO',
-  brand_id: 1,
-  category_id: 3,
-  series_name: 'SECUPRO',
-  origin: 'Đức',
-  short_desc_vi: 'Dao an toàn rút lưỡi tự động. An toàn – chắc chắn – linh hoạt – tiện dụng.',
-  full_desc_vi: 'Dao an toàn rút lưỡi hoàn toàn tự động với cơ chế bảo vệ tiên tiến. Phù hợp cho mọi môi trường công nghiệp. Được tin tưởng bởi hàng nghìn nhà máy.',
-  is_featured: true,
-  specs_json: {
-    'Cơ chế an toàn': 'Rút lưỡi hoàn toàn tự động',
-    'Vật liệu tay cầm': 'Nhôm',
-    'Độ sâu cắt': '20 mm',
-    'Chứng nhận': 'GS Certified',
-    'Thay lưỡi': 'Không cần dụng cụ',
-  },
-  applications_json: ['Gia công cơ khí', 'Công nghiệp thực phẩm'],
-  sort_order: 0,
-  created_at: new Date().toISOString(),
-  updated_at: new Date().toISOString(),
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://kimthanhdong.vn'
+
+interface PageProps {
+  params: { slug: string }
 }
 
-const mockBrand = { id: 1, name_vi: 'Martor', slug: 'martor' }
-const mockCategory = { id: 3, name_vi: 'Dụng cụ an toàn', slug: 'an-toan' }
-
-const mockCatalog = {
-  name: 'SECUPRO Series',
-  size: '4.2 MB',
-  pages: 18,
+export function generateStaticParams() {
+  return PRODUCTS.map((p) => ({ slug: productSlug(p) }))
 }
 
-const mockRelated = [
-  { ...mockProduct, id: 2, part_number: 'PART-00002', name_vi: 'SECUNORM 380' },
-  { ...mockProduct, id: 3, part_number: 'PART-00003', name_vi: 'SECUMAX 150' },
-  { ...mockProduct, id: 4, part_number: 'PART-00004', name_vi: 'SECUPRO XL' },
-]
+export function generateMetadata({ params }: PageProps): Metadata {
+  const product = getProductBySlug(params.slug)
+  if (!product) return { title: 'Không tìm thấy sản phẩm' }
 
-export const metadata = {
-  title: 'SECUPRO MARTEGO | Kim Thành Đông',
-  description: 'Dao an toàn rút lưỡi tự động. An toàn – chắc chắn – linh hoạt – tiện dụng. Báo giá trong 24 giờ.',
+  return {
+    title: `${product.name} ${product.part} — ${brandName(product.brand)}`,
+    description: `${product.desc} Mã ${product.part}, thương hiệu ${brandName(product.brand)}. Tải catalog PDF, nhận báo giá trong 24 giờ.`,
+    alternates: { canonical: `/san-pham/${params.slug}` },
+  }
 }
 
-export default function PDPPage() {
-  const views = ['Mặt trước', 'Mặt bên', 'Góc 45°', 'Chi tiết cơ cấu', 'Đang sử dụng']
+export default function ProductDetailPage({ params }: PageProps) {
+  const product = getProductBySlug(params.slug)
+  if (!product) notFound()
+
+  const brand = brandName(product.brand)
+  const category = categoryName(product.category)
+  const related = PRODUCTS.filter(
+    (p) => p.brand === product.brand && p.part !== product.part
+  ).slice(0, 4)
+
+  // Spec D4: Product schema without `offers` — KTĐ does not publish prices.
+  const schema = {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'Product',
+        name: product.name,
+        sku: product.part,
+        description: product.desc,
+        brand: { '@type': 'Brand', name: brand },
+        category,
+        countryOfOrigin: product.origin,
+      },
+      {
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          { '@type': 'ListItem', position: 1, name: 'Trang chủ', item: SITE_URL },
+          { '@type': 'ListItem', position: 2, name: 'Sản phẩm', item: `${SITE_URL}/san-pham` },
+          { '@type': 'ListItem', position: 3, name: brand, item: `${SITE_URL}/san-pham?brand=${product.brand}` },
+          { '@type': 'ListItem', position: 4, name: product.name, item: `${SITE_URL}/san-pham/${params.slug}` },
+        ],
+      },
+    ],
+  }
 
   return (
-    <main className="max-w-7xl mx-auto px-8 py-8">
-      {/* Breadcrumb */}
-      <div className="text-sm text-ktd-dark/70 mb-8 flex gap-2">
-        <Link href="/" className="hover:text-ktd-blue">Trang chủ</Link>
-        <span>/</span>
-        <Link href="/san-pham" className="hover:text-ktd-blue">Sản phẩm</Link>
-        <span>/</span>
-        <Link href={`/san-pham?brand=${mockBrand.slug}`} className="hover:text-ktd-blue">
-          {mockBrand.name_vi}
-        </Link>
-        <span>/</span>
-        <span className="text-ktd-dark">{mockProduct.name_vi}</span>
-      </div>
+    <div className="container-ktd pb-16 pt-6 md:pb-24">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+      />
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 mb-16">
-        {/* Gallery */}
-        <div className="lg:col-span-1">
-          <div className="sticky top-28">
-            <div className="grid grid-cols-5 gap-2 mb-4">
-              {views.map((view, idx) => (
-                <button
-                  key={view}
-                  className={`aspect-square rounded-lg border-2 flex items-center justify-center text-xs text-center px-1 transition-colors ${
-                    idx === 0
-                      ? 'border-ktd-blue bg-ktd-light/60'
-                      : 'border-ktd-light/80 hover:border-ktd-blue'
-                  }`}
-                >
-                  <span className="text-ktd-dark/30 text-xs leading-tight">{view}</span>
-                </button>
-              ))}
-            </div>
+      <nav aria-label="Breadcrumb" className="mb-7 text-body-sm text-ink-500">
+        <Link href="/">Trang chủ</Link> / <Link href="/san-pham">Sản phẩm</Link> /{' '}
+        <Link href={`/san-pham?brand=${product.brand}`}>{brand}</Link> /{' '}
+        <span className="text-ink-900">{product.name}</span>
+      </nav>
 
-            <div className="aspect-square bg-ktd-light rounded-lg flex items-center justify-center mb-3 relative overflow-hidden">
-              <div className="absolute inset-0 bg-gradient-to-br from-ktd-light via-ktd-light to-ktd-light/80 opacity-60"></div>
-              <div className="text-center">
-                <div className="font-mono text-sm text-ktd-dark/30 mb-2">{mockProduct.part_number}</div>
-                <div className="font-mono text-xs text-ktd-dark/20">click để zoom</div>
-              </div>
-            </div>
-          </div>
-        </div>
+      <div className="mb-16 grid items-start gap-10 lg:grid-cols-[1.1fr_1fr] lg:gap-14">
+        <ProductGallery part={product.part} />
 
-        {/* Info */}
-        <div className="lg:col-span-2">
-          <div className="text-xs font-bold uppercase text-ktd-dark/60 mb-3 tracking-widest">
-            {mockCategory.name_vi}
-          </div>
+        <div>
+          <p className="label-caps mb-3 text-ink-500">
+            {category}
+            {product.sub ? ` › ${product.sub}` : ''}
+          </p>
 
-          {mockProduct.is_featured && (
-            <span className="inline-block bg-blue-100 text-blue-700 text-xs font-semibold px-3 py-1 rounded mb-3">
-              Bán chạy
+          {product.tag && (
+            <span
+              className={`mb-3.5 inline-block rounded-sm px-3 py-1 text-xs font-semibold text-white ${
+                product.tag === 'Mới' ? 'bg-quote' : 'bg-ktd-600'
+              }`}
+            >
+              {product.tag}
             </span>
           )}
 
-          <h1 className="text-3xl font-bold font-vietnam text-ktd-dark mb-6">
-            {mockProduct.name_vi}
-          </h1>
+          <h1 className="mb-6 font-display text-h1 text-ink-900">{product.name}</h1>
 
-          {/* Key Info Table */}
-          <div className="border-y border-ktd-light/80 py-4 mb-6">
-            <div className="grid grid-cols-3 gap-8 text-sm">
-              <div>
-                <div className="text-ktd-dark/60 mb-1">Mã hàng</div>
-                <div className="font-mono text-lg font-semibold text-ktd-blue">{mockProduct.part_number}</div>
-              </div>
-              <div>
-                <div className="text-ktd-dark/60 mb-1">Thương hiệu</div>
-                <div className="font-semibold text-ktd-dark">{mockBrand.name_vi}</div>
-              </div>
-              <div>
-                <div className="text-ktd-dark/60 mb-1">Xuất xứ</div>
-                <div className="text-ktd-dark">{mockProduct.origin}</div>
-              </div>
+          <dl className="mb-6 flex flex-col gap-3 border-y border-[#eef1f4] py-5">
+            <div className="flex items-center gap-4">
+              <dt className="w-[110px] flex-shrink-0 text-sm text-ink-500">Mã hàng</dt>
+              <dd className="part-no text-lg font-medium text-ktd-600">{product.part}</dd>
             </div>
-          </div>
+            <div className="flex items-center gap-4">
+              <dt className="w-[110px] flex-shrink-0 text-sm text-ink-500">Thương hiệu</dt>
+              <dd className="font-display text-[15px] font-semibold text-ink-900">{brand}</dd>
+            </div>
+            <div className="flex items-center gap-4">
+              <dt className="w-[110px] flex-shrink-0 text-sm text-ink-500">Xuất xứ</dt>
+              <dd className="text-[15px] text-ink-900">{product.origin}</dd>
+            </div>
+          </dl>
 
-          {/* Description */}
-          <p className="text-lg text-ktd-dark/80 mb-8 leading-relaxed">
-            {mockProduct.full_desc_vi}
-          </p>
+          <p className="mb-7 text-body-lg text-ink-700">{product.desc}</p>
 
-          {/* CTA Buttons */}
-          <div className="space-y-3 mb-8">
-            <button className="w-full bg-ktd-red text-white rounded-lg py-4 font-semibold hover:bg-red-700 transition-colors shadow-lg">
-              + THÊM VÀO YÊU CẦU BÁO GIÁ
-            </button>
-            <button className="w-full bg-white border-2 border-ktd-blue text-ktd-blue rounded-lg py-4 font-semibold hover:bg-blue-50 transition-colors flex items-center justify-center gap-3">
-              <span>⬇</span>
-              <div className="text-left">
-                <div>Tải Catalog Series (PDF)</div>
-                <div className="font-mono text-xs text-ktd-dark/60">{mockCatalog.size} • {mockCatalog.pages} trang</div>
-              </div>
-            </button>
-          </div>
-        </div>
-      </div>
+          <QuoteButton addPart={product.part} className="mb-3 w-full">
+            + THÊM VÀO YÊU CẦU BÁO GIÁ
+          </QuoteButton>
 
-      {/* Tabs */}
-      <div className="border-b border-ktd-light/80 mb-8">
-        <div className="flex gap-8">
-          {[
-            { label: 'MÔ TẢ', active: true },
-            { label: 'THÔNG SỐ KỸ THUẬT', active: false },
-            { label: 'ỨNG DỤNG', active: false },
-            { label: 'TÀI LIỆU', active: false },
-          ].map((tab) => (
-            <button
-              key={tab.label}
-              className={`pb-4 px-2 font-semibold text-sm border-b-4 transition-colors ${
-                tab.active
-                  ? 'text-ktd-dark border-ktd-blue'
-                  : 'text-ktd-dark/60 border-transparent hover:text-ktd-dark'
-              }`}
-            >
-              {tab.label}
-            </button>
-          ))}
-        </div>
-      </div>
+          <CatalogButton product={product} />
 
-      {/* Tab Content */}
-      <div className="max-w-3xl mb-16">
-        <p className="text-lg text-ktd-dark/80 leading-relaxed mb-6">
-          {mockProduct.full_desc_vi}
-        </p>
-        <p className="text-base text-ktd-dark/70">
-          Sản phẩm được phân phối chính hãng bởi Kim Thành Đông, kèm hỗ trợ kỹ thuật và catalog đầy đủ của cả dòng {mockProduct.series_name}. Toàn bộ các mã còn lại trong series được cung cấp qua file catalog PDF đính kèm.
-        </p>
-      </div>
-
-      {/* Specs Table */}
-      <div className="max-w-3xl mb-16">
-        <h3 className="text-xl font-bold text-ktd-dark mb-6 font-vietnam">THÔNG SỐ KỸ THUẬT</h3>
-        <table className="w-full border border-ktd-light/80 rounded-lg overflow-hidden">
-          <tbody>
-            {Object.entries(mockProduct.specs_json).map(([key, value]) => (
-              <tr key={key} className="hover:bg-ktd-light/30">
-                <th className="text-left px-6 py-3 font-semibold text-ktd-dark/70 bg-ktd-light/50 border-b border-ktd-light/80 w-1/3">
-                  {key}
-                </th>
-                <td className="px-6 py-3 text-ktd-dark border-b border-ktd-light/80">
-                  {value}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-
-      {/* Related Products */}
-      <div className="mb-16">
-        <h2 className="text-2xl font-bold font-vietnam text-ktd-dark mb-6">Sản phẩm cùng dòng</h2>
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-          {mockRelated.map((product) => (
-            <ProductCard
-              key={product.id}
-              product={{ ...product, brandName: mockBrand.name_vi, categoryName: mockCategory.name_vi }}
-              variant="related"
-            />
-          ))}
-        </div>
-      </div>
-
-      {/* Engineer CTA */}
-      <section className="bg-ktd-blue text-white rounded-xl p-8 mb-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <div>
-            <h3 className="text-xl font-bold font-vietnam mb-3">Cần tư vấn kỹ thuật?</h3>
-            <p className="text-ktd-light-blue mb-4">
-              Kỹ sư giàu kinh nghiệm sẵn sàng hỗ trợ chọn đúng thông số.
+          <div className="border-t border-[#eef1f4] pt-5">
+            <p className="mb-3 font-display text-base font-semibold text-ink-900">
+              Cần tư vấn nhanh?
             </p>
-            <div className="flex gap-3 flex-wrap">
-              <a
-                href="tel:0914897227"
-                className="bg-white text-ktd-blue px-6 py-2 rounded font-semibold hover:bg-ktd-light transition-colors"
-              >
-                ☎ Hotline 0914 897 227
+            <div className="mb-2 flex flex-wrap gap-3">
+              <a href={`tel:${COMPANY_HOTLINE_TEL}`} className="btn-secondary">
+                ☎ {COMPANY_HOTLINE}
               </a>
               <a
-                href="https://zalo.me/0914897227"
+                href={ZALO_URL}
                 target="_blank"
-                rel="noopener"
-                className="border border-white text-white px-6 py-2 rounded font-semibold hover:bg-white/10 transition-colors"
+                rel="noopener noreferrer"
+                className="btn border border-ink-300 text-ink-700 hover:bg-ink-100"
               >
-                💬 Zalo
+                💬 Chat Zalo
               </a>
             </div>
+            <p className="text-sm text-ink-500">Phản hồi trong 15–30 phút giờ hành chính.</p>
           </div>
+        </div>
+      </div>
 
-          <div>
-            <h3 className="text-xl font-bold font-vietnam mb-3">Yêu cầu báo giá sỉ / lẻ</h3>
-            <p className="text-ktd-light-blue mb-4">
-              Nhận báo giá trong vòng 24 giờ làm việc.
-            </p>
-            <button className="bg-ktd-red text-white px-6 py-2 rounded font-semibold hover:bg-red-700 transition-colors">
-              Gửi yêu cầu báo giá
-            </button>
+      <ProductTabs product={product} />
+
+      {related.length > 0 && (
+        <section className="mb-14">
+          <h2 className="mb-6 font-display text-[22px] font-bold text-ink-900 md:text-[26px]">
+            Sản phẩm cùng dòng
+          </h2>
+          <div className="grid grid-cols-2 gap-4 lg:grid-cols-4 lg:gap-5">
+            {related.map((p) => (
+              <ProductCard key={p.part} product={p} variant="compact" />
+            ))}
           </div>
+        </section>
+      )}
+
+      <section className="grid gap-8 rounded-lg bg-ktd-600 px-6 py-7 md:px-8 lg:grid-cols-[1fr_1px_1fr] lg:items-center">
+        <div className="flex flex-col items-start gap-2.5">
+          <h2 className="font-display text-xl font-bold text-white">Cần tư vấn kỹ thuật?</h2>
+          <p className="text-sm leading-relaxed text-ktd-100">
+            Kỹ sư giàu kinh nghiệm sẵn sàng hỗ trợ chọn đúng thông số.
+          </p>
+          <div className="mt-1 flex flex-wrap gap-2.5">
+            <a href={`tel:${COMPANY_HOTLINE_TEL}`} className="btn bg-white text-ktd-600 hover:bg-ktd-50">
+              ☎ Hotline {COMPANY_HOTLINE}
+            </a>
+            <a
+              href={ZALO_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn border border-white/35 bg-white/15 text-white hover:bg-white/25"
+            >
+              💬 Zalo
+            </a>
+          </div>
+        </div>
+
+        <div className="hidden h-full w-px bg-white/25 lg:block" aria-hidden="true" />
+
+        <div className="flex flex-col items-start gap-2.5">
+          <h2 className="font-display text-xl font-bold text-white">Yêu cầu báo giá sỉ / lẻ</h2>
+          <p className="text-sm leading-relaxed text-ktd-100">
+            Nhận báo giá trong vòng 24 giờ làm việc.
+          </p>
+          <QuoteButton addPart={product.part} className="mt-1">
+            Gửi yêu cầu báo giá
+          </QuoteButton>
         </div>
       </section>
-    </main>
+    </div>
   )
 }
