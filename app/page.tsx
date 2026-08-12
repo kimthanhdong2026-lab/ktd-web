@@ -44,8 +44,14 @@ export default function HomePage() {
 
         <div className="container-ktd relative">
           <div className="max-w-[820px]">
-            <p className="text-on-video mb-6 inline-flex items-center gap-2 rounded-full border border-[rgba(199,223,239,.25)] bg-[rgba(0,38,63,.35)] px-3.5 py-1.5 text-xs font-semibold tracking-[0.04em] text-ktd-100">
-              CÔNG NGHỆ TOÀN CẦU · KỸ THUẬT BẢN ĐỊA · GIAO HÀNG NHANH
+            {/* Câu đầy đủ dài 55 ký tự, không thể nằm một dòng trên màn 375px
+                dù có thu nhỏ cỡ chữ. Điện thoại dùng bản rút gọn giữ đủ ba vế,
+                desktop giữ nguyên câu đầy đủ. */}
+            <p className="text-on-video mb-6 inline-flex items-center gap-2 whitespace-nowrap rounded-full border border-[rgba(199,223,239,.25)] bg-[rgba(0,38,63,.35)] px-3.5 py-1.5 text-xs font-semibold tracking-[0.04em] text-ktd-100">
+              <span className="md:hidden">TOÀN CẦU · BẢN ĐỊA · GIAO NHANH</span>
+              <span className="hidden md:inline">
+                CÔNG NGHỆ TOÀN CẦU · KỸ THUẬT BẢN ĐỊA · GIAO HÀNG NHANH
+              </span>
             </p>
 
             <h1 className="text-on-video mb-5 font-display text-display-1 text-white">
