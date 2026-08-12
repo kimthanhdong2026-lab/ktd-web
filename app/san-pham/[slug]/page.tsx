@@ -49,7 +49,6 @@ export const metadata = {
 
 export default function PDPPage() {
   const views = ['Mặt trước', 'Mặt bên', 'Góc 45°', 'Chi tiết cơ cấu', 'Đang sử dụng']
-  const [currentView] = views
 
   return (
     <main className="max-w-7xl mx-auto px-8 py-8">
