@@ -5,9 +5,11 @@ import { useStore } from './StoreProvider'
 import { COMPANY_HOTLINE_TEL, ZALO_URL } from '@/lib/constants'
 
 /**
- * Spec B6 — the floating stack, present on every page.
- * Desktop shows all four buttons plus back-to-top; mobile keeps only
- * Báo giá + Zalo so the stack never covers content.
+ * Bộ nút nổi (spec B6), có mặt trên mọi trang.
+ * Thứ tự và thiết bị hiển thị:
+ *   Báo giá · Zalo · Tìm kiếm  → mọi thiết bị
+ *   Gọi hotline                → chỉ điện thoại (tel: chỉ hữu ích ở đó)
+ *   Về đầu trang               → chỉ desktop, và chỉ sau khi cuộn sâu
  */
 export function FloatingCTA() {
   const { openRfq, openSearch, cartCount } = useStore()
@@ -51,11 +53,13 @@ export function FloatingCTA() {
         Z
       </a>
 
+      {/* Chỉ hiện trên điện thoại: chạm là gọi được ngay. Trên desktop nút này
+          không làm được gì, số hotline đã nằm sẵn ở thanh utility đầu trang. */}
       <a
         href={`tel:${COMPANY_HOTLINE_TEL}`}
         title="Gọi hotline"
         aria-label="Gọi hotline"
-        className={`${base} hidden bg-ktd-600 text-white shadow-[0_6px_20px_rgba(0,107,178,.3)] md:flex`}
+        className={`${base} bg-ktd-600 text-white shadow-[0_6px_20px_rgba(0,107,178,.3)] md:hidden`}
       >
         <span aria-hidden="true">☎</span>
       </a>
@@ -65,7 +69,7 @@ export function FloatingCTA() {
         onClick={() => openSearch('')}
         title="Tìm kiếm"
         aria-label="Mở ô tìm kiếm"
-        className={`${base} hidden border border-ink-300 bg-white text-ink-700 shadow-md md:flex`}
+        className={`${base} border border-ink-300 bg-white text-ink-700 shadow-md`}
       >
         <span aria-hidden="true">🔍</span>
       </button>
