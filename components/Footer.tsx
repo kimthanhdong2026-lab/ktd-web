@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { COMPANY_PHONE, COMPANY_EMAIL, COMPANY_WEBSITE, OFFICES } from '@/lib/constants'
+import { COMPANY_PHONE, COMPANY_EMAIL, OFFICES } from '@/lib/constants'
 
 export function Footer() {
   return (
