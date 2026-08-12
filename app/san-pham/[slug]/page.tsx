@@ -23,6 +23,7 @@ const mockProduct = {
     'Thay lưỡi': 'Không cần dụng cụ',
   },
   applications_json: ['Gia công cơ khí', 'Công nghiệp thực phẩm'],
+  sort_order: 0,
   created_at: new Date().toISOString(),
   updated_at: new Date().toISOString(),
 }
