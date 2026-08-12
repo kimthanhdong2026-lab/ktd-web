@@ -32,7 +32,7 @@ export const metadata = {
   description: mockArticle.excerpt_vi,
 }
 
-export default function ArticlePage({ params }: { params: { slug: string } }) {
+export default function ArticlePage() {
   return (
     <main className="max-w-3xl mx-auto px-8 py-12">
       {/* Breadcrumb */}
