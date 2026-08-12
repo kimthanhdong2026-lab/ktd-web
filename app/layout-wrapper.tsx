@@ -29,30 +29,6 @@ export function LayoutWrapper({ children, products, brands, categories }: Layout
   const [cart, setCart] = useState<CartItem[]>([])
   const [toast, setToast] = useState<string | null>(null)
 
-  const addToCart = (partNumber: string) => {
-    const product = products.find((p) => p.part_number === partNumber)
-    if (!product) return
-
-    setCart((prev) => {
-      const existing = prev.find((item) => item.partNumber === partNumber)
-      if (existing) {
-        return prev.map((item) =>
-          item.partNumber === partNumber ? { ...item, qty: item.qty + 1 } : item
-        )
-      }
-      return [
-        ...prev,
-        {
-          partNumber,
-          name: product.name_vi,
-          brand: product.brandName,
-          qty: 1,
-        },
-      ]
-    })
-    setToast(`✓ Đã thêm ${product.name_vi} vào yêu cầu báo giá`)
-  }
-
   const removeFromCart = (partNumber: string) => {
     setCart((prev) => prev.filter((item) => item.partNumber !== partNumber))
   }
