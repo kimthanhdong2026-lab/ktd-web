@@ -50,7 +50,10 @@ toàn bộ trang sản phẩm, PDP, tìm kiếm và sitemap đọc chung từ đ
 
 - Ảnh sản phẩm thật (tối đa 5 ảnh/mã, nền trắng) — hiện dùng placeholder trung tính.
 - File catalog PDF từng series — nút tải hiện chỉ báo toast.
-- Video Hero (desktop) + ảnh tĩnh WebP (mobile).
+- **B-roll cho Hero** — video giới thiệu 2:48 đã lên trang chủ dạng bấm-để-xem,
+  nhưng nền Hero tự chạy vẫn cần một loạt B-roll sạch (không chữ, không watermark).
+  Khe cắm đã dựng sẵn, xem `public/video/README.txt`. Kịch bản 15 giây nằm ở
+  `Hop-thu-den/video_welcome_homepage_kim_th_nh_ng (1).html`.
 - Logo vector cho 6 thương hiệu còn thiếu: Helical, Bevel Tools, Technomark, Gruetzner, Roscamat, 3ARM.
 - Backend nhận RFQ (email tới đầu mối điều phối + lưu DB + ping Zalo/Telegram), SLA 15–30 phút.
 - Bản tiếng Anh `/en/` (giai đoạn P1).

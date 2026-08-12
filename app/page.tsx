@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { HeroSearch } from '@/components/home/HeroSearch'
+import { HeroVideo } from '@/components/home/HeroVideo'
 import { FeaturedProducts } from '@/components/home/FeaturedProducts'
 import { QuoteButton } from '@/components/QuoteButton'
 import { BRANDS, CATEGORIES, NEWS, countByCategory } from '@/lib/ktd-data'
@@ -24,6 +25,13 @@ export default function HomePage() {
           }}
           aria-hidden="true"
         />
+
+        {/* Video nền chỉ tải trên desktop; nếu chưa có file thì nền kẻ sọc
+            phía trên vẫn giữ nguyên (spec C1). */}
+        <HeroVideo />
+
+        {/* Overlay luôn nằm trên video để chữ trắng không bị chìm vào
+            vùng sáng của cảnh quay. */}
         <div
           className="absolute inset-0"
           style={{
