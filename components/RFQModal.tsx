@@ -4,25 +4,20 @@ import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { useStore } from './StoreProvider'
 import { brandName, getProductByPart } from '@/lib/ktd-data'
-import { COMPANY_HOTLINE, COMPANY_HOTLINE_TEL, PROVINCES, ZALO_URL } from '@/lib/constants'
 
 interface FormState {
   name: string
   company: string
   phone: string
   email: string
-  province: string
   note: string
-  agree: boolean
 }
 
-const EMPTY_FORM: FormState = {
-  name: '', company: '', phone: '', email: '', province: '', note: '', agree: false,
-}
+const EMPTY_FORM: FormState = { name: '', company: '', phone: '', email: '', note: '' }
 
 const EMAIL_RE = /^[^@\s]+@[^@\s]+\.[^@\s]+$/
 
-/** RFQ-YYMMDD-NNN, e.g. RFQ-260805-014 (spec C7.2). */
+/** RFQ-YYMMDD-NNN, e.g. RFQ-260805-014. */
 function makeRequestCode(): string {
   const d = new Date()
   const pad = (n: number) => String(n).padStart(2, '0')
@@ -30,9 +25,14 @@ function makeRequestCode(): string {
   return `RFQ-${String(d.getFullYear()).slice(2)}${pad(d.getMonth() + 1)}${pad(d.getDate())}-${seq}`
 }
 
+/**
+ * Form rút gọn theo đúng bản thiết kế mới nhất: chỉ Họ tên và Số điện thoại
+ * là bắt buộc. Công ty / Email để trống vẫn gửi được — càng ít trường,
+ * tỉ lệ gửi càng cao.
+ */
 export function RFQModal() {
   const router = useRouter()
-  const { rfqOpen, rfqNote, closeRfq, cart, setQty, removeFromCart, showToast } = useStore()
+  const { rfqOpen, rfqNote, closeRfq, cart, setQty, removeFromCart } = useStore()
 
   const [form, setForm] = useState<FormState>(EMPTY_FORM)
   const [touched, setTouched] = useState<Record<string, boolean>>({})
@@ -40,7 +40,6 @@ export function RFQModal() {
   const [sentCode, setSentCode] = useState<string | null>(null)
   const [sentSummary, setSentSummary] = useState('')
 
-  // Carry over the prefilled note when opened from "nhờ kỹ sư tìm giúp".
   useEffect(() => {
     if (rfqOpen && rfqNote) setForm((f) => (f.note ? f : { ...f, note: rfqNote }))
   }, [rfqOpen, rfqNote])
@@ -59,34 +58,29 @@ export function RFQModal() {
 
   const errors = {
     name: !form.name.trim() ? 'Vui lòng nhập họ tên' : '',
-    company: !form.company.trim() ? 'Vui lòng nhập tên công ty' : '',
     phone: !form.phone.trim() ? 'Vui lòng nhập số điện thoại' : '',
-    email: !form.email.trim()
-      ? 'Vui lòng nhập email'
-      : !EMAIL_RE.test(form.email)
-        ? 'Email chưa hợp lệ'
-        : '',
+    // Optional field: only complain when something was typed and it is malformed.
+    email: form.email.trim() && !EMAIL_RE.test(form.email) ? 'Email chưa hợp lệ' : '',
   }
-  const hasErrors = Object.values(errors).some(Boolean)
+  const blocking = !!errors.name || !!errors.phone
 
   const showError = (field: keyof typeof errors) =>
     (tried || touched[field]) && errors[field] ? errors[field] : ''
 
-  const fieldClass = (field: keyof typeof errors) =>
+  const fieldClass = (field: keyof typeof errors | null) =>
     `w-full rounded-md border px-3.5 py-2.5 text-[15px] outline-none focus:border-ktd-600 ${
-      showError(field) ? 'border-quote' : 'border-ink-300'
+      field && showError(field) ? 'border-quote' : 'border-ink-300'
     }`
 
   const submit = () => {
     setTried(true)
-    if (hasErrors) return
+    if (blocking || errors.email) return
     const units = cart.reduce((s, c) => s + c.qty, 0)
     setSentSummary(
       cart.length ? `${cart.length} sản phẩm · ${units} đơn vị` : 'Yêu cầu tư vấn chung'
     )
     setSentCode(makeRequestCode())
-    // Wiring to the Lead Dispatcher inbox (email + DB + Zalo/Telegram ping)
-    // lands with the backend task — spec D7.
+    // Gửi tới đầu mối điều phối (email + DB + ping Zalo/Telegram) sẽ nối ở bước backend.
   }
 
   return (
@@ -143,9 +137,7 @@ export function RFQModal() {
                 <h2 className="mb-1.5 font-display text-2xl font-bold text-ink-900">
                   Yêu cầu báo giá
                 </h2>
-                <p className="text-sm text-ink-500">
-                  Kỹ sư của chúng tôi phản hồi trong 15–30 phút giờ hành chính.
-                </p>
+                <p className="text-sm text-ink-500">Chúng tôi sẽ phản hồi sớm nhất.</p>
               </div>
               <button
                 type="button"
@@ -215,23 +207,16 @@ export function RFQModal() {
                 </p>
               )}
 
-              <div className="mb-7 flex flex-col gap-2.5 sm:flex-row">
+              <div className="mb-7">
                 <button
                   type="button"
                   onClick={() => {
                     closeRfq()
                     router.push('/san-pham')
                   }}
-                  className="btn-secondary flex-1 text-sm"
+                  className="btn-secondary w-full text-sm"
                 >
                   + Thêm sản phẩm khác
-                </button>
-                <button
-                  type="button"
-                  onClick={() => showToast('Tính năng đính kèm file sẽ hoạt động khi backend lên sóng.')}
-                  className="btn border border-ink-300 flex-1 text-sm text-ink-700 hover:bg-ink-100"
-                >
-                  ⬆ Đính kèm danh sách
                 </button>
               </div>
 
@@ -257,19 +242,14 @@ export function RFQModal() {
 
                 <div>
                   <label htmlFor="rfq-company" className="mb-1.5 block text-[13px] text-ink-700">
-                    Công ty *
+                    Công ty
                   </label>
                   <input
                     id="rfq-company"
                     value={form.company}
                     onChange={(e) => set('company', e.target.value)}
-                    onBlur={() => setTouched((t) => ({ ...t, company: true }))}
-                    aria-invalid={!!showError('company')}
-                    className={fieldClass('company')}
+                    className={fieldClass(null)}
                   />
-                  {showError('company') && (
-                    <p className="mt-1 text-xs text-quote">⚠ {showError('company')}</p>
-                  )}
                 </div>
 
                 <div>
@@ -293,7 +273,7 @@ export function RFQModal() {
 
                 <div>
                   <label htmlFor="rfq-email" className="mb-1.5 block text-[13px] text-ink-700">
-                    Email *
+                    Email
                   </label>
                   <input
                     id="rfq-email"
@@ -310,28 +290,9 @@ export function RFQModal() {
                 </div>
               </div>
 
-              <div className="mb-3.5">
-                <label htmlFor="rfq-province" className="mb-1.5 block text-[13px] text-ink-700">
-                  Tỉnh/Thành phố
-                </label>
-                <select
-                  id="rfq-province"
-                  value={form.province}
-                  onChange={(e) => set('province', e.target.value)}
-                  className="w-full rounded-md border border-ink-300 bg-white px-3.5 py-2.5 text-[15px] outline-none focus:border-ktd-600"
-                >
-                  <option value="">— Chọn —</option>
-                  {PROVINCES.map((p) => (
-                    <option key={p} value={p}>
-                      {p}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
               <div className="mb-4">
                 <label htmlFor="rfq-note" className="mb-1.5 block text-[13px] text-ink-700">
-                  Ghi chú kỹ thuật
+                  Ghi chú
                 </label>
                 <textarea
                   id="rfq-note"
@@ -342,29 +303,9 @@ export function RFQModal() {
                 />
               </div>
 
-              <label className="mb-5 flex items-start gap-2.5 text-sm text-ink-700">
-                <input
-                  type="checkbox"
-                  checked={form.agree}
-                  onChange={(e) => set('agree', e.target.checked)}
-                  className="mt-0.5 h-4 w-4 accent-ktd-600"
-                />
-                Tôi đồng ý để Kim Thành Đông liên hệ tư vấn.
-              </label>
-
-              <button type="button" onClick={submit} className="btn-quote w-full">
+              <button type="button" onClick={submit} className="btn-quote mt-1.5 w-full">
                 GỬI YÊU CẦU BÁO GIÁ
               </button>
-
-              <p className="mt-4 flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-sm text-ink-500">
-                <span>Hoặc liên hệ ngay:</span>
-                <a href={`tel:${COMPANY_HOTLINE_TEL}`} className="font-semibold">
-                  ☎ {COMPANY_HOTLINE}
-                </a>
-                <a href={ZALO_URL} target="_blank" rel="noopener noreferrer" className="font-semibold">
-                  💬 Zalo
-                </a>
-              </p>
             </div>
           </>
         )}

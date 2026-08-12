@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { ABOUT_CRITERIA, ABOUT_TIMELINE, COMPANY_HOTLINE, COMPANY_HOTLINE_TEL, OFFICES } from '@/lib/constants'
+import { ABOUT_CRITERIA, ABOUT_TIMELINE, COMPANY_HOTLINE, COMPANY_HOTLINE_TEL } from '@/lib/constants'
 
 export const metadata: Metadata = {
   title: 'Giới thiệu — Đồng hành cùng công nghiệp Việt Nam từ 2011',
@@ -82,22 +82,6 @@ export default function AboutPage() {
             </li>
           ))}
         </ol>
-      </section>
-
-      <section className="container-ktd pb-16 md:pb-20">
-        <h2 className="mb-8 font-display text-[26px] font-bold text-ink-900 md:text-3xl">
-          Năng lực &amp; hạ tầng
-        </h2>
-        <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {OFFICES.map((o) => (
-            <li key={o.name} className="rounded-xl border border-hairline bg-white p-6">
-              <span className="mb-2 block font-display text-base font-semibold text-ktd-600">
-                {o.name}
-              </span>
-              <span className="block text-sm leading-relaxed text-ink-700">{o.addr}</span>
-            </li>
-          ))}
-        </ul>
       </section>
 
       <section className="flex flex-wrap items-center justify-center gap-6 bg-ktd-600 px-5 py-6">

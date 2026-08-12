@@ -62,7 +62,3 @@ export const ABOUT_TIMELINE = [
   { year: '2025', text: 'Tham gia triển lãm MTA Vietnam, mở rộng danh mục.' },
   { year: '2026', text: 'Ra mắt website & hệ thống báo giá trực tuyến.' },
 ]
-
-export const PROVINCES = [
-  'TP.HCM', 'Hà Nội', 'Bà Rịa – Vũng Tàu', 'Đồng Nai', 'Bình Dương', 'Hải Phòng', 'Đà Nẵng', 'Khác',
-]

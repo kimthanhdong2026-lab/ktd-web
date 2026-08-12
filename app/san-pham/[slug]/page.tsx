@@ -127,26 +127,6 @@ export default function ProductDetailPage({ params }: PageProps) {
           </QuoteButton>
 
           <CatalogButton product={product} />
-
-          <div className="border-t border-[#eef1f4] pt-5">
-            <p className="mb-3 font-display text-base font-semibold text-ink-900">
-              Cần tư vấn nhanh?
-            </p>
-            <div className="mb-2 flex flex-wrap gap-3">
-              <a href={`tel:${COMPANY_HOTLINE_TEL}`} className="btn-secondary">
-                ☎ {COMPANY_HOTLINE}
-              </a>
-              <a
-                href={ZALO_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn border border-ink-300 text-ink-700 hover:bg-ink-100"
-              >
-                💬 Chat Zalo
-              </a>
-            </div>
-            <p className="text-sm text-ink-500">Phản hồi trong 15–30 phút giờ hành chính.</p>
-          </div>
         </div>
       </div>
 

@@ -240,45 +240,8 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ---------- 7. Technical services ---------- */}
+      {/* ---------- 7. News ---------- */}
       <section className="bg-white py-14 md:py-24">
-        <div className="container-ktd grid items-center gap-10 lg:grid-cols-2 lg:gap-14">
-          <div className="placeholder-hatch relative flex aspect-[4/3] items-center justify-center overflow-hidden rounded-lg bg-ink-100">
-            <span className="relative font-mono text-xs text-[#9aa3ad]">
-              [ ẢNH KỸ SƯ TẠI NHÀ MÁY ]
-            </span>
-          </div>
-          <div>
-            <p className="label-caps mb-3 text-ktd-600">Dịch vụ kỹ thuật</p>
-            <h2 className="mb-5 font-display text-h2 text-ink-900">
-              Không chỉ bán thiết bị — chúng tôi đồng hành kỹ thuật
-            </h2>
-            <ul className="mb-8 flex flex-col gap-4">
-              {[
-                ['Tư vấn lựa chọn thiết bị', 'Kỹ sư phân tích bài toán gia công và đề xuất đúng thông số, đúng vật liệu phôi.'],
-                ['Bảo dưỡng & sửa chữa máy móc', 'Hỗ trợ bảo trì định kỳ, thay thế phụ tùng chính hãng, kéo dài tuổi thọ thiết bị.'],
-                ['Hỗ trợ kỹ thuật tại nhà máy', 'Đội ngũ có mặt tại xưởng để hướng dẫn vận hành và xử lý sự cố.'],
-              ].map(([title, body]) => (
-                <li key={title} className="flex gap-3">
-                  <span className="mt-1 text-ktd-600" aria-hidden="true">▸</span>
-                  <span>
-                    <span className="block font-display text-[17px] font-semibold text-ink-900">
-                      {title}
-                    </span>
-                    <span className="block text-sm leading-relaxed text-ink-500">{body}</span>
-                  </span>
-                </li>
-              ))}
-            </ul>
-            <Link href="/lien-he" className="btn-secondary">
-              Liên hệ kỹ sư
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* ---------- 8. News ---------- */}
-      <section className="bg-ktd-50 py-14 md:py-24">
         <div className="container-ktd">
           <div className="mb-9 flex flex-wrap items-end justify-between gap-4">
             <h2 className="font-display text-h2 text-ink-900">Tin tức &amp; Giải pháp</h2>
@@ -310,7 +273,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ---------- 9. Closing CTA ---------- */}
+      {/* ---------- 8. Closing CTA ---------- */}
       <section className="bg-ktd-600 px-5 py-11 text-center">
         <div className="mx-auto max-w-[760px]">
           <h2 className="mb-4 font-display text-h2 text-white">Không tìm thấy sản phẩm bạn cần?</h2>

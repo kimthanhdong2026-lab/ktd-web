@@ -4,8 +4,11 @@ import { useState } from 'react'
 import { OFFICES } from '@/lib/constants'
 import { cx } from '@/lib/utils'
 
-/** Spec C7.1 — office list on the left, map that follows the selection on the right. */
-export function OfficeMap() {
+/**
+ * Spec C7.1 — office list on the left with the shared contact details beneath it,
+ * map on the right following the selection.
+ */
+export function OfficeMap({ children }: { children?: React.ReactNode }) {
   const [active, setActive] = useState(0)
   const office = OFFICES[active]
 
@@ -34,6 +37,7 @@ export function OfficeMap() {
             </li>
           ))}
         </ul>
+        {children}
       </div>
 
       <div className="lg:sticky lg:top-[100px]">

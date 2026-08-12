@@ -10,8 +10,6 @@ import {
   BRANDS,
   CATEGORIES,
   PRODUCTS,
-  SECTORS,
-  CATEGORY_SECTORS,
   brandName,
   categoryName,
   countByBrand,
@@ -22,7 +20,7 @@ import { cx } from '@/lib/utils'
 
 const PAGE_SIZE = 12
 
-type FilterKind = 'brand' | 'category' | 'sector'
+type FilterKind = 'brand' | 'category'
 
 const SORTS = [
   { value: 'default', label: 'Mặc định' },
@@ -34,7 +32,6 @@ const SORTS = [
 const PARAM: Record<FilterKind, string> = {
   brand: 'brand',
   category: 'category',
-  sector: 'sector',
 }
 
 /**
@@ -56,13 +53,12 @@ export function ProductBrowser() {
     () => ({
       brand: params.getAll('brand'),
       category: params.getAll('category'),
-      sector: params.getAll('sector'),
     }),
     [params]
   )
 
   const activeCount =
-    selected.brand.length + selected.category.length + selected.sector.length
+    selected.brand.length + selected.category.length
 
   const writeParams = useCallback(
     (next: Record<FilterKind, string[]>) => {
@@ -102,11 +98,6 @@ export function ProductBrowser() {
     let list: Product[] = PRODUCTS
     if (selected.brand.length) list = list.filter((p) => selected.brand.includes(p.brand))
     if (selected.category.length) list = list.filter((p) => selected.category.includes(p.category))
-    if (selected.sector.length) {
-      list = list.filter((p) =>
-        (CATEGORY_SECTORS[p.category] ?? []).some((s) => selected.sector.includes(s))
-      )
-    }
     list = filterProducts(list, query)
 
     const sorted = list.slice()
@@ -134,7 +125,6 @@ export function ProductBrowser() {
   const chips = [
     ...selected.brand.map((v) => ({ kind: 'brand' as const, value: v, label: brandName(v) })),
     ...selected.category.map((v) => ({ kind: 'category' as const, value: v, label: categoryName(v) })),
-    ...selected.sector.map((v) => ({ kind: 'sector' as const, value: v, label: v })),
   ]
 
   const filterPanel = (
@@ -178,28 +168,11 @@ export function ProductBrowser() {
         </div>
       </FilterGroup>
 
-      <FilterGroup title="Lĩnh vực">
-        <div className="max-h-[240px] overflow-y-auto pr-1">
-          {SECTORS.map((s) => (
-            <FilterRow
-              key={s}
-              label={s}
-              checked={selected.sector.includes(s)}
-              onChange={() => toggle('sector', s)}
-            />
-          ))}
-        </div>
-      </FilterGroup>
     </>
   )
 
   return (
     <div className="container-ktd pb-16 pt-6 md:pb-24">
-      <nav aria-label="Breadcrumb" className="mb-5 text-body-sm text-ink-500">
-        <Link href="/">Trang chủ</Link> / <span className="text-ink-900">Sản phẩm</span>
-      </nav>
-
-      <p className="label-caps mb-3 text-ktd-600">Danh mục sản phẩm</p>
       <h1 className="mb-3 font-display text-h1 text-ink-900">Tìm đúng thiết bị bạn cần</h1>
       <p className="mb-6 max-w-[1280px] text-body-lg text-ink-500">
         {BRANDS.length} thương hiệu chính hãng · {PRODUCTS.length} mã hàng đại diện. Lọc theo thương
