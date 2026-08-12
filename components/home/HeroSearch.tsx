@@ -39,14 +39,18 @@ export function HeroSearch() {
         </div>
       </div>
 
-      <div className="mb-10 flex flex-wrap items-center gap-2.5 text-[13px] text-[#8fb3cf]">
-        <span>Tìm nhiều:</span>
-        {HERO_CHIPS.map((chip) => (
+      {/* Luôn giữ đúng một dòng: không xuống dòng, thừa thì cuộn ngang.
+          Điện thoại chỉ hiện 3 gợi ý đầu cho gọn. */}
+      <div className="mb-10 flex items-center gap-2.5 overflow-x-auto whitespace-nowrap text-[13px] text-[#8fb3cf] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        <span className="flex-shrink-0">Tìm nhiều:</span>
+        {HERO_CHIPS.map((chip, i) => (
           <button
             key={chip}
             type="button"
             onClick={() => openSearch(chip)}
-            className="rounded-full border border-[rgba(199,223,239,.22)] bg-[rgba(199,223,239,.1)] px-3.5 py-1.5 text-[13px] text-ktd-100 transition-colors hover:bg-[rgba(199,223,239,.2)]"
+            className={`flex-shrink-0 rounded-full border border-[rgba(199,223,239,.22)] bg-[rgba(199,223,239,.1)] px-3.5 py-1.5 text-[13px] text-ktd-100 transition-colors hover:bg-[rgba(199,223,239,.2)] ${
+              i >= 3 ? 'hidden md:inline-block' : ''
+            }`}
           >
             {chip}
           </button>

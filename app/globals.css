@@ -65,6 +65,15 @@
     @apply text-label-caps uppercase;
   }
 
+  /* Giữ chữ trắng đọc được khi đè lên video mà không phải làm tối cả khung
+     hình — thay cho lớp phủ dày (spec C1: không để chữ trắng trên vùng sáng
+     mà thiếu bảo vệ). */
+  .text-on-video {
+    text-shadow:
+      0 1px 2px rgba(0, 38, 63, 0.7),
+      0 4px 20px rgba(0, 38, 63, 0.55);
+  }
+
   .part-no {
     @apply font-mono tracking-[0.02em];
   }

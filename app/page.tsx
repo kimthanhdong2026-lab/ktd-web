@@ -30,30 +30,31 @@ export default function HomePage() {
             phía trên vẫn giữ nguyên (spec C1). */}
         <HeroVideo />
 
-        {/* Overlay luôn nằm trên video để chữ trắng không bị chìm vào
-            vùng sáng của cảnh quay. */}
+        {/* Lớp phủ để rất nhẹ (khoảng 90% trong suốt) cho video hiện rõ.
+            Phần bảo vệ chữ trắng chuyển sang dùng đổ bóng trên từng dòng chữ,
+            thay vì làm tối cả khung hình. */}
         <div
           className="absolute inset-0"
           style={{
             background:
-              'linear-gradient(120deg,rgba(0,38,63,.92) 0%,rgba(0,38,63,.72) 45%,rgba(0,63,108,.45) 100%)',
+              'linear-gradient(120deg,rgba(0,38,63,.18) 0%,rgba(0,38,63,.10) 50%,rgba(0,63,108,.05) 100%)',
           }}
           aria-hidden="true"
         />
 
         <div className="container-ktd relative">
           <div className="max-w-[820px]">
-            <p className="mb-6 inline-flex items-center gap-2 rounded-full border border-[rgba(199,223,239,.25)] bg-[rgba(199,223,239,.12)] px-3.5 py-1.5 text-xs font-semibold tracking-[0.04em] text-ktd-100">
+            <p className="text-on-video mb-6 inline-flex items-center gap-2 rounded-full border border-[rgba(199,223,239,.25)] bg-[rgba(0,38,63,.35)] px-3.5 py-1.5 text-xs font-semibold tracking-[0.04em] text-ktd-100">
               CÔNG NGHỆ TOÀN CẦU · KỸ THUẬT BẢN ĐỊA · GIAO HÀNG NHANH
             </p>
 
-            <h1 className="mb-5 font-display text-display-1 text-white">
+            <h1 className="text-on-video mb-5 font-display text-display-1 text-white">
               Thiết bị công nghiệp
               <br />
               cho nhà máy Việt Nam
             </h1>
 
-            <p className="mb-8 max-w-[620px] text-base leading-relaxed text-ktd-100">
+            <p className="text-on-video mb-8 max-w-[620px] text-base leading-relaxed text-ktd-100">
               {BRANDS.length} thương hiệu quốc tế chính hãng · Kỹ sư tư vấn kỹ thuật · Báo giá trong
               24 giờ.
             </p>
@@ -72,10 +73,10 @@ export default function HomePage() {
                 <div key={s.label}>
                   <dt className="sr-only">{s.label}</dt>
                   <dd>
-                    <span className="block font-display text-[40px] font-bold leading-none text-white">
+                    <span className="text-on-video block font-display text-[40px] font-bold leading-none text-white">
                       {s.num}
                     </span>
-                    <span className="mt-1.5 block text-[13px] uppercase tracking-[0.06em] text-[#8fb3cf]">
+                    <span className="text-on-video mt-1.5 block text-[13px] uppercase tracking-[0.06em] text-ktd-100">
                       {s.label}
                     </span>
                   </dd>
