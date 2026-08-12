@@ -1,10 +1,6 @@
 import Link from 'next/link'
 import { ProductCard } from '@/components/ProductCard'
 
-interface PDPPageProps {
-  params: { slug: string }
-}
-
 // Mock data
 const mockProduct = {
   id: 1,
@@ -51,7 +47,7 @@ export const metadata = {
   description: 'Dao an toàn rút lưỡi tự động. An toàn – chắc chắn – linh hoạt – tiện dụng. Báo giá trong 24 giờ.',
 }
 
-export default function PDPPage({ params }: PDPPageProps) {
+export default function PDPPage() {
   const views = ['Mặt trước', 'Mặt bên', 'Góc 45°', 'Chi tiết cơ cấu', 'Đang sử dụng']
   const [currentView] = views
 
