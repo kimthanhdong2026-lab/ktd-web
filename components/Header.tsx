@@ -41,8 +41,9 @@ export function Header() {
   return (
     <header
       className={cx(
-        // Bỏ chỉ đỏ trên, chỉ dưới còn 2px (70% của 3px).
-        'sticky top-0 z-50 border-b-2 border-quote bg-white transition-shadow duration-150',
+        // Vạch phân cách dùng xanh logo thay cho đỏ: đỏ để dành cho những
+        // thông tin thật sự quan trọng, không dùng làm đường kẻ trang trí.
+        'sticky top-0 z-50 border-b-2 border-ktd-600 bg-white transition-shadow duration-150',
         scrolled && 'shadow-header'
       )}
     >
@@ -127,11 +128,11 @@ export function Header() {
           <button
             type="button"
             onClick={() => openRfq()}
-            className="relative flex min-h-[44px] items-center gap-2 rounded-md bg-quote px-4 text-[13px] font-semibold text-white shadow-cta transition-colors hover:bg-quote-700 md:px-[18px]"
+            className="relative flex min-h-[44px] items-center gap-2 rounded-md bg-ktd-600 px-4 text-[13px] font-semibold text-white transition-colors hover:bg-ktd-700 md:px-[18px]"
           >
             Báo giá
             {cartCount > 0 && (
-              <span className="absolute -right-2 -top-2 flex h-[19px] min-w-[19px] items-center justify-center rounded-full border-2 border-white bg-quote-700 px-[3px] text-[11px] font-bold text-white">
+              <span className="absolute -right-2 -top-2 flex h-[19px] min-w-[19px] items-center justify-center rounded-full border-2 border-white bg-ktd-800 px-[3px] text-[11px] font-bold text-white">
                 {cartCount}
               </span>
             )}

@@ -96,7 +96,7 @@ export default function ProductDetailPage({ params }: PageProps) {
           {product.tag && (
             <span
               className={`mb-3.5 inline-block rounded-sm px-3 py-1 text-xs font-semibold text-white ${
-                product.tag === 'Mới' ? 'bg-quote' : 'bg-ktd-600'
+                product.tag === 'Mới' ? 'bg-ktd-800' : 'bg-ktd-600'
               }`}
             >
               {product.tag}

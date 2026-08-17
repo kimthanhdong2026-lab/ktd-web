@@ -48,9 +48,10 @@
     @apply btn bg-ktd-600 text-white hover:bg-ktd-700;
   }
 
-  /* The only place #E30613 is allowed (spec B1). */
+  /* Nút báo giá dùng xanh logo như mọi hành động chính. Đỏ #E30613 chỉ còn
+     ở đúng một chỗ trên toàn site — nút nổi góc phải màn hình. */
   .btn-quote {
-    @apply btn bg-quote text-white shadow-cta hover:bg-quote-700;
+    @apply btn bg-ktd-600 text-white hover:bg-ktd-700;
   }
 
   .btn-secondary {

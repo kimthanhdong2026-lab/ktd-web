@@ -44,24 +44,24 @@ export interface Article {
 }
 
 export const BRANDS: Brand[] = [
-  { slug: 'morrisflex', name: 'Morrisflex', origin: 'Quốc tế', desc: 'Mũi mài hợp kim cacbua vonfram', logo: '/assets/brands/morrisflex.webp' },
+  // Thứ tự ở đây là thứ tự ưu tiên hiển thị (dải logo trang chủ và cách gom
+  // nhóm ở trang sản phẩm). 8 hãng đầu theo chỉ định trong tài liệu SỬA WEB;
+  // phần còn lại giữ nguyên, chờ danh sách đầy đủ.
   { slug: 'martor', name: 'Martor', origin: 'Đức', desc: 'Dao an toàn, GS certified', logo: '/assets/brands/martor.webp' },
+  { slug: 'morrisflex', name: 'Morrisflex', origin: 'Quốc tế', desc: 'Mũi mài hợp kim cacbua vonfram', logo: '/assets/brands/morrisflex.webp' },
+  { slug: 'ata', name: 'ATA Air Tools', origin: 'Quốc tế', desc: 'Máy mài, chà nhám khí nén', logo: '/assets/brands/ata.webp' },
+  { slug: 'technomark', name: 'Technomark', origin: 'Pháp', desc: 'Máy khắc dấu laser & chấm peen' },
+  { slug: 'lenzkes', name: 'Lenzkes', origin: 'Đức', desc: 'Kẹp khuôn, kẹp gá máy công cụ', logo: '/assets/brands/lenzkes.webp' },
+  { slug: 'tschorn', name: 'TSChorn', origin: 'Đức', desc: 'Thiết bị đo, đầu dò 3D', logo: '/assets/brands/tschorn.webp' },
+  { slug: 'fiam', name: 'Fiam', origin: 'Ý', desc: 'Tua vít điện công nghiệp', logo: '/assets/brands/fiam.webp' },
+  { slug: 'tecna', name: 'Tecna', origin: 'Ý', desc: 'Pa lăng cân bằng', logo: '/assets/brands/tecna.webp' },
   { slug: 'helical', name: 'Helical', origin: 'Mỹ', desc: 'Dao phay ngón hiệu suất cao' },
   { slug: 'corehog', name: 'Corehog', origin: 'Mỹ', desc: 'Công cụ CNC cho composite, CFRP', logo: '/assets/brands/corehog.webp' },
-  { slug: 'ata', name: 'ATA Air Tools', origin: 'Quốc tế', desc: 'Máy mài, chà nhám khí nén', logo: '/assets/brands/ata.webp' },
   { slug: 'bevel-tools', name: 'Bevel Tools', origin: 'Quốc tế', desc: 'Máy vát mép & bo tròn kim loại' },
-  { slug: 'lenzkes', name: 'Lenzkes', origin: 'Đức', desc: 'Kẹp khuôn, kẹp gá máy công cụ', logo: '/assets/brands/lenzkes.webp' },
-  { slug: 'technomark', name: 'Technomark', origin: 'Pháp', desc: 'Máy khắc dấu laser & chấm peen' },
-  { slug: 'tschorn', name: 'TSChorn', origin: 'Đức', desc: 'Thiết bị đo, đầu dò 3D', logo: '/assets/brands/tschorn.webp' },
   { slug: 'rocklinizer', name: 'Rocklinizer', origin: 'Mỹ', desc: 'Máy phủ cứng bề mặt khuôn', logo: '/assets/brands/rocklinizer.webp' },
-  { slug: 'fiam', name: 'Fiam', origin: 'Ý', desc: 'Tua vít điện công nghiệp', logo: '/assets/brands/fiam.webp' },
   { slug: 'buchem', name: 'Buchem', origin: 'Đức', desc: 'Hóa chất vệ sinh khuôn mẫu', logo: '/assets/brands/buchem.webp' },
-  { slug: 'gruetzner', name: 'Gruetzner', origin: 'Đức', desc: 'Hệ thống bôi trơn tự động' },
   { slug: 'diprofil', name: 'Diprofil', origin: 'Thụy Điển', desc: 'Máy đánh bóng khuôn', logo: '/assets/brands/diprofil.webp' },
   { slug: 'rtc', name: 'RTC', origin: 'Quốc tế', desc: 'Khớp nối', logo: '/assets/brands/rtc.webp' },
-  { slug: 'tecna', name: 'Tecna', origin: 'Ý', desc: 'Pa lăng cân bằng', logo: '/assets/brands/tecna.webp' },
-  { slug: 'roscamat', name: 'Roscamat', origin: 'Tây Ban Nha', desc: 'Máy taro cánh tay (M2–M36)' },
-  { slug: '3arm', name: '3ARM', origin: 'Quốc tế', desc: 'Cánh tay công thái học' },
   { slug: 'sloky', name: 'Sloky', origin: 'Đài Loan', desc: 'Tua vít lực chính xác', logo: '/assets/brands/sloky.webp' },
   { slug: 'hartner', name: 'Hartner', origin: 'Đức', desc: 'Dụng cụ cắt gọt chính xác', logo: '/assets/brands/hartner.webp' },
   { slug: 'karnasch', name: 'Karnasch', origin: 'Đức', desc: 'Dụng cụ cắt gọt, mũi khoan chuyên dụng', logo: '/assets/brands/karnasch.webp' },
@@ -79,16 +79,6 @@ export const CATEGORIES: Category[] = [
   { slug: 'siet-luc', name: 'Siết lực & taro', icon: '⚙️' },
 ]
 
-export const SECTORS = [
-  'Công nghiệp hóa chất',
-  'Công nghiệp hàng hải',
-  'Công nghiệp hóa dầu',
-  'Gia công cơ khí',
-  'Nhà máy điện',
-  'Đóng tàu',
-  'Công nghiệp thực phẩm',
-  'Công nghiệp nhựa',
-] as const
 
 /** Spec C4 ★ — shop-floor slang mapped onto standard technical terms. */
 export const SLANG_MAP: Record<string, string> = {
@@ -102,20 +92,20 @@ export const SLANG_MAP: Record<string, string> = {
   'cao thuy luc': 'vật tư thủy lực',
   'to vit luc': 'sloky tua vít lực',
   'tua vit luc': 'sloky tua vít lực',
-  'canh tay taro': 'roscamat máy taro',
 }
 
-/** Spec D1.4 — application sectors per category, used as the PDP "Ứng dụng" tab and a secondary filter. */
+/** Ngành ứng dụng theo từng danh mục — dùng cho tab "Ứng dụng" ở trang chi
+    tiết sản phẩm. Tên ngành khớp với SECTOR_CARDS trong lib/constants.ts. */
 export const CATEGORY_SECTORS: Record<string, string[]> = {
-  'cat-got': ['Gia công cơ khí', 'Đóng tàu', 'Công nghiệp nhựa'],
-  'khi-nen': ['Gia công cơ khí', 'Đóng tàu'],
-  'an-toan': ['Công nghiệp thực phẩm', 'Công nghiệp hóa chất', 'Công nghiệp nhựa'],
-  'do-kiem': ['Gia công cơ khí', 'Nhà máy điện'],
-  'nang-ha': ['Đóng tàu', 'Công nghiệp hàng hải', 'Gia công cơ khí'],
-  'kep-ga': ['Gia công cơ khí', 'Công nghiệp nhựa'],
-  'danh-dau': ['Gia công cơ khí', 'Đóng tàu', 'Công nghiệp hàng hải'],
-  'hoa-chat': ['Công nghiệp hóa chất', 'Công nghiệp hóa dầu', 'Công nghiệp nhựa'],
-  'siet-luc': ['Gia công cơ khí', 'Nhà máy điện'],
+  'cat-got': ['Gia công cơ khí & CNC', 'Đóng tàu & kết cấu kim loại', 'Hàng không vũ trụ'],
+  'khi-nen': ['Gia công cơ khí & CNC', 'Đóng tàu & kết cấu kim loại'],
+  'an-toan': ['Ô tô & linh kiện', 'Điện tử & lắp ráp chính xác', 'Khuôn mẫu & ép nhựa'],
+  'do-kiem': ['Gia công cơ khí & CNC', 'Khuôn mẫu & ép nhựa'],
+  'nang-ha': ['Ô tô & linh kiện', 'Đóng tàu & kết cấu kim loại', 'Điện tử & lắp ráp chính xác'],
+  'kep-ga': ['Khuôn mẫu & ép nhựa', 'Gia công cơ khí & CNC'],
+  'danh-dau': ['Ô tô & linh kiện', 'Dầu khí & năng lượng', 'Điện tử & lắp ráp chính xác'],
+  'hoa-chat': ['Khuôn mẫu & ép nhựa', 'Dầu khí & năng lượng'],
+  'siet-luc': ['Ô tô & linh kiện', 'Điện tử & lắp ráp chính xác'],
 }
 
 export const PRODUCTS: Product[] = [
@@ -224,14 +214,6 @@ export const PRODUCTS: Product[] = [
     pdf: { name: 'Tecna Balancers', size: '4.0 MB', pages: 18 },
   },
   {
-    part: 'ERGO-A3', name: 'Cánh tay công thái 3ARM ERGO-A3', brand: '3arm', category: 'nang-ha',
-    series: 'ERGO', origin: 'Quốc tế',
-    desc: 'Cánh tay đỡ dụng cụ (manipulator) giảm phản lực xoắn, định vị chính xác thao tác.',
-    specs: [['Tải trọng', '8 kg'], ['Tầm với', '1.200 mm'], ['Bậc tự do', '6']],
-    kw: ['canh tay', 'manipulator', 'cong thai', '3arm'],
-    pdf: { name: '3ARM Manipulators', size: '3.9 MB', pages: 15 },
-  },
-  {
     part: 'LK-125', name: 'Bộ kẹp khuôn Lenzkes LK-125', brand: 'lenzkes', category: 'kep-ga',
     series: 'Clamping', origin: 'Đức',
     desc: 'Bộ kẹp gá khuôn trên bàn máy công cụ, lực kẹp cao, tháo lắp nhanh không vặn ren dài.',
@@ -280,14 +262,6 @@ export const PRODUCTS: Product[] = [
     pdf: { name: 'Sloky Torque Drivers', size: '2.1 MB', pages: 9 },
   },
   {
-    part: 'R-TIGER', name: 'Máy taro cánh tay Roscamat Tiger', brand: 'roscamat', category: 'siet-luc',
-    series: 'Tiger', origin: 'Tây Ban Nha', featured: true,
-    desc: 'Máy taro cánh tay điện, taro ren M3–M20, cánh tay cân bằng tầm với 1.700 mm.',
-    specs: [['Dải taro', 'M3 – M20'], ['Tầm với', '1.700 mm'], ['Tốc độ', '350 rpm']],
-    kw: ['may taro', 'canh tay taro', 'roscamat'],
-    pdf: { name: 'Roscamat Tapping', size: '3.7 MB', pages: 16 },
-  },
-  {
     part: 'RTC-40', name: 'Khớp nối RTC-40', brand: 'rtc', category: 'siet-luc',
     series: 'RTC', origin: 'Quốc tế',
     desc: 'Khớp nối truyền động bù lệch tâm, đàn hồi chống rung cho hệ trục.',
@@ -302,14 +276,6 @@ export const PRODUCTS: Product[] = [
     specs: [['Dạng', 'Bình xịt 500 ml'], ['Ứng dụng', 'Khuôn ép nhựa'], ['Điểm chớp cháy', '> 60 °C']],
     kw: ['hoa chat', 've sinh khuon', 'buchem'],
     pdf: { name: 'Buchem Mold Care', size: '2.2 MB', pages: 9 },
-  },
-  {
-    part: 'GR-LUBE', name: 'Hệ thống bôi trơn Gruetzner GR-Lube', brand: 'gruetzner', category: 'hoa-chat',
-    series: 'GR', origin: 'Đức',
-    desc: 'Bộ bôi trơn tự động định lượng cho dây chuyền, cấp mỡ/dầu theo chu kỳ cài đặt.',
-    specs: [['Dung tích', '120 cc'], ['Chu kỳ', '1 – 12 tháng'], ['Nguồn', 'Pin / điện']],
-    kw: ['boi tron', 'gruetzner', 'tu dong'],
-    pdf: { name: 'Gruetzner Lubrication', size: '2.6 MB', pages: 11 },
   },
   {
     part: 'HT-HSS8', name: 'Mũi khoan HSS-E Hartner 8mm', brand: 'hartner', category: 'cat-got',
@@ -341,13 +307,13 @@ export const NEWS: Article[] = [
     excerpt: 'Số me, lớp phủ và biên dạng — ba yếu tố cần cân nhắc khi phay nhôm, thép tôi hay composite.',
   },
   {
-    slug: 'mta-2025', cat: 'Tin công ty', date: '10/07/2026',
+    slug: 'mta-2025', cat: 'Tin tức', date: '10/07/2026',
     title: 'Kim Thành Đông tại triển lãm MTA Vietnam 2025',
     excerpt: 'KTĐ giới thiệu danh mục dụng cụ an toàn Martor và pa lăng cân bằng Tecna tới khách hàng công nghiệp.',
   },
 ]
 
-export const NEWS_CATEGORIES = ['Kiến thức kỹ thuật', 'Giải pháp ứng dụng', 'Tin công ty'] as const
+export const NEWS_CATEGORIES = ['Kiến thức kỹ thuật', 'Giải pháp ứng dụng', 'Tin tức'] as const
 
 // ---------------------------------------------------------------- lookups
 

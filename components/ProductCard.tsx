@@ -27,7 +27,7 @@ export function ProductCard({ product, variant = 'full' }: ProductCardProps) {
         {product.tag && (
           <span
             className={`absolute left-3 top-3 z-[2] rounded-sm px-2.5 py-1 text-[11px] font-semibold text-white ${
-              product.tag === 'Mới' ? 'bg-quote' : 'bg-ktd-600'
+              product.tag === 'Mới' ? 'bg-ktd-800' : 'bg-ktd-600'
             }`}
           >
             {product.tag}
@@ -61,7 +61,7 @@ export function ProductCard({ product, variant = 'full' }: ProductCardProps) {
               <button
                 type="button"
                 onClick={() => addToCart(product.part)}
-                className="min-h-[44px] flex-1 rounded-[7px] bg-quote px-2 text-[13px] font-semibold text-white transition-colors hover:bg-quote-700"
+                className="min-h-[44px] flex-1 rounded-[7px] bg-ktd-600 px-2 text-[13px] font-semibold text-white transition-colors hover:bg-ktd-700"
               >
                 + Thêm báo giá
               </button>

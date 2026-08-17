@@ -5,12 +5,21 @@ import { HeroVideo } from '@/components/home/HeroVideo'
 import { FeaturedProducts } from '@/components/home/FeaturedProducts'
 import { QuoteButton } from '@/components/QuoteButton'
 import { BRANDS, CATEGORIES, NEWS, countByCategory } from '@/lib/ktd-data'
-import { SECTOR_CARDS, WHY_ITEMS, ZALO_URL } from '@/lib/constants'
+import {
+  HERO_BADGE,
+  HERO_BADGE_SHORT,
+  HERO_SUBTITLE,
+  HERO_TITLE,
+  SECTOR_CARDS,
+  WHY_ITEMS,
+} from '@/lib/constants'
 
+// Số thương hiệu lấy thẳng từ dữ liệu để không bao giờ lệch với dải logo
+// và bộ lọc ở trang sản phẩm.
 const HERO_STATS = [
-  { num: '13+', label: 'Năm kinh nghiệm' },
-  { num: String(BRANDS.length), label: 'Thương hiệu chính hãng' },
-  { num: '3', label: 'Kho hàng toàn quốc' },
+  { num: '15+', label: 'Năm kinh nghiệm' },
+  { num: String(BRANDS.length), label: 'Thương hiệu quốc tế' },
+  { num: '1000+', label: 'Khách hàng doanh nghiệp' },
 ]
 
 export default function HomePage() {
@@ -43,26 +52,22 @@ export default function HomePage() {
         />
 
         <div className="container-ktd relative">
+          {/* Câu đầy đủ dài 56 ký tự, không thể nằm một dòng trên màn 375px dù
+              có thu nhỏ cỡ chữ. Điện thoại dùng bản rút gọn giữ đủ ba vế. */}
+          <p className="text-on-video mb-6 inline-flex items-center gap-2 whitespace-nowrap rounded-full border border-[rgba(199,223,239,.25)] bg-[rgba(0,38,63,.35)] px-3.5 py-1.5 text-xs font-semibold tracking-[0.04em] text-ktd-100">
+            <span className="md:hidden">{HERO_BADGE_SHORT}</span>
+            <span className="hidden md:inline">{HERO_BADGE}</span>
+          </p>
+
+          {/* Tiêu đề dùng hết bề rộng container, không bó trong 820px như phần
+              nội dung bên dưới — có vậy mới đủ chỗ nằm một dòng trên desktop. */}
+          <h1 className="text-on-video mb-5 font-display text-display-1 text-white">
+            {HERO_TITLE}
+          </h1>
+
           <div className="max-w-[820px]">
-            {/* Câu đầy đủ dài 55 ký tự, không thể nằm một dòng trên màn 375px
-                dù có thu nhỏ cỡ chữ. Điện thoại dùng bản rút gọn giữ đủ ba vế,
-                desktop giữ nguyên câu đầy đủ. */}
-            <p className="text-on-video mb-6 inline-flex items-center gap-2 whitespace-nowrap rounded-full border border-[rgba(199,223,239,.25)] bg-[rgba(0,38,63,.35)] px-3.5 py-1.5 text-xs font-semibold tracking-[0.04em] text-ktd-100">
-              <span className="md:hidden">TOÀN CẦU · BẢN ĐỊA · GIAO NHANH</span>
-              <span className="hidden md:inline">
-                CÔNG NGHỆ TOÀN CẦU · KỸ THUẬT BẢN ĐỊA · GIAO HÀNG NHANH
-              </span>
-            </p>
-
-            <h1 className="text-on-video mb-5 font-display text-display-1 text-white">
-              Thiết bị công nghiệp
-              <br />
-              cho nhà máy Việt Nam
-            </h1>
-
             <p className="text-on-video mb-8 max-w-[620px] text-base leading-relaxed text-ktd-100">
-              {BRANDS.length} thương hiệu quốc tế chính hãng · Kỹ sư tư vấn kỹ thuật · Báo giá trong
-              24 giờ.
+              {HERO_SUBTITLE}
             </p>
 
             <HeroSearch />
@@ -71,7 +76,7 @@ export default function HomePage() {
               <Link href="/san-pham" className="btn-primary">
                 Xem sản phẩm
               </Link>
-              <QuoteButton />
+              <QuoteButton>Tư vấn &amp; Báo giá</QuoteButton>
             </div>
 
             <dl className="flex flex-wrap gap-x-10 gap-y-6 border-t border-[rgba(199,223,239,.18)] pt-8 md:gap-x-14">
@@ -103,7 +108,7 @@ export default function HomePage() {
           <div className="mb-12 text-center">
             <p className="label-caps mb-3 text-ktd-600">Phân phối chính hãng</p>
             <h2 className="font-display text-h2 text-ink-900">
-              {BRANDS.length} thương hiệu quốc tế chúng tôi phân phối
+              {BRANDS.length} thương hiệu quốc tế chúng tôi đang phân phối
             </h2>
           </div>
 
@@ -195,7 +200,7 @@ export default function HomePage() {
         <div className="container-ktd">
           <p className="label-caps mb-3 text-[#4f7ea3]">Lĩnh vực phục vụ</p>
           <h2 className="mb-7 max-w-[640px] font-display text-h2 text-white">
-            Đồng hành cùng 8 ngành công nghiệp trọng điểm
+            Giải pháp cho các ngành công nghiệp
           </h2>
         </div>
         <ul className="flex snap-x snap-mandatory gap-5 overflow-x-auto px-5 pb-3 sm:px-6 md:px-8 lg:px-10">
@@ -239,12 +244,6 @@ export default function HomePage() {
           <ul className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
             {WHY_ITEMS.map((w) => (
               <li key={w.title} className="rounded-xl bg-white p-6 md:p-8">
-                <span
-                  className="mb-5 flex h-[52px] w-[52px] items-center justify-center rounded-xl bg-ktd-50 text-2xl"
-                  aria-hidden="true"
-                >
-                  {w.icon}
-                </span>
                 <h3 className="mb-2.5 font-display text-[19px] font-semibold text-ink-900">
                   {w.title}
                 </h3>
@@ -288,26 +287,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ---------- 8. Closing CTA ---------- */}
-      <section className="bg-ktd-600 px-5 py-11 text-center">
-        <div className="mx-auto max-w-[760px]">
-          <h2 className="mb-4 font-display text-h2 text-white">Không tìm thấy sản phẩm bạn cần?</h2>
-          <p className="mb-8 text-lg leading-relaxed text-ktd-100">
-            Gửi yêu cầu — kỹ sư của chúng tôi phản hồi trong vòng 24 giờ làm việc.
-          </p>
-          <div className="flex flex-wrap justify-center gap-3.5">
-            <QuoteButton />
-            <a
-              href={ZALO_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn bg-white text-ktd-600 hover:bg-ktd-50"
-            >
-              Chat Zalo
-            </a>
-          </div>
-        </div>
-      </section>
     </>
   )
 }

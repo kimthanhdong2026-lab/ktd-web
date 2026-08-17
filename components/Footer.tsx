@@ -4,10 +4,12 @@ import {
   COMPANY_EMAIL,
   COMPANY_HOTLINE,
   COMPANY_HOTLINE_TEL,
+  COMPANY_INTRO,
   COMPANY_NAME,
+  COMPANY_PHONE,
+  COMPANY_PHONE_TEL,
   NAV_ITEMS,
   OFFICES,
-  TAGLINE,
 } from '@/lib/constants'
 import { CATEGORIES } from '@/lib/ktd-data'
 
@@ -52,13 +54,9 @@ export function Footer() {
                 </a>
               </div>
             </div>
-            <p className="mb-2 max-w-[300px] text-sm leading-relaxed text-[#8fb3cf]">
-              Đối tác thiết bị công nghiệp &amp; giải pháp kỹ thuật. Công nghệ toàn cầu. Kỹ thuật bản
-              địa. Giao hàng nhanh toàn quốc.
+            <p className="max-w-[320px] text-sm leading-relaxed text-[#8fb3cf]">
+              {COMPANY_INTRO}
             </p>
-            <div className="mt-3 font-display text-[13px] font-semibold tracking-[0.05em] text-[#4f7ea3]">
-              {TAGLINE}
-            </div>
           </div>
 
           <div>
@@ -100,7 +98,14 @@ export function Footer() {
                   ✉ {COMPANY_EMAIL}
                 </a>
               </li>
-              <li className="leading-relaxed">Trụ sở: {OFFICES[0].addr}</li>
+              <li>
+                <a href={`tel:${COMPANY_PHONE_TEL}`} className="text-[#8fb3cf] hover:text-white">
+                  ☎ {COMPANY_PHONE}
+                </a>
+              </li>
+              <li className="leading-relaxed">
+                {OFFICES[0].name}: {OFFICES[0].addr}
+              </li>
             </ul>
           </div>
         </div>

@@ -13,12 +13,15 @@ import {
   brandName,
   categoryName,
   countByBrand,
-  countByCategory,
   type Product,
 } from '@/lib/ktd-data'
 import { cx } from '@/lib/utils'
 
 const PAGE_SIZE = 12
+
+/** Bộ lọc liệt kê thương hiệu theo A–Z; thứ tự trong BRANDS là thứ tự ưu tiên
+    hiển thị ở trang chủ nên giữ nguyên. */
+const BRANDS_AZ = [...BRANDS].sort((a, b) => a.name.localeCompare(b.name, 'vi'))
 
 type FilterKind = 'brand' | 'category'
 
@@ -136,17 +139,16 @@ export function ProductBrowser() {
           onClick={clearAll}
           className="text-[13px] text-ink-500 underline hover:text-ktd-600"
         >
-          Xóa hết
+          Xóa bộ lọc
         </button>
       </div>
 
       <FilterGroup title="Thương hiệu">
         <div className="max-h-[340px] overflow-y-auto pr-1">
-          {BRANDS.map((b) => (
+          {BRANDS_AZ.map((b) => (
             <FilterRow
               key={b.slug}
               label={b.name}
-              count={countByBrand(b.slug)}
               checked={selected.brand.includes(b.slug)}
               onChange={() => toggle('brand', b.slug)}
             />
@@ -160,7 +162,6 @@ export function ProductBrowser() {
             <FilterRow
               key={c.slug}
               label={c.name}
-              count={countByCategory(c.slug)}
               checked={selected.category.includes(c.slug)}
               onChange={() => toggle('category', c.slug)}
             />
@@ -175,8 +176,8 @@ export function ProductBrowser() {
     <div className="container-ktd pb-16 pt-6 md:pb-24">
       <h1 className="mb-3 font-display text-h1 text-ink-900">Tìm đúng thiết bị bạn cần</h1>
       <p className="mb-6 max-w-[1280px] text-body-lg text-ink-500">
-        {BRANDS.length} thương hiệu chính hãng · {PRODUCTS.length} mã hàng đại diện. Lọc theo thương
-        hiệu, danh mục, hoặc tìm bằng tiếng Việt lẫn tiếng Anh.
+        Tìm kiếm nhanh theo tên sản phẩm, mã hàng, thương hiệu hoặc danh mục bằng tiếng Việt hoặc
+        tiếng Anh.
       </p>
 
       <div className="mb-8 flex items-center gap-3 rounded-[10px] border border-[#e2e7ec] bg-ink-100 px-4 py-3.5 md:px-5">
@@ -344,12 +345,10 @@ function FilterGroup({ title, children }: { title: string; children: React.React
 
 function FilterRow({
   label,
-  count,
   checked,
   onChange,
 }: {
   label: string
-  count?: number
   checked: boolean
   onChange: () => void
 }) {
@@ -367,7 +366,6 @@ function FilterRow({
         className="h-4 w-4 cursor-pointer accent-ktd-600"
       />
       <span className="flex-1">{label}</span>
-      {count !== undefined && <span className="text-xs text-[#9aa3ad]">{count}</span>}
     </label>
   )
 }

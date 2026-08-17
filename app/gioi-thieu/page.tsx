@@ -1,11 +1,16 @@
 import type { Metadata } from 'next'
-import Link from 'next/link'
-import { ABOUT_CRITERIA, ABOUT_TIMELINE, COMPANY_HOTLINE, COMPANY_HOTLINE_TEL } from '@/lib/constants'
+import {
+  ABOUT_MISSION,
+  ABOUT_STORY,
+  ABOUT_TIMELINE,
+  ABOUT_VALUES,
+  ABOUT_VISION,
+} from '@/lib/constants'
 
 export const metadata: Metadata = {
   title: 'Giới thiệu — Đồng hành cùng công nghiệp Việt Nam từ 2011',
   description:
-    'Công ty TNHH Kim Thành Đông thành lập 2011, hơn 13 năm cung cấp thiết bị công nghiệp, vật tư máy móc và giải pháp kỹ thuật cho nhà máy tại Việt Nam.',
+    'Công ty TNHH Kim Thành Đông thành lập 2011, cung cấp thiết bị, dụng cụ công nghiệp chất lượng cao và giải pháp phục vụ sản xuất tại Việt Nam.',
   alternates: { canonical: '/gioi-thieu' },
 }
 
@@ -20,80 +25,83 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-[900px] px-5 py-12 md:py-20">
-        <p className="mb-6 text-[19px] leading-[1.75] text-ink-700">
-          Công ty TNHH Kim Thành Đông thành lập năm 2011, đến nay đã hơn 13 năm cung cấp thiết bị
-          công nghiệp, vật tư máy móc và giải pháp kỹ thuật cho các nhà máy thuộc nhiều ngành: chế
-          tạo máy, điện tử, ô tô, hàng không, đóng tàu, hóa chất và năng lượng.
-        </p>
-        <p className="text-[17px] leading-[1.75] text-ink-500">
-          Là nhà phân phối và nhà cung cấp giải pháp kỹ thuật — không phải nhà sản xuất — KTĐ mang
-          công nghệ toàn cầu về gần hơn với kỹ sư và nhà máy Việt Nam, kèm dịch vụ hỗ trợ kỹ thuật
-          bản địa và giao hàng nhanh.
-        </p>
+      <section className="mx-auto max-w-[900px] px-5 pb-12 md:pb-16">
+        {ABOUT_STORY.map((para, i) => (
+          <p
+            key={i}
+            className={
+              i === 0
+                ? 'mb-6 text-[19px] leading-[1.75] text-ink-700'
+                : 'mb-5 text-[17px] leading-[1.75] text-ink-500'
+            }
+          >
+            {para}
+          </p>
+        ))}
       </section>
 
+      {/* Chờ Marketing cấp ảnh nhà xưởng, văn phòng và triển lãm (spec E4 mục 11). */}
       <section className="container-ktd pb-16 md:pb-20">
-        <div className="grid gap-6 md:grid-cols-2">
-          <div className="rounded-lg bg-ktd-50 p-8 md:p-10">
-            <h2 className="mb-4 font-display text-2xl font-bold text-ktd-600">Tầm nhìn</h2>
-            <p className="text-base leading-relaxed text-ink-700">
-              Trở thành đối tác cung ứng thiết bị công nghiệp và giải pháp kỹ thuật hàng đầu, được
-              tin tưởng bởi các nhà máy trong và ngoài nước tại Việt Nam.
-            </p>
-          </div>
-          <div className="rounded-lg bg-ktd-50 p-8 md:p-10">
-            <h2 className="mb-4 font-display text-2xl font-bold text-ktd-600">Sứ mệnh</h2>
-            <p className="text-base leading-relaxed text-ink-700">
-              Cung cấp sản phẩm chính hãng, giải pháp kỹ thuật tối ưu và dịch vụ nhanh chóng, giúp
-              khách hàng nâng cao hiệu quả sản xuất và tiết kiệm chi phí.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      <section className="container-ktd pb-16 md:pb-20">
-        <h2 className="mb-8 font-display text-[26px] font-bold text-ink-900 md:text-3xl">
-          5 tiêu chí hoạt động
-        </h2>
-        <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
-          {ABOUT_CRITERIA.map((c) => (
-            <li key={c.n} className="rounded-xl border border-hairline bg-white p-5 md:p-6">
-              <span className="mb-3 block font-display text-[28px] font-bold text-ktd-100">
-                {c.n}
-              </span>
-              <span className="block text-[15px] leading-relaxed text-ink-700">{c.t}</span>
+        <ul className="grid gap-4 sm:grid-cols-3">
+          {['Văn phòng & kho hàng', 'Đội ngũ kỹ thuật', 'Triển lãm MTA Vietnam'].map((caption) => (
+            <li
+              key={caption}
+              className="placeholder-hatch relative flex aspect-[4/3] flex-col items-center justify-center gap-2 overflow-hidden rounded-lg bg-ink-100"
+            >
+              <span className="relative font-mono text-[11px] text-[#9aa3ad]">[ ẢNH ]</span>
+              <span className="relative text-sm text-ink-500">{caption}</span>
             </li>
           ))}
         </ul>
       </section>
 
       <section className="container-ktd pb-16 md:pb-20">
+        <div className="grid gap-6 md:grid-cols-2">
+          <div className="rounded-lg bg-ktd-50 p-8 md:p-10">
+            <h2 className="mb-4 font-display text-2xl font-bold text-ktd-600">Tầm nhìn</h2>
+            <p className="text-base leading-relaxed text-ink-700">{ABOUT_VISION}</p>
+          </div>
+          <div className="rounded-lg bg-ktd-50 p-8 md:p-10">
+            <h2 className="mb-4 font-display text-2xl font-bold text-ktd-600">Sứ mệnh</h2>
+            <p className="text-base leading-relaxed text-ink-700">{ABOUT_MISSION}</p>
+          </div>
+        </div>
+      </section>
+
+      <section className="container-ktd pb-16 md:pb-20">
+        <h2 className="mb-8 font-display text-[26px] font-bold text-ink-900 md:text-3xl">
+          Giá trị chúng tôi theo đuổi
+        </h2>
+        <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {ABOUT_VALUES.map((v, i) => (
+            <li key={v.title} className="rounded-xl border border-hairline bg-white p-5 md:p-6">
+              <span className="mb-3 block font-display text-[28px] font-bold text-ktd-100">
+                {String(i + 1).padStart(2, '0')}
+              </span>
+              <h3 className="mb-2 font-display text-[17px] font-semibold text-ink-900">{v.title}</h3>
+              <p className="text-sm leading-relaxed text-ink-500">{v.body}</p>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <section className="container-ktd pb-16 md:pb-24">
         <h2 className="mb-8 font-display text-[26px] font-bold text-ink-900 md:text-3xl">
           Chặng đường phát triển
         </h2>
-        <ol className="flex gap-4 overflow-x-auto pb-3">
+        <ol className="flex gap-5 overflow-x-auto pb-3">
           {ABOUT_TIMELINE.map((t) => (
-            <li key={t.year} className="w-[220px] flex-none border-t-[3px] border-ktd-600 pt-4">
-              <span className="mb-2 block font-display text-[22px] font-bold text-ktd-600">
+            <li key={t.year} className="w-[260px] flex-none border-t-[3px] border-ktd-600 pt-4">
+              <span className="mb-1.5 block font-display text-[22px] font-bold text-ktd-600">
                 {t.year}
               </span>
-              <span className="block text-[15px] leading-relaxed text-ink-700">{t.text}</span>
+              <span className="mb-2 block font-display text-[15px] font-semibold leading-snug text-ink-900">
+                {t.title}
+              </span>
+              <span className="block text-sm leading-relaxed text-ink-500">{t.text}</span>
             </li>
           ))}
         </ol>
-      </section>
-
-      <section className="flex flex-wrap items-center justify-center gap-6 bg-ktd-600 px-5 py-6">
-        <h2 className="font-display text-xl font-bold text-white">
-          Quý khách liên hệ với chúng tôi — hotline{' '}
-          <a href={`tel:${COMPANY_HOTLINE_TEL}`} className="border-b border-white/45 text-white">
-            {COMPANY_HOTLINE}
-          </a>
-        </h2>
-        <Link href="/lien-he" className="btn bg-white text-ktd-600 hover:bg-ktd-50">
-          Liên hệ ngay
-        </Link>
       </section>
     </>
   )
