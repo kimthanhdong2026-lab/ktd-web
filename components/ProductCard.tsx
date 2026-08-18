@@ -1,5 +1,6 @@
 'use client'
 
+import Image from 'next/image'
 import Link from 'next/link'
 import { useStore } from './StoreProvider'
 import { brandName, categoryName, productSlug, type Product } from '@/lib/ktd-data'
@@ -23,10 +24,22 @@ export function ProductCard({ product, variant = 'full' }: ProductCardProps) {
 
   return (
     <article className="group card relative flex flex-col overflow-hidden hover:border-[#cdd6de] hover:shadow-md">
-      <div className="placeholder-hatch relative flex aspect-[4/3] items-center justify-center overflow-hidden bg-ink-100">
-        <span className="relative rounded-sm border border-ink-300 bg-white px-2.5 py-1 font-mono text-xs text-ink-500">
-          {product.part}
-        </span>
+      <div className="relative flex aspect-[4/3] items-center justify-center overflow-hidden bg-white">
+        {product.images?.length ? (
+          <Image
+            src={product.images[0]}
+            alt={product.name}
+            fill
+            sizes="(max-width:640px) 50vw, (max-width:1024px) 33vw, 25vw"
+            className="object-contain p-3 transition-transform duration-250 group-hover:scale-[1.04]"
+          />
+        ) : (
+          <span className="placeholder-hatch absolute inset-0 flex items-center justify-center bg-ink-100">
+            <span className="rounded-sm border border-ink-300 bg-white px-2.5 py-1 font-mono text-xs text-ink-500">
+              {product.part}
+            </span>
+          </span>
+        )}
       </div>
 
       <div className="flex flex-1 flex-col p-4 md:p-[18px]">

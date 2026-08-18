@@ -41,3 +41,7 @@ dist/
 
 # Bản giải nén của file handoff — bản .zip gốc đã được theo dõi trong repo
 handoff-extracted/
+
+# Kết quả trung gian của script nhập liệu Martor — sinh lại được
+scripts/martor-manifest.json
+scripts/martor-products.ts.txt

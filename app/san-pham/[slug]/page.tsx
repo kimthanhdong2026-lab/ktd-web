@@ -85,7 +85,7 @@ export default function ProductDetailPage({ params }: PageProps) {
       </nav>
 
       <div className="mb-16 grid items-start gap-10 lg:grid-cols-[1.1fr_1fr] lg:gap-14">
-        <ProductGallery part={product.part} />
+        <ProductGallery part={product.part} images={product.images} />
 
         <div>
           <p className="label-caps mb-3 text-ink-500">
