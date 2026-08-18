@@ -48,8 +48,8 @@ export const BRANDS: Brand[] = [
   // nhóm ở trang sản phẩm). 8 hãng đầu theo chỉ định trong tài liệu SỬA WEB;
   // phần còn lại giữ nguyên, chờ danh sách đầy đủ.
   { slug: 'martor', name: 'Martor', origin: 'Đức', desc: 'Dao an toàn, GS certified', logo: '/assets/brands/martor.webp' },
-  { slug: 'morrisflex', name: 'Morrisflex', origin: 'Quốc tế', desc: 'Mũi mài hợp kim cacbua vonfram', logo: '/assets/brands/morrisflex.webp' },
-  { slug: 'ata', name: 'ATA Air Tools', origin: 'Quốc tế', desc: 'Máy mài, chà nhám khí nén', logo: '/assets/brands/ata.webp' },
+  { slug: 'morrisflex', name: 'Morrisflex', origin: 'Ireland', desc: 'Mũi mài hợp kim cacbua vonfram', logo: '/assets/brands/morrisflex.webp' },
+  { slug: 'ata', name: 'ATA Air Tools', origin: 'Ireland', desc: 'Máy mài, chà nhám khí nén', logo: '/assets/brands/ata.webp' },
   { slug: 'technomark', name: 'Technomark', origin: 'Pháp', desc: 'Máy khắc dấu laser & chấm peen' },
   { slug: 'lenzkes', name: 'Lenzkes', origin: 'Đức', desc: 'Kẹp khuôn, kẹp gá máy công cụ', logo: '/assets/brands/lenzkes.webp' },
   { slug: 'tschorn', name: 'TSChorn', origin: 'Đức', desc: 'Thiết bị đo, đầu dò 3D', logo: '/assets/brands/tschorn.webp' },
@@ -57,11 +57,11 @@ export const BRANDS: Brand[] = [
   { slug: 'tecna', name: 'Tecna', origin: 'Ý', desc: 'Pa lăng cân bằng', logo: '/assets/brands/tecna.webp' },
   { slug: 'helical', name: 'Helical', origin: 'Mỹ', desc: 'Dao phay ngón hiệu suất cao' },
   { slug: 'corehog', name: 'Corehog', origin: 'Mỹ', desc: 'Công cụ CNC cho composite, CFRP', logo: '/assets/brands/corehog.webp' },
-  { slug: 'bevel-tools', name: 'Bevel Tools', origin: 'Quốc tế', desc: 'Máy vát mép & bo tròn kim loại' },
+  { slug: 'bevel-tools', name: 'Bevel Tools', origin: 'Hà Lan', desc: 'Máy vát mép & bo tròn kim loại' },
   { slug: 'rocklinizer', name: 'Rocklinizer', origin: 'Mỹ', desc: 'Máy phủ cứng bề mặt khuôn', logo: '/assets/brands/rocklinizer.webp' },
   { slug: 'buchem', name: 'Buchem', origin: 'Đức', desc: 'Hóa chất vệ sinh khuôn mẫu', logo: '/assets/brands/buchem.webp' },
   { slug: 'diprofil', name: 'Diprofil', origin: 'Thụy Điển', desc: 'Máy đánh bóng khuôn', logo: '/assets/brands/diprofil.webp' },
-  { slug: 'rtc', name: 'RTC', origin: 'Quốc tế', desc: 'Khớp nối', logo: '/assets/brands/rtc.webp' },
+  { slug: 'rtc', name: 'RTC', origin: 'Thổ Nhĩ Kỳ', desc: 'Khớp nối', logo: '/assets/brands/rtc.webp' },
   { slug: 'sloky', name: 'Sloky', origin: 'Đài Loan', desc: 'Tua vít lực chính xác', logo: '/assets/brands/sloky.webp' },
   { slug: 'hartner', name: 'Hartner', origin: 'Đức', desc: 'Dụng cụ cắt gọt chính xác', logo: '/assets/brands/hartner.webp' },
   { slug: 'karnasch', name: 'Karnasch', origin: 'Đức', desc: 'Dụng cụ cắt gọt, mũi khoan chuyên dụng', logo: '/assets/brands/karnasch.webp' },
@@ -135,7 +135,7 @@ export const PRODUCTS: Product[] = [
   },
   {
     part: 'MF-INOXCUT', name: 'Mũi mài INOX CUT', brand: 'morrisflex', category: 'cat-got',
-    series: 'INOX CUT', origin: 'Quốc tế', featured: true, tag: 'Bán chạy',
+    series: 'INOX CUT', origin: 'Ireland', featured: true, tag: 'Bán chạy',
     desc: 'Mũi mài hợp kim cacbua vonfram chuyên mài inox, không sinh nhiệt cháy bề mặt.',
     specs: [['Vật liệu', 'Cacbua vonfram'], ['Đường kính', '6 mm'], ['Chuôi', '6 mm'], ['Tốc độ tối đa', '30.000 rpm']],
     kw: ['mui mai', 'ca rem', 'hop kim', 'inox'],
@@ -143,7 +143,7 @@ export const PRODUCTS: Product[] = [
   },
   {
     part: 'SPM80R', name: 'Mũi mài hợp kim SPM80R', brand: 'morrisflex', category: 'cat-got',
-    series: 'SPM', origin: 'Quốc tế',
+    series: 'SPM', origin: 'Ireland',
     desc: 'Mũi mài đầu tròn, gợn xoắn kép cho tốc độ bóc tách vật liệu cao.',
     specs: [['Vật liệu', 'Cacbua vonfram'], ['Đường kính', '8 mm'], ['Kiểu răng', 'Xoắn kép'], ['Tốc độ tối đa', '28.000 rpm']],
     kw: ['mui mai', 'ca rem', 'spm'],
@@ -175,7 +175,7 @@ export const PRODUCTS: Product[] = [
   },
   {
     part: 'BT-R2', name: 'Máy vát mép Bevel BT-R2', brand: 'bevel-tools', category: 'cat-got',
-    series: 'R', origin: 'Quốc tế',
+    series: 'R', origin: 'Hà Lan',
     desc: 'Dụng cụ vát mép và bo tròn cạnh kim loại cầm tay, thay dao nhanh.',
     specs: [['Góc vát', '45°'], ['Bo tròn', 'R2'], ['Vật liệu', 'Thép, nhôm']],
     kw: ['vat mep', 'bo tron', 'bevel'],
@@ -183,7 +183,7 @@ export const PRODUCTS: Product[] = [
   },
   {
     part: 'AT-7033', name: 'Máy mài khí nén AT-7033', brand: 'ata', category: 'khi-nen',
-    series: 'AT', origin: 'Quốc tế', featured: true, tag: 'Bán chạy',
+    series: 'AT', origin: 'Ireland', featured: true, tag: 'Bán chạy',
     desc: 'Máy mài thẳng khí nén 1/4", vòng bi kín chịu bụi, cân bằng độ rung thấp.',
     specs: [['Tốc độ', '25.000 rpm'], ['Kẹp', '6 mm'], ['Áp suất', '6.3 bar'], ['Tiêu thụ khí', '0.6 m³/min']],
     kw: ['may mai', 'sung mai hoi', 'khi nen', 'ata'],
@@ -191,7 +191,7 @@ export const PRODUCTS: Product[] = [
   },
   {
     part: 'AT-5012', name: 'Máy chà nhám khí nén AT-5012', brand: 'ata', category: 'khi-nen',
-    series: 'AT', origin: 'Quốc tế',
+    series: 'AT', origin: 'Ireland',
     desc: 'Máy chà nhám lệch tâm, đế 125 mm, hút bụi trung tâm, tay cầm chống rung.',
     specs: [['Đế', '125 mm'], ['Quỹ đạo', '5 mm'], ['Tốc độ', '10.000 opm']],
     kw: ['cha nham', 'khi nen', 'ata'],
@@ -263,7 +263,7 @@ export const PRODUCTS: Product[] = [
   },
   {
     part: 'RTC-40', name: 'Khớp nối RTC-40', brand: 'rtc', category: 'siet-luc',
-    series: 'RTC', origin: 'Quốc tế',
+    series: 'RTC', origin: 'Thổ Nhĩ Kỳ',
     desc: 'Khớp nối truyền động bù lệch tâm, đàn hồi chống rung cho hệ trục.',
     specs: [['Đường kính trục', '40 mm'], ['Mô-men', '120 Nm'], ['Kiểu', 'Đàn hồi']],
     kw: ['khop noi', 'rtc', 'truyen dong'],

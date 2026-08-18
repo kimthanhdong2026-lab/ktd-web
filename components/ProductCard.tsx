@@ -24,15 +24,6 @@ export function ProductCard({ product, variant = 'full' }: ProductCardProps) {
   return (
     <article className="group card relative flex flex-col overflow-hidden hover:border-[#cdd6de] hover:shadow-md">
       <div className="placeholder-hatch relative flex aspect-[4/3] items-center justify-center overflow-hidden bg-ink-100">
-        {product.tag && (
-          <span
-            className={`absolute left-3 top-3 z-[2] rounded-sm px-2.5 py-1 text-[11px] font-semibold text-white ${
-              product.tag === 'Mới' ? 'bg-ktd-800' : 'bg-ktd-600'
-            }`}
-          >
-            {product.tag}
-          </span>
-        )}
         <span className="relative rounded-sm border border-ink-300 bg-white px-2.5 py-1 font-mono text-xs text-ink-500">
           {product.part}
         </span>

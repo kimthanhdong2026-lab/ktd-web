@@ -37,6 +37,12 @@ export const NAV_ITEMS = [
   { label: 'LIÊN HỆ', href: '/lien-he' },
 ]
 
+/**
+ * Bốn danh mục tiêu biểu, dùng chung cho cột "Danh mục" ở footer và bộ lọc
+ * danh mục ở trang Sản phẩm — để hai chỗ không bao giờ lệch nhau.
+ */
+export const FEATURED_CATEGORIES = ['cat-got', 'an-toan', 'nang-ha', 'hoa-chat']
+
 export const HERO_BADGE = 'GIẢI PHÁP TỐI ƯU · THƯƠNG HIỆU UY TÍN · ĐỒNG HÀNH DÀI HẠN'
 /** Bản rút gọn cho điện thoại — câu đầy đủ 56 ký tự không thể nằm một dòng. */
 export const HERO_BADGE_SHORT = 'TỐI ƯU · UY TÍN · DÀI HẠN'
@@ -117,34 +123,13 @@ export const ABOUT_VALUES = [
 
 /** Mốc hợp tác phân phối theo từng năm. `brands` dùng để sau này thay tên bằng logo. */
 export const ABOUT_TIMELINE = [
-  { year: '2011', title: 'Khởi đầu hành trình', brands: [], text: 'Thành lập Công ty TNHH Kim Thành Đông.' },
-  { year: '2017', title: 'HARTNER', brands: ['hartner'], text: 'Bắt đầu hợp tác phân phối HARTNER tại Việt Nam.' },
-  { year: '2018', title: 'TECNA', brands: ['tecna'], text: 'Mở rộng hợp tác phân phối với TECNA.' },
-  {
-    year: '2019',
-    title: 'BUCHEM · MORRISFLEX · ATA TOOLS · SLOKY',
-    brands: ['buchem', 'morrisflex', 'ata', 'sloky'],
-    text: 'Mở rộng danh mục với 4 thương hiệu công nghiệp quốc tế.',
-  },
-  {
-    year: '2021',
-    title: 'TECHNOMARK · DIPROFIL',
-    brands: ['technomark', 'diprofil'],
-    text: 'Tiếp tục mở rộng sang các giải pháp đánh dấu và hoàn thiện bề mặt.',
-  },
-  {
-    year: '2022',
-    title: 'MARTOR · TSCHORN · FIAM · LENZKES · ROCKLIN',
-    brands: ['martor', 'tschorn', 'fiam', 'lenzkes', 'rocklinizer'],
-    text: 'Dấu mốc mở rộng mạnh mạng lưới thương hiệu và danh mục giải pháp.',
-  },
-  { year: '2023', title: 'KARNASCH', brands: ['karnasch'], text: 'Bổ sung các giải pháp dụng cụ cắt gọt chuyên nghiệp.' },
-  { year: '2024', title: 'RTC', brands: ['rtc'], text: 'Mở rộng danh mục với các giải pháp khớp nối nhanh công nghiệp.' },
-  { year: '2025', title: 'BEVELTOOLS', brands: ['bevel-tools'], text: 'Bổ sung giải pháp vát mép và xử lý cạnh kim loại.' },
-  {
-    year: '2026',
-    title: 'HELICAL · COREHOG',
-    brands: ['helical', 'corehog'],
-    text: 'Tiếp tục mở rộng các giải pháp gia công chính xác và vật liệu composite.',
-  },
+  { year: '2011', title: 'Khởi đầu hành trình', text: 'Thành lập Kim Thành Đông tại Vũng Tàu.' },
+  { year: '2018', title: 'HARTNER · TECNA', text: 'Bắt đầu phân phối HARTNER và TECNA.' },
+  { year: '2019', title: 'BUCHEM · MORRISFLEX · ATA TOOLS · SLOKY', text: 'Thêm 4 thương hiệu công nghiệp quốc tế.' },
+  { year: '2021', title: 'TECHNOMARK · DIPROFIL', text: 'Giải pháp đánh dấu & hoàn thiện bề mặt.' },
+  { year: '2022', title: 'MARTOR · TSCHORN · FIAM · LENZKES · ROCKLIN', text: 'Mở rộng mạnh mạng lưới thương hiệu.' },
+  { year: '2023', title: 'KARNASCH', text: 'Bổ sung dụng cụ cắt gọt chuyên nghiệp.' },
+  { year: '2024', title: 'RTC', text: 'Khớp nối nhanh công nghiệp.' },
+  { year: '2025', title: 'BEVELTOOLS', text: 'Vát mép và xử lý cạnh kim loại.' },
+  { year: '2026', title: 'HELICAL · COREHOG', text: 'Gia công chính xác và vật liệu composite.' },
 ]

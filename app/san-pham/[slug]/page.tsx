@@ -93,16 +93,6 @@ export default function ProductDetailPage({ params }: PageProps) {
             {product.sub ? ` › ${product.sub}` : ''}
           </p>
 
-          {product.tag && (
-            <span
-              className={`mb-3.5 inline-block rounded-sm px-3 py-1 text-xs font-semibold text-white ${
-                product.tag === 'Mới' ? 'bg-ktd-800' : 'bg-ktd-600'
-              }`}
-            >
-              {product.tag}
-            </span>
-          )}
-
           <h1 className="mb-6 font-display text-h1 text-ink-900">{product.name}</h1>
 
           <dl className="mb-6 flex flex-col gap-3 border-y border-[#eef1f4] py-5">

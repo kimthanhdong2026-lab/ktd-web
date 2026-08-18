@@ -66,7 +66,7 @@ export default function HomePage() {
           </h1>
 
           <div className="max-w-[820px]">
-            <p className="text-on-video mb-8 max-w-[620px] text-base leading-relaxed text-ktd-100">
+            <p className="text-on-video mb-8 text-base leading-relaxed text-ktd-100">
               {HERO_SUBTITLE}
             </p>
 
@@ -117,39 +117,27 @@ export default function HomePage() {
               <li key={b.slug}>
                 <Link
                   href={`/san-pham?brand=${b.slug}`}
-                  className="flex h-full flex-col items-center gap-2.5 rounded-[10px] border border-[#e2e7ec] bg-white px-3.5 pb-3.5 pt-4 transition duration-200 hover:-translate-y-0.5 hover:border-ktd-600 hover:shadow-md"
+                  title={b.name}
+                  className="flex h-full min-h-[88px] items-center justify-center rounded-[10px] border border-[#e2e7ec] bg-white p-4 transition duration-200 hover:-translate-y-0.5 hover:border-ktd-600 hover:shadow-md"
                 >
-                  <span className="relative flex h-14 w-full items-center justify-center overflow-hidden rounded-md bg-white">
-                    {b.logo ? (
-                      <Image
-                        src={b.logo}
-                        alt={`Logo ${b.name}`}
-                        width={160}
-                        height={56}
-                        className="max-h-11 w-auto max-w-[88%] object-contain grayscale transition duration-200 hover:grayscale-0"
-                      />
-                    ) : (
-                      <>
-                        <span
-                          className="absolute inset-0 opacity-70"
-                          style={{
-                            backgroundImage:
-                              'repeating-linear-gradient(135deg,#eef1f4 0 8px,#F7F9FB 8px 16px)',
-                          }}
-                          aria-hidden="true"
-                        />
-                        <span className="relative font-mono text-[9px] tracking-[0.08em] text-[#b3bcc5]">
-                          LOGO
-                        </span>
-                      </>
-                    )}
-                  </span>
-                  <span className="flex flex-col items-center gap-0.5">
+                  {b.logo ? (
+                    // Logo để nguyên màu gốc. Bản trước dùng grayscale + hover mới
+                    // hiện màu, nên trên máy thật và trên điện thoại (không có
+                    // hover) logo luôn bị trắng xám.
+                    <Image
+                      src={b.logo}
+                      alt={b.name}
+                      width={160}
+                      height={56}
+                      className="max-h-12 w-auto max-w-full object-contain"
+                    />
+                  ) : (
+                    // Chưa có file logo thì hiện tên hãng, nếu không ô sẽ trống
+                    // và khách không biết đó là thương hiệu nào.
                     <span className="text-center font-display text-[15px] font-bold leading-tight text-ink-700">
                       {b.name}
                     </span>
-                    <span className="text-[11px] text-[#9aa3ad]">{b.origin}</span>
-                  </span>
+                  )}
                 </Link>
               </li>
             ))}
@@ -199,7 +187,7 @@ export default function HomePage() {
       <section className="overflow-hidden bg-ktd-900 pb-4 pt-12 md:pt-14">
         <div className="container-ktd">
           <p className="label-caps mb-3 text-[#4f7ea3]">Lĩnh vực phục vụ</p>
-          <h2 className="mb-7 max-w-[640px] font-display text-h2 text-white">
+          <h2 className="mb-7 font-display text-h2 text-white">
             Giải pháp cho các ngành công nghiệp
           </h2>
         </div>
@@ -207,7 +195,7 @@ export default function HomePage() {
           {SECTOR_CARDS.map((s) => (
             <li
               key={s.name}
-              className="relative h-[304px] w-[300px] flex-none snap-start overflow-hidden rounded-lg bg-[#012c48] sm:w-[340px]"
+              className="relative h-[304px] w-[320px] flex-none snap-start overflow-hidden rounded-lg bg-[#012c48] sm:w-[420px]"
             >
               <span className="placeholder-hatch-dark absolute inset-0 opacity-60" aria-hidden="true" />
               <span
@@ -221,8 +209,8 @@ export default function HomePage() {
               <span className="absolute left-4 top-4 font-mono text-[10px] tracking-[0.08em] text-[#4f7ea3]">
                 [ ẢNH NGÀNH ]
               </span>
-              <span className="absolute bottom-0 left-0 right-0 p-7">
-                <span className="mb-2 block font-display text-[22px] font-semibold text-white">
+              <span className="absolute bottom-0 left-0 right-0 p-5 sm:p-7">
+                <span className="mb-2 block font-display text-[18px] font-semibold text-white sm:text-[22px]">
                   {s.name}
                 </span>
                 <span className="block text-sm leading-relaxed text-ktd-100">{s.desc}</span>

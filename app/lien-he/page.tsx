@@ -42,7 +42,11 @@ export default function ContactPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
       />
 
-      <h1 className="mb-2 font-display text-h1 text-ink-900">{COMPANY_NAME_UPPER}</h1>
+      {/* Cỡ chữ bằng khoảng 2/3 tiêu đề trang chuẩn (44px -> 29px), dùng
+          màu xanh logo giống nhãn "Văn phòng"/"Kho hàng" bên dưới. */}
+      <h1 className="mb-2 font-display text-[clamp(1.25rem,2.65vw,1.8125rem)] font-bold leading-tight text-ktd-600">
+        {COMPANY_NAME_UPPER}
+      </h1>
       <p className="mb-10 text-body-lg text-ink-500">{COMPANY_ADDRESS}</p>
 
       <OfficeMap>

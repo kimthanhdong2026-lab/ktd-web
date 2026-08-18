@@ -8,15 +8,14 @@ import {
   COMPANY_NAME,
   COMPANY_PHONE,
   COMPANY_PHONE_TEL,
+  FEATURED_CATEGORIES,
   NAV_ITEMS,
   OFFICES,
 } from '@/lib/constants'
 import { CATEGORIES } from '@/lib/ktd-data'
 
-const FOOTER_CATEGORIES = ['cat-got', 'an-toan', 'nang-ha', 'hoa-chat']
-
 export function Footer() {
-  const categories = CATEGORIES.filter((c) => FOOTER_CATEGORIES.includes(c.slug))
+  const categories = CATEGORIES.filter((c) => FEATURED_CATEGORIES.includes(c.slug))
 
   return (
     <footer className="bg-ktd-900 px-0 pb-6 pt-12 text-ktd-100">
@@ -94,13 +93,13 @@ export function Footer() {
                 </a>
               </li>
               <li>
-                <a href={`mailto:${COMPANY_EMAIL}`} className="text-[#8fb3cf] hover:text-white">
-                  ✉ {COMPANY_EMAIL}
+                <a href={`tel:${COMPANY_PHONE_TEL}`} className="text-[#8fb3cf] hover:text-white">
+                  ☎ {COMPANY_PHONE}
                 </a>
               </li>
               <li>
-                <a href={`tel:${COMPANY_PHONE_TEL}`} className="text-[#8fb3cf] hover:text-white">
-                  ☎ {COMPANY_PHONE}
+                <a href={`mailto:${COMPANY_EMAIL}`} className="text-[#8fb3cf] hover:text-white">
+                  ✉ {COMPANY_EMAIL}
                 </a>
               </li>
               <li className="leading-relaxed">

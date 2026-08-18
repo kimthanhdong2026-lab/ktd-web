@@ -15,6 +15,7 @@ import {
   countByBrand,
   type Product,
 } from '@/lib/ktd-data'
+import { FEATURED_CATEGORIES } from '@/lib/constants'
 import { cx } from '@/lib/utils'
 
 const PAGE_SIZE = 12
@@ -22,6 +23,9 @@ const PAGE_SIZE = 12
 /** Bộ lọc liệt kê thương hiệu theo A–Z; thứ tự trong BRANDS là thứ tự ưu tiên
     hiển thị ở trang chủ nên giữ nguyên. */
 const BRANDS_AZ = [...BRANDS].sort((a, b) => a.name.localeCompare(b.name, 'vi'))
+
+/** Bộ lọc chỉ liệt kê 4 danh mục tiêu biểu, khớp với cột Danh mục ở footer. */
+const FILTER_CATEGORIES = CATEGORIES.filter((c) => FEATURED_CATEGORIES.includes(c.slug))
 
 type FilterKind = 'brand' | 'category'
 
@@ -158,7 +162,7 @@ export function ProductBrowser() {
 
       <FilterGroup title="Danh mục">
         <div className="max-h-[260px] overflow-y-auto pr-1">
-          {CATEGORIES.map((c) => (
+          {FILTER_CATEGORIES.map((c) => (
             <FilterRow
               key={c.slug}
               label={c.name}
