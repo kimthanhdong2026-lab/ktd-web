@@ -16,7 +16,12 @@ export interface Brand {
 export interface Category {
   slug: string
   name: string
+  /** Dòng chữ nhỏ liệt kê nhóm thiết bị — thay cho số đếm sản phẩm. */
+  sub: string
+  /** Khóa icon, ánh xạ sang component trong components/home/CategoryTiles.tsx */
   icon: string
+  /** Ảnh thiết bị đại diện, đặt chìm làm nền ô. Chưa có thì ô dùng nền kỹ thuật. */
+  image?: string
 }
 
 export interface Product {
@@ -68,15 +73,20 @@ export const BRANDS: Brand[] = [
 ]
 
 export const CATEGORIES: Category[] = [
-  { slug: 'cat-got', name: 'Dụng cụ cắt gọt', icon: '🔧' },
-  { slug: 'khi-nen', name: 'Dụng cụ khí nén', icon: '💨' },
-  { slug: 'an-toan', name: 'Dụng cụ an toàn', icon: '🛡️' },
-  { slug: 'do-kiem', name: 'Thiết bị đo & kiểm tra', icon: '📐' },
-  { slug: 'nang-ha', name: 'Thiết bị nâng hạ & công thái học', icon: '🏗️' },
-  { slug: 'kep-ga', name: 'Kẹp, gá & khuôn mẫu', icon: '🗜️' },
-  { slug: 'danh-dau', name: 'Đánh dấu & truy xuất', icon: '🔖' },
-  { slug: 'hoa-chat', name: 'Hóa chất & bôi trơn công nghiệp', icon: '🧪' },
-  { slug: 'siet-luc', name: 'Siết lực & taro', icon: '⚙️' },
+  { slug: 'an-toan', name: 'Dụng cụ an toàn', sub: 'Dao, kéo an toàn, lưỡi dao & phụ kiện', icon: 'shield', image: '/categories/an-toan.webp' },
+  { slug: 'cat-got-cnc', name: 'Dụng cụ cắt gọt CNC', sub: 'Mũi khoan, dao phay, mũi khoét, ta rô', icon: 'drill' },
+  { slug: 'mai-hoan-thien', name: 'Mài, đánh bóng & hoàn thiện bề mặt', sub: 'Máy mài, mũi mài, dụng cụ đánh bóng', icon: 'grind' },
+  { slug: 'kep-ve-sinh-khuon', name: 'Kẹp và vệ sinh khuôn mẫu', sub: 'Kẹp khuôn, kẹp phôi, vệ sinh khuôn', icon: 'clamp' },
+  { slug: 'do-can-chinh', name: 'Thiết bị đo & Căn chỉnh gia công', sub: 'Đầu dò 3D, Dò cạnh, Xác định điểm 0', icon: 'target' },
+  { slug: 'danh-dau', name: 'Đánh dấu & truy xuất', sub: 'Khắc chấm, Khắc laser, Truy xuất nguồn gốc', icon: 'qr', image: '/categories/danh-dau.webp' },
+  { slug: 'nang-ha', name: 'Thiết bị nâng hạ & công thái học', sub: 'Pa lăng cân bằng, Bộ cân bằng tải, Phụ kiện', icon: 'hoist' },
+  { slug: 'siet-cong-nghiep', name: 'Thiết bị siết công nghiệp', sub: 'Tô vít công nghiệp, Máy siết bu lông, Hệ thống siết lực tự động', icon: 'gear' },
+  { slug: 'siet-luc-cam-tay', name: 'Dụng cụ siết lực cầm tay', sub: 'Tô vít lực, Đầu vít, Phụ kiện', icon: 'screwdriver' },
+  { slug: 'vat-mep', name: 'Máy vát mép & bo cạnh', sub: 'Vát mép, Bo tròn cạnh, Chuẩn bị mép hàn', icon: 'bevel' },
+  { slug: 'composite', name: 'Dụng cụ gia công composite', sub: 'Dao phay, Mũi khoan, Dụng cụ Honeycomb', icon: 'honeycomb' },
+  { slug: 'do-kiem-may-han', name: 'Thiết bị đo & Kiểm tra máy hàn', sub: 'Đo dòng điện hàn và lực ép', icon: 'wave' },
+  { slug: 'phuc-hoi-be-mat', name: 'Xử lý & phục hồi bề mặt kim loại', sub: 'Phủ carbide, Sửa chữa khuôn, Phục hồi bề mặt', icon: 'diamond' },
+  { slug: 'khop-noi', name: 'Khớp nối nhanh công nghiệp', sub: 'Khớp nối khí, Khớp nối thủy lực, Khớp nối nước', icon: 'coupling' },
 ]
 
 
@@ -97,15 +107,20 @@ export const SLANG_MAP: Record<string, string> = {
 /** Ngành ứng dụng theo từng danh mục — dùng cho tab "Ứng dụng" ở trang chi
     tiết sản phẩm. Tên ngành khớp với SECTOR_CARDS trong lib/constants.ts. */
 export const CATEGORY_SECTORS: Record<string, string[]> = {
-  'cat-got': ['Gia công cơ khí & CNC', 'Đóng tàu & kết cấu kim loại', 'Hàng không vũ trụ'],
-  'khi-nen': ['Gia công cơ khí & CNC', 'Đóng tàu & kết cấu kim loại'],
   'an-toan': ['Ô tô & linh kiện', 'Điện tử & lắp ráp chính xác', 'Khuôn mẫu & ép nhựa'],
-  'do-kiem': ['Gia công cơ khí & CNC', 'Khuôn mẫu & ép nhựa'],
-  'nang-ha': ['Ô tô & linh kiện', 'Đóng tàu & kết cấu kim loại', 'Điện tử & lắp ráp chính xác'],
-  'kep-ga': ['Khuôn mẫu & ép nhựa', 'Gia công cơ khí & CNC'],
+  'cat-got-cnc': ['Gia công cơ khí & CNC', 'Hàng không vũ trụ', 'Đóng tàu & kết cấu kim loại'],
+  'mai-hoan-thien': ['Gia công cơ khí & CNC', 'Đóng tàu & kết cấu kim loại', 'Khuôn mẫu & ép nhựa'],
+  'kep-ve-sinh-khuon': ['Khuôn mẫu & ép nhựa', 'Gia công cơ khí & CNC'],
+  'do-can-chinh': ['Gia công cơ khí & CNC', 'Khuôn mẫu & ép nhựa'],
   'danh-dau': ['Ô tô & linh kiện', 'Dầu khí & năng lượng', 'Điện tử & lắp ráp chính xác'],
-  'hoa-chat': ['Khuôn mẫu & ép nhựa', 'Dầu khí & năng lượng'],
-  'siet-luc': ['Ô tô & linh kiện', 'Điện tử & lắp ráp chính xác'],
+  'nang-ha': ['Ô tô & linh kiện', 'Đóng tàu & kết cấu kim loại', 'Điện tử & lắp ráp chính xác'],
+  'siet-cong-nghiep': ['Ô tô & linh kiện', 'Điện tử & lắp ráp chính xác'],
+  'siet-luc-cam-tay': ['Điện tử & lắp ráp chính xác', 'Gia công cơ khí & CNC'],
+  'vat-mep': ['Đóng tàu & kết cấu kim loại', 'Gia công cơ khí & CNC'],
+  'composite': ['Hàng không vũ trụ', 'Gia công cơ khí & CNC'],
+  'do-kiem-may-han': ['Ô tô & linh kiện', 'Đóng tàu & kết cấu kim loại'],
+  'phuc-hoi-be-mat': ['Khuôn mẫu & ép nhựa', 'Gia công cơ khí & CNC'],
+  'khop-noi': ['Gia công cơ khí & CNC', 'Dầu khí & năng lượng'],
 }
 
 export const PRODUCTS: Product[] = [
@@ -134,7 +149,7 @@ export const PRODUCTS: Product[] = [
     pdf: { name: 'SECUMAX Series', size: '3.1 MB', pages: 12 },
   },
   {
-    part: 'MF-INOXCUT', name: 'Mũi mài INOX CUT', brand: 'morrisflex', category: 'cat-got',
+    part: 'MF-INOXCUT', name: 'Mũi mài INOX CUT', brand: 'morrisflex', category: 'mai-hoan-thien',
     series: 'INOX CUT', origin: 'Ireland', featured: true, tag: 'Bán chạy',
     desc: 'Mũi mài hợp kim cacbua vonfram chuyên mài inox, không sinh nhiệt cháy bề mặt.',
     specs: [['Vật liệu', 'Cacbua vonfram'], ['Đường kính', '6 mm'], ['Chuôi', '6 mm'], ['Tốc độ tối đa', '30.000 rpm']],
@@ -142,7 +157,7 @@ export const PRODUCTS: Product[] = [
     pdf: { name: 'Morrisflex Carbide Burrs', size: '5.6 MB', pages: 24 },
   },
   {
-    part: 'SPM80R', name: 'Mũi mài hợp kim SPM80R', brand: 'morrisflex', category: 'cat-got',
+    part: 'SPM80R', name: 'Mũi mài hợp kim SPM80R', brand: 'morrisflex', category: 'mai-hoan-thien',
     series: 'SPM', origin: 'Ireland',
     desc: 'Mũi mài đầu tròn, gợn xoắn kép cho tốc độ bóc tách vật liệu cao.',
     specs: [['Vật liệu', 'Cacbua vonfram'], ['Đường kính', '8 mm'], ['Kiểu răng', 'Xoắn kép'], ['Tốc độ tối đa', '28.000 rpm']],
@@ -150,7 +165,7 @@ export const PRODUCTS: Product[] = [
     pdf: { name: 'Morrisflex Carbide Burrs', size: '5.6 MB', pages: 24 },
   },
   {
-    part: 'HEV-40250', name: 'Dao phay ngón HEV 4 me', brand: 'helical', category: 'cat-got',
+    part: 'HEV-40250', name: 'Dao phay ngón HEV 4 me', brand: 'helical', category: 'cat-got-cnc',
     series: 'HEV', origin: 'Mỹ', featured: true,
     desc: 'Dao phay ngón 4 me phủ AlTiN, biên dạng biến bước giảm rung, phay thép tôi.',
     specs: [['Số me', '4'], ['Đường kính', '6.35 mm'], ['Phủ', 'AlTiN'], ['Vật liệu phôi', 'Thép tôi ≤ 55 HRC']],
@@ -158,7 +173,7 @@ export const PRODUCTS: Product[] = [
     pdf: { name: 'Helical End Mills', size: '8.1 MB', pages: 36 },
   },
   {
-    part: 'HFV-30187', name: 'Dao phay ngón HFV 3 me', brand: 'helical', category: 'cat-got',
+    part: 'HFV-30187', name: 'Dao phay ngón HFV 3 me', brand: 'helical', category: 'cat-got-cnc',
     series: 'HFV', origin: 'Mỹ',
     desc: 'Dao phay ngón 3 me cho nhôm, rãnh thoát phoi rộng, độ bóng bề mặt cao.',
     specs: [['Số me', '3'], ['Đường kính', '4.76 mm'], ['Vật liệu phôi', 'Nhôm, hợp kim màu']],
@@ -166,7 +181,7 @@ export const PRODUCTS: Product[] = [
     pdf: { name: 'Helical End Mills', size: '8.1 MB', pages: 36 },
   },
   {
-    part: 'CH-C4', name: 'Dao CNC composite CH-C4', brand: 'corehog', category: 'cat-got',
+    part: 'CH-C4', name: 'Dao CNC composite CH-C4', brand: 'corehog', category: 'composite',
     series: 'C-Series', origin: 'Mỹ',
     desc: 'Công cụ cắt CFRP / honeycomb, hình học chống tưa sợi, tuổi thọ cao.',
     specs: [['Ứng dụng', 'CFRP, composite'], ['Đường kính', '6 mm'], ['Phủ', 'Kim cương (CVD)']],
@@ -174,7 +189,7 @@ export const PRODUCTS: Product[] = [
     pdf: { name: 'Corehog Composite Tools', size: '4.9 MB', pages: 20 },
   },
   {
-    part: 'BT-R2', name: 'Máy vát mép Bevel BT-R2', brand: 'bevel-tools', category: 'cat-got',
+    part: 'BT-R2', name: 'Máy vát mép Bevel BT-R2', brand: 'bevel-tools', category: 'vat-mep',
     series: 'R', origin: 'Hà Lan',
     desc: 'Dụng cụ vát mép và bo tròn cạnh kim loại cầm tay, thay dao nhanh.',
     specs: [['Góc vát', '45°'], ['Bo tròn', 'R2'], ['Vật liệu', 'Thép, nhôm']],
@@ -182,7 +197,7 @@ export const PRODUCTS: Product[] = [
     pdf: { name: 'Bevel Tools Catalog', size: '2.7 MB', pages: 10 },
   },
   {
-    part: 'AT-7033', name: 'Máy mài khí nén AT-7033', brand: 'ata', category: 'khi-nen',
+    part: 'AT-7033', name: 'Máy mài khí nén AT-7033', brand: 'ata', category: 'mai-hoan-thien',
     series: 'AT', origin: 'Ireland', featured: true, tag: 'Bán chạy',
     desc: 'Máy mài thẳng khí nén 1/4", vòng bi kín chịu bụi, cân bằng độ rung thấp.',
     specs: [['Tốc độ', '25.000 rpm'], ['Kẹp', '6 mm'], ['Áp suất', '6.3 bar'], ['Tiêu thụ khí', '0.6 m³/min']],
@@ -190,7 +205,7 @@ export const PRODUCTS: Product[] = [
     pdf: { name: 'ATA Air Tools', size: '6.3 MB', pages: 28 },
   },
   {
-    part: 'AT-5012', name: 'Máy chà nhám khí nén AT-5012', brand: 'ata', category: 'khi-nen',
+    part: 'AT-5012', name: 'Máy chà nhám khí nén AT-5012', brand: 'ata', category: 'mai-hoan-thien',
     series: 'AT', origin: 'Ireland',
     desc: 'Máy chà nhám lệch tâm, đế 125 mm, hút bụi trung tâm, tay cầm chống rung.',
     specs: [['Đế', '125 mm'], ['Quỹ đạo', '5 mm'], ['Tốc độ', '10.000 opm']],
@@ -198,7 +213,7 @@ export const PRODUCTS: Product[] = [
     pdf: { name: 'ATA Air Tools', size: '6.3 MB', pages: 28 },
   },
   {
-    part: 'FIAM-15C', name: 'Tua vít điện Fiam 15C', brand: 'fiam', category: 'khi-nen',
+    part: 'FIAM-15C', name: 'Tua vít điện Fiam 15C', brand: 'fiam', category: 'siet-cong-nghiep',
     series: '15C', origin: 'Ý',
     desc: 'Tua vít điện công nghiệp điều khiển mô-men, ly hợp chính xác cho dây chuyền lắp ráp.',
     specs: [['Mô-men', '1.5 – 15 Nm'], ['Điều khiển', 'Ly hợp cơ khí'], ['Nguồn', 'BLDC']],
@@ -214,7 +229,7 @@ export const PRODUCTS: Product[] = [
     pdf: { name: 'Tecna Balancers', size: '4.0 MB', pages: 18 },
   },
   {
-    part: 'LK-125', name: 'Bộ kẹp khuôn Lenzkes LK-125', brand: 'lenzkes', category: 'kep-ga',
+    part: 'LK-125', name: 'Bộ kẹp khuôn Lenzkes LK-125', brand: 'lenzkes', category: 'kep-ve-sinh-khuon',
     series: 'Clamping', origin: 'Đức',
     desc: 'Bộ kẹp gá khuôn trên bàn máy công cụ, lực kẹp cao, tháo lắp nhanh không vặn ren dài.',
     specs: [['Rãnh T', '14 mm'], ['Lực kẹp', '25 kN'], ['Số chi tiết', '58']],
@@ -222,7 +237,7 @@ export const PRODUCTS: Product[] = [
     pdf: { name: 'Lenzkes Clamping', size: '5.2 MB', pages: 22 },
   },
   {
-    part: 'RK-500', name: 'Máy phủ cứng Rocklinizer RK-500', brand: 'rocklinizer', category: 'kep-ga',
+    part: 'RK-500', name: 'Máy phủ cứng Rocklinizer RK-500', brand: 'rocklinizer', category: 'phuc-hoi-be-mat',
     series: 'RK', origin: 'Mỹ',
     desc: 'Thiết bị phủ cứng bề mặt khuôn bằng phóng điện, tăng tuổi thọ cạnh sắc.',
     specs: [['Công suất', '500 VA'], ['Điện cực', 'Tungsten carbide'], ['Độ cứng phủ', '≤ 90 HRC']],
@@ -230,7 +245,7 @@ export const PRODUCTS: Product[] = [
     pdf: { name: 'Rocklinizer Systems', size: '2.9 MB', pages: 12 },
   },
   {
-    part: 'DF-BSG', name: 'Máy đánh bóng khuôn Diprofil BSG', brand: 'diprofil', category: 'kep-ga',
+    part: 'DF-BSG', name: 'Máy đánh bóng khuôn Diprofil BSG', brand: 'diprofil', category: 'mai-hoan-thien',
     series: 'BSG', origin: 'Thụy Điển',
     desc: 'Máy đánh bóng khuôn mẫu chuyển động thẳng, giũa và đá mài đổi nhanh.',
     specs: [['Hành trình', '3 mm'], ['Tần số', '6.500 spm'], ['Nguồn', 'Khí nén / điện']],
@@ -246,7 +261,7 @@ export const PRODUCTS: Product[] = [
     pdf: { name: 'Technomark Marking', size: '4.6 MB', pages: 20 },
   },
   {
-    part: 'TS-3D', name: 'Đầu dò 3D TSChorn TS-3D', brand: 'tschorn', category: 'do-kiem',
+    part: 'TS-3D', name: 'Đầu dò 3D TSChorn TS-3D', brand: 'tschorn', category: 'do-can-chinh',
     series: '3D', origin: 'Đức',
     desc: 'Đầu dò 3D dò cạnh và tâm lỗ trên máy phay, đồng hồ so tích hợp độ chính xác cao.',
     specs: [['Độ chính xác', '0.01 mm'], ['Chuôi', '20 mm'], ['Đầu dò', 'Ø 4 mm']],
@@ -254,7 +269,7 @@ export const PRODUCTS: Product[] = [
     pdf: { name: 'TSChorn Measuring', size: '2.4 MB', pages: 10 },
   },
   {
-    part: 'SLOKY-TS15', name: 'Tua vít lực Sloky TS-15', brand: 'sloky', category: 'siet-luc',
+    part: 'SLOKY-TS15', name: 'Tua vít lực Sloky TS-15', brand: 'sloky', category: 'siet-luc-cam-tay',
     series: 'TS', origin: 'Đài Loan',
     desc: 'Tua vít lực chính xác cài đặt mô-men cố định, chống siết quá tay khi lắp mảnh dao.',
     specs: [['Dải mô-men', '0.6 – 1.5 Nm'], ['Sai số', '± 6%'], ['Đầu', 'Có thể thay']],
@@ -262,7 +277,7 @@ export const PRODUCTS: Product[] = [
     pdf: { name: 'Sloky Torque Drivers', size: '2.1 MB', pages: 9 },
   },
   {
-    part: 'RTC-40', name: 'Khớp nối RTC-40', brand: 'rtc', category: 'siet-luc',
+    part: 'RTC-40', name: 'Khớp nối RTC-40', brand: 'rtc', category: 'khop-noi',
     series: 'RTC', origin: 'Thổ Nhĩ Kỳ',
     desc: 'Khớp nối truyền động bù lệch tâm, đàn hồi chống rung cho hệ trục.',
     specs: [['Đường kính trục', '40 mm'], ['Mô-men', '120 Nm'], ['Kiểu', 'Đàn hồi']],
@@ -270,7 +285,7 @@ export const PRODUCTS: Product[] = [
     pdf: { name: 'RTC Couplings', size: '1.9 MB', pages: 8 },
   },
   {
-    part: 'BX-88', name: 'Hóa chất vệ sinh khuôn Buchem BX-88', brand: 'buchem', category: 'hoa-chat',
+    part: 'BX-88', name: 'Hóa chất vệ sinh khuôn Buchem BX-88', brand: 'buchem', category: 'kep-ve-sinh-khuon',
     series: 'BX', origin: 'Đức',
     desc: 'Dung dịch tẩy nhựa cháy và cặn khuôn ép, an toàn với bề mặt thép khuôn.',
     specs: [['Dạng', 'Bình xịt 500 ml'], ['Ứng dụng', 'Khuôn ép nhựa'], ['Điểm chớp cháy', '> 60 °C']],
@@ -278,7 +293,7 @@ export const PRODUCTS: Product[] = [
     pdf: { name: 'Buchem Mold Care', size: '2.2 MB', pages: 9 },
   },
   {
-    part: 'HT-HSS8', name: 'Mũi khoan HSS-E Hartner 8mm', brand: 'hartner', category: 'cat-got',
+    part: 'HT-HSS8', name: 'Mũi khoan HSS-E Hartner 8mm', brand: 'hartner', category: 'cat-got-cnc',
     series: 'HSS-E', origin: 'Đức',
     desc: 'Mũi khoan thép gió coban HSS-E mài chính xác, khoan thép hợp kim và inox độ bền cao.',
     specs: [['Vật liệu', 'HSS-E (Co5)'], ['Đường kính', '8 mm'], ['Góc mũi', '135°'], ['Chuẩn', 'DIN 338']],
@@ -286,7 +301,7 @@ export const PRODUCTS: Product[] = [
     pdf: { name: 'Hartner Drilling', size: '3.5 MB', pages: 15 },
   },
   {
-    part: 'KN-HSSDMOND', name: 'Lưỡi khoét hợp kim Karnasch', brand: 'karnasch', category: 'cat-got',
+    part: 'KN-HSSDMOND', name: 'Lưỡi khoét hợp kim Karnasch', brand: 'karnasch', category: 'cat-got-cnc',
     series: 'Master Cut', origin: 'Đức',
     desc: 'Lưỡi khoét lõi (annular cutter) phủ TiAlN, khoan lỗ lớn nhanh trên thép tấm và dầm.',
     specs: [['Đường kính', '12 – 60 mm'], ['Chiều sâu cắt', '30 mm / 50 mm'], ['Phủ', 'TiAlN'], ['Chuôi', 'Weldon 19 mm']],

@@ -2,9 +2,10 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { HeroSearch } from '@/components/home/HeroSearch'
 import { HeroVideo } from '@/components/home/HeroVideo'
+import { CategoryTiles } from '@/components/home/CategoryTiles'
 import { FeaturedProducts } from '@/components/home/FeaturedProducts'
 import { QuoteButton } from '@/components/QuoteButton'
-import { BRANDS, CATEGORIES, NEWS, countByCategory } from '@/lib/ktd-data'
+import { BRANDS, NEWS } from '@/lib/ktd-data'
 import {
   HERO_BADGE,
   HERO_BADGE_SHORT,
@@ -152,36 +153,7 @@ export default function HomePage() {
       </section>
 
       {/* ---------- 3. Categories ---------- */}
-      <section className="bg-ktd-50 py-14 md:py-24">
-        <div className="container-ktd">
-          <h2 className="mb-10 text-center font-display text-h2 text-ink-900">
-            Bạn đang cần loại thiết bị nào?
-          </h2>
-          <ul className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4 lg:gap-5">
-            {CATEGORIES.map((c) => (
-              <li key={c.slug}>
-                <Link
-                  href={`/san-pham?category=${c.slug}`}
-                  className="flex h-full flex-col rounded-[10px] border border-[#dbe6f0] bg-white p-5 transition duration-200 hover:-translate-y-0.5 hover:border-ktd-600 hover:shadow-md md:p-6"
-                >
-                  <span
-                    className="mb-4 flex h-12 w-12 items-center justify-center rounded-[10px] bg-ktd-50 text-[22px]"
-                    aria-hidden="true"
-                  >
-                    {c.icon}
-                  </span>
-                  <span className="mb-1.5 font-display text-[17px] font-semibold text-ink-900 md:text-lg">
-                    {c.name}
-                  </span>
-                  <span className="text-[13px] text-ink-500">
-                    {countByCategory(c.slug)} sản phẩm
-                  </span>
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </section>
+      <CategoryTiles />
 
       {/* ---------- 4. Sectors ---------- */}
       <section className="overflow-hidden bg-ktd-900 pb-4 pt-12 md:pt-14">

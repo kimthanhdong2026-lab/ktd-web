@@ -41,7 +41,7 @@ export const NAV_ITEMS = [
  * Bốn danh mục tiêu biểu, dùng chung cho cột "Danh mục" ở footer và bộ lọc
  * danh mục ở trang Sản phẩm — để hai chỗ không bao giờ lệch nhau.
  */
-export const FEATURED_CATEGORIES = ['cat-got', 'an-toan', 'nang-ha', 'hoa-chat']
+export const FEATURED_CATEGORIES = ['mai-hoan-thien', 'cat-got-cnc', 'an-toan', 'kep-ve-sinh-khuon']
 
 export const HERO_BADGE = 'GIẢI PHÁP TỐI ƯU · THƯƠNG HIỆU UY TÍN · ĐỒNG HÀNH DÀI HẠN'
 /** Bản rút gọn cho điện thoại — câu đầy đủ 56 ký tự không thể nằm một dòng. */
