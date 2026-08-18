@@ -47,7 +47,14 @@ for (const it of items) {
     pdfPath = `/catalogs/martor/${base}.pdf`
   }
 
-  const short = (it.paragraphs[0] || '').split(/(?<=\.)\s/)[0].slice(0, 200)
+  // Câu đầu tiên, cắt ở dấu chấm CÓ khoảng trắng phía sau để không cắt nhầm
+  // trong mã hàng kiểu "No.110700.02". Nếu vẫn quá dài thì cắt theo ranh giới
+  // từ chứ không cắt cứng giữa chữ.
+  const sentence = (it.paragraphs[0] || '').split(/(?<=\.)\s/)[0].trim()
+  const short =
+    sentence.length <= 230
+      ? sentence
+      : sentence.slice(0, 230).replace(/\s\S*$/, '').replace(/[,;:]$/, '') + '…'
   const full = it.paragraphs
 
   lines.push(`  {

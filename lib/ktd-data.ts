@@ -266,7 +266,7 @@ export const PRODUCTS: Product[] = [
   {
     part: '145001.12', name: 'SECUMAX 145', brand: 'martor', category: 'an-toan',
     series: 'SECUMAX', origin: 'Đức',
-    desc: 'Dao an toàn MARTOR SECUMAX 145 No.145001.12 là dòng dao cắt an toàn lưỡi ẩn của MARTOR, được thiết kế chuyên dụng cho các công việc cắt bao bì và vật liệu đóng gói trong kho vận, logistics và dây chuy',
+    desc: 'Dao an toàn MARTOR SECUMAX 145 No.145001.12 là dòng dao cắt an toàn lưỡi ẩn của MARTOR, được thiết kế chuyên dụng cho các công việc cắt bao bì và vật liệu đóng gói trong kho vận, logistics và dây chuyền sản xuất.',
     descFull: [
       'Dao an toàn MARTOR SECUMAX 145 No.145001.12 là dòng dao cắt an toàn lưỡi ẩn của MARTOR, được thiết kế chuyên dụng cho các công việc cắt bao bì và vật liệu đóng gói trong kho vận, logistics và dây chuyền sản xuất.',
       'Dao thuộc dòng SECUMAX, nổi bật với lưỡi dao được che chắn hoàn toàn, giúp giảm thiểu tối đa nguy cơ tai nạn lao động và hạn chế làm hư hỏng hàng hóa trong quá trình cắt.',
@@ -325,7 +325,7 @@ export const PRODUCTS: Product[] = [
   {
     part: '148001.12', name: 'SECUMAX 148', brand: 'martor', category: 'an-toan',
     series: 'SECUMAX', origin: 'Đức',
-    desc: 'Dao an toàn MARTOR SECUMAX 148 No.148001.12 là dòng dao cắt bao bì an toàn chính hãng của MARTOR, được thiết kế chuyên dụng cho các môi trường làm việc yêu cầu mức độ an toàn cao như kho vận, logistic',
+    desc: 'Dao an toàn MARTOR SECUMAX 148 No.148001.12 là dòng dao cắt bao bì an toàn chính hãng của MARTOR, được thiết kế chuyên dụng cho các môi trường làm việc yêu cầu mức độ an toàn cao như kho vận, logistics và dây chuyền sản xuất.',
     descFull: [
       'Dao an toàn MARTOR SECUMAX 148 No.148001.12 là dòng dao cắt bao bì an toàn chính hãng của MARTOR, được thiết kế chuyên dụng cho các môi trường làm việc yêu cầu mức độ an toàn cao như kho vận, logistics và dây chuyền sản xuất.',
       'Sản phẩm thuộc dòng SECUMAX, nổi bật với lưỡi cắt được che chắn hoàn toàn, giúp giảm thiểu tối đa nguy cơ tai nạn lao động và hạn chế làm hư hỏng hàng hóa trong quá trình thao tác.',
@@ -385,7 +385,7 @@ export const PRODUCTS: Product[] = [
   {
     part: '150001.12', name: 'SECUMAX 150', brand: 'martor', category: 'an-toan',
     series: 'SECUMAX', origin: 'Đức',
-    desc: 'Dao an toàn MARTOR SECUMAX 150 No.150001.12 là dao cắt an toàn công nghiệp chính hãng của MARTOR, được thiết kế dành cho các môi trường làm việc yêu cầu tiêu chuẩn an toàn cao như kho vận, đóng gói và',
+    desc: 'Dao an toàn MARTOR SECUMAX 150 No.150001.12 là dao cắt an toàn công nghiệp chính hãng của MARTOR, được thiết kế dành cho các môi trường làm việc yêu cầu tiêu chuẩn an toàn cao như kho vận, đóng gói và nhà máy sản xuất.',
     descFull: [
       'Dao an toàn MARTOR SECUMAX 150 No.150001.12 là dao cắt an toàn công nghiệp chính hãng của MARTOR, được thiết kế dành cho các môi trường làm việc yêu cầu tiêu chuẩn an toàn cao như kho vận, đóng gói và nhà máy sản xuất.',
       'Sản phẩm sử dụng cơ chế lưỡi cắt che chắn hoàn toàn (concealed blade) giúp bảo vệ tối đa người sử dụng và hạn chế nguy cơ làm hư hỏng hàng hóa khi thao tác. Thiết kế nhỏ gọn, trọng lượng nhẹ giúp người dùng thao tác nhanh và thoải mái trong các công việc cắt lặp lại hằng ngày.',
@@ -440,7 +440,7 @@ export const PRODUCTS: Product[] = [
   {
     part: '121001.02', name: 'SECUMAX EASYSAFE', brand: 'martor', category: 'an-toan',
     series: 'SECUMAX', origin: 'Đức',
-    desc: 'Dao an toàn MARTOR SECUMAX EASYSAFE No.121001.02 là dao cắt an toàn công nghiệp đến từ MARTOR, được thiết kế chuyên dụng cho các công việc cắt bao bì, dây đai, màng film và thùng carton trong môi trườ',
+    desc: 'Dao an toàn MARTOR SECUMAX EASYSAFE No.121001.02 là dao cắt an toàn công nghiệp đến từ MARTOR, được thiết kế chuyên dụng cho các công việc cắt bao bì, dây đai, màng film và thùng carton trong môi trường kho vận và sản xuất.',
     descFull: [
       'Dao an toàn MARTOR SECUMAX EASYSAFE No.121001.02 là dao cắt an toàn công nghiệp đến từ MARTOR, được thiết kế chuyên dụng cho các công việc cắt bao bì, dây đai, màng film và thùng carton trong môi trường kho vận và sản xuất.',
       'Sản phẩm có lưỡi dao được giấu kín hoàn toàn, giúp giảm nguy cơ tai nạn lao động và hạn chế làm hư hỏng hàng hóa khi thao tác. Thiết kế nhỏ gọn, trọng lượng nhẹ giúp người dùng thao tác dễ dàng và thoải mái khi sử dụng liên tục.',
@@ -539,7 +539,7 @@ export const PRODUCTS: Product[] = [
   {
     part: '120701.02', name: 'SECUNORM PROFI25 MDP', brand: 'martor', category: 'an-toan',
     series: 'SECUNORM', origin: 'Đức',
-    desc: 'Dao an toàn MARTOR SECUNORM PROFI25 MDP No.120701.02 là dao cắt an toàn công nghiệp chính hãng của MARTOR, được thiết kế với thân dao bằng nhựa MDP (Metal Detectable Plastic) có khả năng phát hiện kim',
+    desc: 'Dao an toàn MARTOR SECUNORM PROFI25 MDP No.120701.02 là dao cắt an toàn công nghiệp chính hãng của MARTOR, được thiết kế với thân dao bằng nhựa MDP (Metal Detectable Plastic) có khả năng phát hiện kim loại, phù hợp cho các môi…',
     descFull: [
       'Dao an toàn MARTOR SECUNORM PROFI25 MDP No.120701.02 là dao cắt an toàn công nghiệp chính hãng của MARTOR, được thiết kế với thân dao bằng nhựa MDP (Metal Detectable Plastic) có khả năng phát hiện kim loại, phù hợp cho các môi trường yêu cầu kiểm soát an toàn nghiêm ngặt.',
       'Dao được trang bị cơ chế lưỡi tự động thu hồi, giúp lưỡi dao rút lại ngay khi rời khỏi vật liệu cắt, từ đó giảm thiểu tối đa nguy cơ tai nạn lao động. Nhờ đặc tính phát hiện kim loại, sản phẩm đặc biệt phù hợp cho ngành thực phẩm, dược phẩm, phòng sạch và các dây chuyền sản xuất yêu cầu tiêu chuẩn an toàn cao.',
@@ -692,7 +692,7 @@ export const PRODUCTS: Product[] = [
   {
     part: '110700.02', name: 'SECUNORM SMARTCUT MDP', brand: 'martor', category: 'an-toan',
     series: 'SECUNORM', origin: 'Đức',
-    desc: 'Dao an toàn MARTOR SECUNORM SMARTCUT MDP No.110700.02 là dòng dao cắt an toàn chuyên dụng của MARTOR, được thiết kế cho các môi trường sản xuất yêu cầu tiêu chuẩn an toàn và kiểm soát dị vật nghiêm ng',
+    desc: 'Dao an toàn MARTOR SECUNORM SMARTCUT MDP No.110700.02 là dòng dao cắt an toàn chuyên dụng của MARTOR, được thiết kế cho các môi trường sản xuất yêu cầu tiêu chuẩn an toàn và kiểm soát dị vật nghiêm ngặt như ngành thực phẩm, dược…',
     descFull: [
       'Dao an toàn MARTOR SECUNORM SMARTCUT MDP No.110700.02 là dòng dao cắt an toàn chuyên dụng của MARTOR, được thiết kế cho các môi trường sản xuất yêu cầu tiêu chuẩn an toàn và kiểm soát dị vật nghiêm ngặt như ngành thực phẩm, dược phẩm và phòng sạch.',
       'Thân dao được chế tạo từ nhựa MDP (Metal Detectable Plastic) – vật liệu có khả năng phát hiện bằng máy dò kim loại, giúp giảm nguy cơ lẫn dị vật trong dây chuyền sản xuất và đáp ứng các tiêu chuẩn HACCP.',
@@ -753,7 +753,7 @@ export const PRODUCTS: Product[] = [
   {
     part: '122001.02', name: 'SECUPRO MARTEGO', brand: 'martor', category: 'an-toan',
     series: 'SECUPRO', origin: 'Đức',
-    desc: 'Dao an toàn MARTOR SECUPRO MARTEGO No.122001.02 là dao cắt an toàn công nghiệp cao cấp của MARTOR, nổi bật với cơ chế bóp tay cầm và tự động rút lưỡi hoàn toàn, giúp tăng mức độ an toàn cho người sử d',
+    desc: 'Dao an toàn MARTOR SECUPRO MARTEGO No.122001.02 là dao cắt an toàn công nghiệp cao cấp của MARTOR, nổi bật với cơ chế bóp tay cầm và tự động rút lưỡi hoàn toàn, giúp tăng mức độ an toàn cho người sử dụng và bảo vệ hàng hóa khi…',
     descFull: [
       'Dao an toàn MARTOR SECUPRO MARTEGO No.122001.02 là dao cắt an toàn công nghiệp cao cấp của MARTOR, nổi bật với cơ chế bóp tay cầm và tự động rút lưỡi hoàn toàn, giúp tăng mức độ an toàn cho người sử dụng và bảo vệ hàng hóa khi cắt.',
       'SECUPRO MARTEGO được thiết kế cho môi trường làm việc chuyên nghiệp như kho vận, logistics, dây chuyền đóng gói và nhà máy sản xuất. Cấu trúc chắc chắn cùng thiết kế công thái học giúp thao tác cắt ổn định, giảm mỏi tay khi sử dụng trong thời gian dài.',
@@ -816,7 +816,7 @@ export const PRODUCTS: Product[] = [
   {
     part: '10130610', name: 'SECUPRO MAXISAFE', brand: 'martor', category: 'an-toan',
     series: 'SECUPRO', origin: 'Đức',
-    desc: 'Dao cắt an toàn MARTOR SECUPRO MAXISAFE No.10130610 là dòng dao an toàn công nghiệp chính hãng của MARTOR, được thiết kế cho các công việc cắt bao bì và vật liệu đóng gói trong môi trường kho vận, log',
+    desc: 'Dao cắt an toàn MARTOR SECUPRO MAXISAFE No.10130610 là dòng dao an toàn công nghiệp chính hãng của MARTOR, được thiết kế cho các công việc cắt bao bì và vật liệu đóng gói trong môi trường kho vận, logistics và dây chuyền sản xuất.',
     descFull: [
       'Dao cắt an toàn MARTOR SECUPRO MAXISAFE No.10130610 là dòng dao an toàn công nghiệp chính hãng của MARTOR, được thiết kế cho các công việc cắt bao bì và vật liệu đóng gói trong môi trường kho vận, logistics và dây chuyền sản xuất.',
       'Sản phẩm được trang bị cơ chế lưỡi dao tự động thu hồi hoàn toàn, giúp lưỡi dao rút vào thân ngay khi người dùng nhả thanh trượt. Điều này giúp tăng mức độ an toàn cho người sử dụng và bảo vệ hàng hóa trong quá trình cắt.',
@@ -878,7 +878,7 @@ export const PRODUCTS: Product[] = [
   {
     part: '116001.02', name: 'SECUPRO MEGASAFE', brand: 'martor', category: 'an-toan',
     series: 'SECUPRO', origin: 'Đức',
-    desc: 'Dao an toàn MARTOR SECUPRO MEGASAFE No.116001.02 là dao cắt an toàn công nghiệp cao cấp đến từ MARTOR, được thiết kế để đáp ứng các tiêu chuẩn an toàn cao trong môi trường kho vận, đóng gói và sản xuấ',
+    desc: 'Dao an toàn MARTOR SECUPRO MEGASAFE No.116001.02 là dao cắt an toàn công nghiệp cao cấp đến từ MARTOR, được thiết kế để đáp ứng các tiêu chuẩn an toàn cao trong môi trường kho vận, đóng gói và sản xuất công nghiệp.',
     descFull: [
       'Dao an toàn MARTOR SECUPRO MEGASAFE No.116001.02 là dao cắt an toàn công nghiệp cao cấp đến từ MARTOR, được thiết kế để đáp ứng các tiêu chuẩn an toàn cao trong môi trường kho vận, đóng gói và sản xuất công nghiệp.',
       'Sản phẩm sử dụng cơ chế tự động thu hồi lưỡi hoàn toàn (fully automatic blade retraction), giúp lưỡi dao rút vào thân ngay khi rời khỏi vật liệu cắt, từ đó giảm thiểu tối đa nguy cơ tai nạn lao động.',
