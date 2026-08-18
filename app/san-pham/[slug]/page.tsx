@@ -31,7 +31,7 @@ export function generateMetadata({ params }: PageProps): Metadata {
 
   return {
     title: `${product.name} ${product.part} — ${brandName(product.brand)}`,
-    description: `${product.desc} Mã ${product.part}, thương hiệu ${brandName(product.brand)}. Tải catalog PDF, nhận báo giá trong 24 giờ.`,
+    description: `${product.desc} Mã ${product.part}, thương hiệu ${brandName(product.brand)}. Tải catalog PDF, nhận báo giá sớm nhất.`,
     alternates: { canonical: `/san-pham/${params.slug}` },
   }
 }
@@ -161,7 +161,7 @@ export default function ProductDetailPage({ params }: PageProps) {
         <div className="flex flex-col items-start gap-2.5">
           <h2 className="font-display text-xl font-bold text-white">Yêu cầu báo giá sỉ / lẻ</h2>
           <p className="text-sm leading-relaxed text-ktd-100">
-            Nhận báo giá trong vòng 24 giờ làm việc.
+            Nhận báo giá sớm nhất.
           </p>
           <QuoteButton addPart={product.part} className="mt-1">
             Gửi yêu cầu báo giá

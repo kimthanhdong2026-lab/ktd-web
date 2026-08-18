@@ -18,33 +18,18 @@ import { cx } from '@/lib/utils'
  * Nút gọi chỉ có trên điện thoại vì `tel:` chỉ hữu ích ở đó; trên PC số hotline
  * đã nằm sẵn ở header và footer.
  *
- * Nhãn chữ hiện thường trực bên trái icon, không phải đợi rê chuột — icon dù rõ
- * đến mấy vẫn có thể bị đoán mò, và trên điện thoại thì không có thao tác rê.
+ * Chỉ hiện icon, không kèm nhãn chữ: nhãn chiếm chỗ và che nội dung trên màn
+ * hình hẹp. Tên nút vẫn có ở aria-label cho trình đọc màn hình và ở title để
+ * hiện tooltip khi rê chuột.
  */
 
 const TILE =
   'flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-2xl border border-black/5 bg-white shadow-md transition-transform duration-200 group-hover:scale-105 md:h-[52px] md:w-[52px]'
 
-const LABEL =
-  'rounded-xl border border-black/5 bg-white px-3 py-1.5 text-[13px] font-semibold text-ink-900 shadow-md'
-
 const ICON = 'h-[22px] w-[22px]'
 
-function Item({
-  label,
-  className,
-  children,
-}: {
-  label: string
-  className?: string
-  children: React.ReactNode
-}) {
-  return (
-    <div className={cx('group flex items-center justify-end gap-2', className)}>
-      <span className={LABEL}>{label}</span>
-      {children}
-    </div>
-  )
+function Item({ className, children }: { className?: string; children: React.ReactNode }) {
+  return <div className={cx('group flex items-center justify-end', className)}>{children}</div>
 }
 
 export function FloatingCTA() {
@@ -61,11 +46,12 @@ export function FloatingCTA() {
 
   return (
     <div className="fixed bottom-4 right-4 z-40 flex flex-col items-end gap-2.5 md:bottom-5 md:right-5">
-      <Item label="Báo giá">
+      <Item>
         <button
           type="button"
           onClick={() => openRfq()}
           aria-label="Yêu cầu báo giá"
+          title="Yêu cầu báo giá"
           className={cx(TILE, 'relative text-ktd-600')}
         >
           <IconQuote className={ICON} />
@@ -77,12 +63,13 @@ export function FloatingCTA() {
         </button>
       </Item>
 
-      <Item label="Chat Zalo">
+      <Item>
         <a
           href={ZALO_URL}
           target="_blank"
           rel="noopener noreferrer"
           aria-label="Chat Zalo"
+          title="Chat Zalo"
           className={cx(TILE, 'text-zalo')}
         >
           <IconChat className={ICON} />
@@ -90,21 +77,23 @@ export function FloatingCTA() {
       </Item>
 
       {/* Chỉ điện thoại */}
-      <Item label="Gọi ngay" className="md:hidden">
+      <Item className="md:hidden">
         <a
           href={`tel:${COMPANY_HOTLINE_TEL}`}
           aria-label="Gọi hotline"
+          title="Gọi ngay"
           className={cx(TILE, 'text-ktd-600')}
         >
           <IconPhone className={ICON} />
         </a>
       </Item>
 
-      <Item label="Tìm kiếm">
+      <Item>
         <button
           type="button"
           onClick={() => openSearch('')}
           aria-label="Mở ô tìm kiếm"
+          title="Tìm kiếm sản phẩm"
           className={cx(TILE, 'text-ink-900')}
         >
           <IconSearch className={ICON} />

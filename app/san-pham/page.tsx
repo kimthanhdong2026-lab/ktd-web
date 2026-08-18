@@ -5,7 +5,7 @@ import { BRANDS, PRODUCTS, productSlug } from '@/lib/ktd-data'
 
 export const metadata: Metadata = {
   title: 'Sản phẩm — Thiết bị công nghiệp chính hãng',
-  description: `${BRANDS.length} thương hiệu chính hãng · ${PRODUCTS.length} mã hàng đại diện. Lọc theo thương hiệu, danh mục hoặc lĩnh vực; tải catalog PDF và nhận báo giá trong 24 giờ.`,
+  description: `${BRANDS.length} thương hiệu chính hãng · ${PRODUCTS.length} mã hàng đại diện. Lọc theo thương hiệu, danh mục hoặc lĩnh vực; tải catalog PDF và nhận báo giá sớm nhất.`,
   alternates: { canonical: '/san-pham' },
 }
 

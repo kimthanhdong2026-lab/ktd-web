@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Be_Vietnam_Pro, Inter, JetBrains_Mono } from 'next/font/google'
 import './globals.css'
+import { BRANDS } from '@/lib/ktd-data'
 import { StoreProvider } from '@/components/StoreProvider'
 import { Header } from '@/components/Header'
 import { Footer } from '@/components/Footer'
@@ -42,11 +43,11 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://kimthanhdong.vn'
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: 'Kim Thành Đông — Thiết bị công nghiệp & Giải pháp kỹ thuật | 21 thương hiệu chính hãng',
+    default: `Kim Thành Đông — Thiết bị công nghiệp & Giải pháp kỹ thuật | ${BRANDS.length} thương hiệu chính hãng`,
     template: '%s | Kim Thành Đông',
   },
   description:
-    'Nhà phân phối thiết bị công nghiệp chính hãng từ 2011. Morrisflex, Martor, Helical, ATA, Tecna… Kho Hà Nội – HCM – Vũng Tàu. Báo giá trong 24h.',
+    'Nhà phân phối thiết bị công nghiệp chính hãng từ 2011. Morrisflex, Martor, Helical, ATA, Tecna… Kho Hà Nội – HCM – Vũng Tàu. Báo giá sớm nhất.',
   alternates: { canonical: '/' },
   openGraph: {
     type: 'website',
@@ -54,7 +55,7 @@ export const metadata: Metadata = {
     siteName: COMPANY_NAME,
     title: 'Kim Thành Đông — Thiết bị công nghiệp & Giải pháp kỹ thuật',
     description:
-      '21 thương hiệu quốc tế chính hãng · Kỹ sư tư vấn kỹ thuật · Báo giá trong 24 giờ.',
+      `${BRANDS.length} thương hiệu quốc tế chính hãng · Kỹ sư tư vấn kỹ thuật · Báo giá sớm nhất.`,
   },
   robots: { index: true, follow: true },
 }
