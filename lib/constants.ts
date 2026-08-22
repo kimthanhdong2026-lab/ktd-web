@@ -10,6 +10,7 @@ export const COMPANY_PHONE_TEL = '02543627760'
 export const COMPANY_HOTLINE = '0914 897 227'
 export const COMPANY_HOTLINE_TEL = '0914897227'
 export const COMPANY_HOTLINE_2 = '0974 516 416'
+export const COMPANY_HOTLINE_2_TEL = '0974516416'
 export const COMPANY_EMAIL = 'sales@kimthanhdong.com'
 export const COMPANY_WEBSITE = 'kimthanhdong.vn'
 export const ZALO_URL = 'https://zalo.me/0914897227'
@@ -22,9 +23,18 @@ export const WORKING_HOURS = [
   '7h30 – 11h30, Thứ 7',
 ]
 
-/** Văn phòng và kho. Trụ sở đăng ký nằm riêng ở COMPANY_ADDRESS. */
+/** Trụ sở đăng ký kinh doanh — khác địa chỉ văn phòng làm việc bên dưới. */
+export const REGISTERED_OFFICE = {
+  name: 'Địa chỉ ĐKKD',
+  addr: 'Số 444A Bình Giã, P. Tam Thắng, Tp. Hồ Chí Minh',
+}
+
+/** Ba địa điểm làm việc thật. Trụ sở đăng ký nằm riêng ở REGISTERED_OFFICE. */
 export const OFFICES = [
-  { name: 'Văn phòng', addr: 'Tầng trệt Seaview 4, KĐT Chí Linh, P. Rạch Dừa, Tp. Hồ Chí Minh' },
+  {
+    name: 'Văn phòng làm việc',
+    addr: 'Tầng trệt Seaview 4, KĐT Chí Linh, P. Rạch Dừa, Tp. Hồ Chí Minh',
+  },
   { name: 'Kho hàng HCM', addr: '326 Võ Văn Hát, P. Long Trường, Tp. Hồ Chí Minh' },
   { name: 'Kho hàng Hà Nội', addr: 'Ruby City CT1, P. Việt Hưng, Tp. Hà Nội' },
 ]
@@ -101,18 +111,18 @@ export const SECTOR_CARDS = [
 ]
 
 export const ABOUT_STORY = [
-  'Công ty TNHH Kim Thành Đông được thành lập từ năm 2011, với định hướng cung cấp thiết bị, dụng cụ công nghiệp chất lượng cao và các giải pháp phục vụ hoạt động sản xuất công nghiệp tại Việt Nam.',
-  'Trong quá trình hoạt động, Kim Thành Đông từng bước xây dựng quan hệ hợp tác với các nhà sản xuất công nghiệp uy tín đến từ Đức, Mỹ, Ý và nhiều quốc gia khác. Danh mục sản phẩm của chúng tôi tập trung vào những nhu cầu thực tế trong nhà máy như gia công cơ khí, khuôn mẫu, lắp ráp, đánh dấu và truy xuất, nâng hạ, an toàn lao động, bảo trì và hoàn thiện bề mặt.',
-  'Chúng tôi hiểu rằng trong môi trường sản xuất, một sản phẩm phù hợp không chỉ cần đáp ứng yêu cầu kỹ thuật mà còn phải cân bằng giữa chất lượng, hiệu quả sử dụng, chi phí và khả năng cung ứng. Vì vậy, Kim Thành Đông không chỉ dừng lại ở việc cung cấp sản phẩm mà hướng đến việc giúp khách hàng lựa chọn giải pháp phù hợp với nhu cầu thực tế.',
-  'Sau hơn một thập kỷ hoạt động, Kim Thành Đông đã có cơ hội phục vụ khách hàng thuộc nhiều lĩnh vực như gia công cơ khí & CNC, khuôn mẫu & ép nhựa, ô tô, điện tử, hàng không, đóng tàu và năng lượng. Chính những yêu cầu đa dạng từ khách hàng đã giúp chúng tôi ngày càng hiểu hơn về thị trường và liên tục hoàn thiện danh mục sản phẩm cũng như chất lượng dịch vụ của mình.',
-  'Kim Thành Đông hướng đến những mối quan hệ hợp tác lâu dài, dựa trên sự minh bạch, trách nhiệm và lợi ích bền vững của các bên. Chúng tôi mong muốn trở thành một đối tác đáng tin cậy, kết nối các công nghệ và sản phẩm công nghiệp chất lượng từ thế giới với nhu cầu ngày càng phát triển của doanh nghiệp Việt Nam.',
+  'Công ty TNHH Kim Thành Đông được thành lập từ năm 2011, hoạt động trong lĩnh vực phân phối dụng cụ, thiết bị và sản phẩm công nghiệp tại Việt Nam.',
+  'Trong suốt quá trình phát triển, Kim Thành Đông từng bước xây dựng quan hệ hợp tác trực tiếp với các nhà sản xuất chuyên ngành đến từ Đức, Mỹ, Ý, Pháp, Thụy Điển và nhiều quốc gia khác. Mỗi thương hiệu mang một thế mạnh riêng, từ gia công cắt gọt, đo kiểm, gá kẹp, mài và hoàn thiện bề mặt đến siết lắp ráp, đánh dấu, nâng hạ, bảo trì và an toàn.',
+  'Sự kết hợp của các thương hiệu này tạo nên một hệ sản phẩm có tính bổ trợ cao, đáp ứng nhiều công đoạn khác nhau trong quá trình sản xuất công nghiệp. Đây cũng là định hướng Kim Thành Đông theo đuổi: không mở rộng danh mục một cách dàn trải, mà lựa chọn những nhà sản xuất có chuyên môn rõ ràng, sản phẩm có giá trị ứng dụng thực tế và có khả năng bổ trợ cho nhau.',
+  'Bên cạnh việc cung cấp sản phẩm chính hãng, Kim Thành Đông chú trọng hỗ trợ khách hàng lựa chọn sản phẩm phù hợp với yêu cầu sử dụng, cung cấp đầy đủ thông tin và tài liệu từ nhà sản xuất, đồng thời duy trì khả năng cung ứng ổn định và hỗ trợ lâu dài trong quá trình sử dụng.',
+  'Từ nền tảng được xây dựng từ năm 2011, Kim Thành Đông tiếp tục phát triển danh mục sản phẩm và mạng lưới đối tác với mục tiêu trở thành một đơn vị phân phối công nghiệp đáng tin cậy, kết nối các nhà sản xuất quốc tế với thị trường Việt Nam bằng sự chuyên nghiệp, minh bạch và hợp tác bền vững.',
 ]
 
 export const ABOUT_VISION =
-  'Trở thành đối tác cung ứng đáng tin cậy của các doanh nghiệp sản xuất tại Việt Nam, kết nối những sản phẩm và công nghệ công nghiệp chất lượng từ thế giới với nhu cầu thực tế của khách hàng.'
+  'Trở thành đơn vị phân phối công nghiệp đáng tin cậy tại Việt Nam, kết nối hiệu quả các nhà sản xuất quốc tế với nhu cầu thực tế của thị trường.'
 
 export const ABOUT_MISSION =
-  'Cung cấp sản phẩm chất lượng, giải pháp phù hợp và dịch vụ chuyên nghiệp, giúp khách hàng nâng cao hiệu quả và tạo ra giá trị bền vững trong hoạt động sản xuất.'
+  'Mang đến thị trường Việt Nam các sản phẩm công nghiệp chính hãng, có giá trị ứng dụng thực tế; đồng thời hỗ trợ khách hàng lựa chọn sản phẩm phù hợp nhất.'
 
 export const ABOUT_VALUES = [
   {
@@ -121,7 +131,7 @@ export const ABOUT_VALUES = [
   },
   {
     title: 'Phù hợp',
-    body: 'Ưu tiên giải pháp phù hợp với nhu cầu thực tế của khách hàng.',
+    body: 'Ưu tiên sản phẩm phù hợp với nhu cầu và ứng dụng thực tế, thay vì chỉ tập trung bán hàng.',
   },
   {
     title: 'Hợp tác lâu dài',

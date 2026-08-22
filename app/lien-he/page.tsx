@@ -1,7 +1,6 @@
 import type { Metadata } from 'next'
 import { OfficeMap } from '@/components/contact/OfficeMap'
 import {
-  COMPANY_ADDRESS,
   COMPANY_EMAIL,
   COMPANY_HOTLINE,
   COMPANY_HOTLINE_2,
@@ -47,7 +46,7 @@ export default function ContactPage() {
       <h1 className="mb-2 font-display text-[clamp(1.25rem,2.65vw,1.8125rem)] font-bold leading-tight text-ktd-600">
         {COMPANY_NAME_UPPER}
       </h1>
-      <p className="mb-10 text-body-lg text-ink-500">{COMPANY_ADDRESS}</p>
+      <div className="mb-10" />
 
       <OfficeMap>
         <div className="rounded-xl bg-ktd-50 p-6">

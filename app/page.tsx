@@ -138,7 +138,7 @@ export default function HomePage() {
       <section className="bg-white py-14 md:py-24">
         <div className="container-ktd">
           <div className="mb-9 flex flex-wrap items-end justify-between gap-4">
-            <h2 className="font-display text-h2 text-ink-900">Tin tức &amp; Giải pháp</h2>
+            <h2 className="font-display text-h2 text-ink-900">Tin tức &amp; Kiến thức</h2>
             <Link href="/tin-tuc" className="btn-ghost text-ktd-600">
               Xem tất cả tin tức →
             </Link>

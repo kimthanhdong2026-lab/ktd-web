@@ -1,22 +1,25 @@
 'use client'
 
 import { useState } from 'react'
-import { OFFICES } from '@/lib/constants'
+import { OFFICES, REGISTERED_OFFICE } from '@/lib/constants'
 import { cx } from '@/lib/utils'
 
 /**
  * Spec C7.1 — office list on the left with the shared contact details beneath it,
  * map on the right following the selection.
  */
+/** Ô đầu là trụ sở đăng ký kinh doanh, ba ô sau là địa điểm làm việc thật. */
+const ADDRESSES = [REGISTERED_OFFICE, ...OFFICES]
+
 export function OfficeMap({ children }: { children?: React.ReactNode }) {
-  const [active, setActive] = useState(0)
-  const office = OFFICES[active]
+  const [active, setActive] = useState(1)
+  const office = ADDRESSES[active]
 
   return (
     <div className="grid items-start gap-10 lg:grid-cols-2 lg:gap-12">
       <div>
         <ul className="mb-8 flex flex-col gap-3.5">
-          {OFFICES.map((o, i) => (
+          {ADDRESSES.map((o, i) => (
             <li key={o.name}>
               <button
                 type="button"

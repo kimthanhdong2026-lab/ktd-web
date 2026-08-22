@@ -76,22 +76,17 @@ export default function AboutPage() {
     <>
       <section className="bg-white px-5 py-8 md:py-10">
         <div className="container-ktd text-center">
-          <h1 className="font-display text-h1 leading-tight text-ktd-600">
+          <h1 className="font-display text-h2 leading-tight text-ktd-600">
             Đồng hành cùng công nghiệp Việt Nam từ 2011
           </h1>
         </div>
       </section>
 
       <section className="mx-auto max-w-[900px] px-5 pb-12 md:pb-16">
+        {/* Cả phần này dùng đúng một cỡ chữ và một màu chữ; trước đây đoạn đầu
+            to và đậm hơn nên nhìn như hai khối khác nhau. */}
         {ABOUT_STORY.map((para, i) => (
-          <p
-            key={i}
-            className={
-              i === 0
-                ? 'mb-6 text-[19px] leading-[1.75] text-ink-700'
-                : 'mb-5 text-[17px] leading-[1.75] text-ink-500'
-            }
-          >
+          <p key={i} className="mb-5 text-[17px] leading-[1.75] text-ink-700">
             {para}
           </p>
         ))}
@@ -115,24 +110,24 @@ export default function AboutPage() {
       <section className="container-ktd pb-16 md:pb-20">
         <div className="grid gap-6 md:grid-cols-2">
           <div className="rounded-lg bg-ktd-50 p-8 md:p-10">
-            <h2 className="mb-4 text-center font-display text-2xl font-bold text-ktd-600">Tầm nhìn</h2>
+            <h2 className="mb-4 text-center font-display text-h2 text-ktd-600">Tầm nhìn</h2>
             <p className="text-base leading-relaxed text-ink-700">{ABOUT_VISION}</p>
           </div>
           <div className="rounded-lg bg-ktd-50 p-8 md:p-10">
-            <h2 className="mb-4 text-center font-display text-2xl font-bold text-ktd-600">Sứ mệnh</h2>
+            <h2 className="mb-4 text-center font-display text-h2 text-ktd-600">Sứ mệnh</h2>
             <p className="text-base leading-relaxed text-ink-700">{ABOUT_MISSION}</p>
           </div>
         </div>
       </section>
 
       <section className="container-ktd pb-16 md:pb-20">
-        <h2 className="mb-8 font-display text-[26px] font-bold text-ktd-600 md:text-3xl">
+        <h2 className="mb-8 font-display text-h2 text-ktd-600">
           Giá trị chúng tôi theo đuổi
         </h2>
         <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {ABOUT_VALUES.map((v, i) => (
-            <li key={v.title} className="rounded-xl border border-hairline bg-white p-5 md:p-6">
-              <span className="mb-3 block text-center font-display text-[28px] font-bold text-ktd-100">
+            <li key={v.title} className="rounded-xl bg-ktd-50 p-5 md:p-6">
+              <span className="mb-3 block text-center font-display text-[28px] font-bold text-ktd-600/30">
                 {String(i + 1).padStart(2, '0')}
               </span>
               <h3 className="mb-2 text-center font-display text-[17px] font-semibold text-ink-900">{v.title}</h3>
@@ -143,7 +138,7 @@ export default function AboutPage() {
       </section>
 
       <section className="container-ktd pb-16 md:pb-24">
-        <h2 className="mb-8 font-display text-[26px] font-bold text-ktd-600 md:text-3xl">
+        <h2 className="mb-8 font-display text-h2 text-ktd-600">
           Chặng đường phát triển
         </h2>
         {/* Máy tính: một hàng 9 mốc, vừa khít bề rộng nên không phải cuộn.

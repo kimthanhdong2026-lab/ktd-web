@@ -6,6 +6,8 @@ import {
   COMPANY_HOTLINE_TEL,
   COMPANY_INTRO,
   COMPANY_NAME,
+  COMPANY_HOTLINE_2,
+  COMPANY_HOTLINE_2_TEL,
   COMPANY_PHONE,
   COMPANY_PHONE_TEL,
   FEATURED_CATEGORIES,
@@ -18,9 +20,10 @@ export function Footer() {
   const categories = CATEGORIES.filter((c) => FEATURED_CATEGORIES.includes(c.slug))
 
   return (
-    <footer className="bg-ktd-900 px-0 pb-6 pt-12 text-ktd-100">
+    <footer className="bg-ktd-800 px-0 pb-6 pt-12 text-ktd-100">
       <div className="container-ktd">
-        <div className="grid gap-10 border-b border-[#123a56] pb-9 md:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1.2fr]">
+        {/* Bốn cột chia đều; trước đây 1.4/1/1/1.2 nên khoảng cách nhìn lệch. */}
+        <div className="grid gap-10 border-b border-[#1c4d70] pb-9 md:grid-cols-2 lg:grid-cols-4">
           <div>
             <div className="mb-4 flex items-center gap-3.5">
               <div className="inline-block rounded-md bg-white px-3.5 py-2.5">
@@ -83,6 +86,12 @@ export function Footer() {
                   </Link>
                 </li>
               ))}
+              {/* Footer chỉ liệt kê 4 nhóm tiêu biểu; dòng này dẫn tới đủ 15 nhóm. */}
+              <li className="pt-1">
+                <Link href="/san-pham" className="font-semibold text-white hover:underline">
+                  Xem tất cả danh mục →
+                </Link>
+              </li>
             </ul>
           </div>
 
@@ -100,6 +109,11 @@ export function Footer() {
                 </a>
               </li>
               <li>
+                <a href={`tel:${COMPANY_HOTLINE_2_TEL}`} className="text-[#8fb3cf] hover:text-white">
+                  ☎ {COMPANY_HOTLINE_2}
+                </a>
+              </li>
+              <li>
                 <a href={`mailto:${COMPANY_EMAIL}`} className="text-[#8fb3cf] hover:text-white">
                   ✉ {COMPANY_EMAIL}
                 </a>
@@ -111,16 +125,9 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="flex flex-wrap items-center justify-between gap-5 pt-6">
-          <p className="text-[13px] text-[#4f7ea3]">
+        <div className="pt-6">
+          <p className="text-[13px] text-[#8fb3cf]">
             © {new Date().getFullYear()} {COMPANY_NAME}. Bản quyền được bảo lưu.
-          </p>
-          <p className="flex gap-4 text-[13px] text-[#4f7ea3]">
-            <span>Vũng Tàu</span>
-            <span aria-hidden="true">·</span>
-            <span>TP.HCM</span>
-            <span aria-hidden="true">·</span>
-            <span>Hà Nội</span>
           </p>
         </div>
       </div>

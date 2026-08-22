@@ -72,6 +72,7 @@ export const BRANDS: Brand[] = [
   { slug: 'corehog', name: 'Corehog', origin: 'Mỹ', desc: 'Thương hiệu dụng cụ cắt chuyên biệt cho composite, với dao phay, mũi khoan và dụng cụ gia công CFRP, fiberglass và cấu trúc honeycomb.', logo: '/assets/brands/norm/corehog.webp' },
   { slug: 'bevel-tools', name: 'Bevel Tools', origin: 'Hà Lan', desc: 'Chuyên gia về vát mép và bo cạnh kim loại, cung cấp máy cùng dao cắt chuyên dụng cho chuẩn bị mép hàn và hoàn thiện cạnh.', logo: '/assets/brands/norm/bevel-tools.webp' },
   { slug: 'rocklinizer', name: 'ROCKLIN', origin: 'Mỹ', desc: 'Nhà sản xuất các công nghệ phục hồi và tăng tuổi thọ bề mặt kim loại, nổi bật với Rocklinizer® và hệ thống sửa khuôn MoldMender®.', logo: '/assets/brands/norm/rocklinizer.webp' },
+  { slug: 'moldmender', name: 'MoldMender', origin: 'Mỹ', desc: 'Thương hiệu sửa chữa khuôn của Rocklin, chuyên máy hàn đắp vi điểm và vật liệu phục hồi cho khuôn mẫu, chi tiết kim loại bị mòn hoặc sứt mẻ.' },
   { slug: 'buchem', name: 'Buchem', origin: 'Đức', desc: 'Chuyên cung cấp các sản phẩm vệ sinh cho ngành khuôn mẫu và ép nhựa.', logo: '/assets/brands/norm/buchem.webp' },
   { slug: 'diprofil', name: 'Diprofil', origin: 'Thụy Điển', desc: 'Thương hiệu chuyên dụng cụ và thiết bị đánh bóng, giũa và hoàn thiện chính xác, đặc biệt cho ngành khuôn mẫu và gia công tinh.', logo: '/assets/brands/norm/diprofil.webp' },
   { slug: 'rtc', name: 'RTC', origin: 'Đức', desc: 'Chuyên công nghệ khớp nối nhanh cho khí nén, thủy lực, nước và các môi chất công nghiệp, với danh mục hơn 10.000 sản phẩm và phụ kiện.', logo: '/assets/brands/norm/rtc.webp' },
@@ -1165,7 +1166,7 @@ export const NEWS: Article[] = [
     excerpt: 'Cấu trúc hạt cacbua vonfram và chất kết dính cobalt quyết định tuổi thọ và tốc độ bóc tách vật liệu.',
   },
   {
-    slug: 'chon-dao-phay', cat: 'Giải pháp ứng dụng', date: '21/07/2026',
+    slug: 'chon-dao-phay', cat: 'Kiến thức kỹ thuật', date: '21/07/2026',
     title: 'Hướng dẫn chọn dao phay ngón theo vật liệu phôi',
     excerpt: 'Số me, lớp phủ và biên dạng — ba yếu tố cần cân nhắc khi phay nhôm, thép tôi hay composite.',
   },
@@ -1176,7 +1177,7 @@ export const NEWS: Article[] = [
   },
 ]
 
-export const NEWS_CATEGORIES = ['Kiến thức kỹ thuật', 'Giải pháp ứng dụng', 'Tin tức'] as const
+export const NEWS_CATEGORIES = ['Kiến thức kỹ thuật', 'Tin tức'] as const
 
 // ---------------------------------------------------------------- lookups
 

@@ -178,7 +178,9 @@ export function ProductBrowser() {
 
   return (
     <div className="container-ktd pb-16 pt-6 md:pb-24">
-      <h1 className="mb-3 font-display text-h1 text-ink-900">Tìm đúng thiết bị bạn cần</h1>
+      <h1 className="mb-3 font-display text-h3 text-ktd-600">
+        Khám phá danh mục sản phẩm Kim Thành Đông đang phân phối
+      </h1>
       <p className="mb-6 max-w-[1280px] text-body-lg text-ink-500">
         Tìm kiếm nhanh theo tên sản phẩm, mã hàng, thương hiệu hoặc danh mục bằng tiếng Việt hoặc
         tiếng Anh.

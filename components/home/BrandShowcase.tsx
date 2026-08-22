@@ -10,6 +10,17 @@ import { BRANDS_CTA, BRANDS_EYEBROW, BRANDS_INTRO } from '@/lib/constants'
 const ROTATE_MS = 3600
 
 /**
+ * Số cột ở khổ màn rộng, chọn sao cho không có hàng lẻ: ưu tiên 6, không chia
+ * hết thì 5. Danh sách hãng còn thay đổi nên để máy tự chọn, đỡ phải sửa tay
+ * mỗi lần thêm hoặc bớt một thương hiệu.
+ */
+const WIDE_COLS = BRANDS.length % 6 === 0 ? 6 : 5
+const TILE_WIDTH =
+  WIDE_COLS === 6
+    ? 'xl:w-[calc((100%-3.75rem)/6)] min-[1400px]:w-[calc((100%-5rem)/6)]'
+    : 'xl:w-[calc((100%-3rem)/5)] min-[1400px]:w-[calc((100%-4rem)/5)]'
+
+/**
  * Khối "thương hiệu phân phối" theo yêu cầu tài liệu L3: giữ đủ 18 logo trên
  * lưới, cứ mỗi vài giây có một ô tự nổi to lên và thông tin hãng đó hiện ở
  * cột bên phải. Rê chuột (hoặc tab tới) một logo thì ô đó được chọn ngay và
@@ -84,7 +95,7 @@ export function BrandShowcase() {
               return (
                 <li
                   key={b.slug}
-                  className="w-[calc((100%-1.25rem)/3)] sm:w-[calc((100%-2.25rem)/4)] xl:w-[calc((100%-3.75rem)/6)] min-[1400px]:w-[calc((100%-5rem)/6)]"
+                  className={`w-[calc((100%-1.25rem)/3)] sm:w-[calc((100%-2.25rem)/4)] ${TILE_WIDTH}`}
                   onMouseEnter={() => {
                     setActive(i)
                     setPaused(true)
