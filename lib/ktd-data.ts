@@ -18,10 +18,6 @@ export interface Category {
   name: string
   /** Dòng chữ nhỏ liệt kê nhóm thiết bị — thay cho số đếm sản phẩm. */
   sub: string
-  /** Khóa icon, ánh xạ sang component trong components/home/CategoryTiles.tsx */
-  icon: string
-  /** Ảnh thiết bị đại diện, đặt chìm làm nền ô. Chưa có thì ô dùng nền kỹ thuật. */
-  image?: string
 }
 
 export interface Product {
@@ -64,41 +60,42 @@ export const BRANDS: Brand[] = [
   // Thứ tự ở đây là thứ tự ưu tiên hiển thị (dải logo trang chủ và cách gom
   // nhóm ở trang sản phẩm). 8 hãng đầu theo chỉ định trong tài liệu SỬA WEB;
   // phần còn lại giữ nguyên, chờ danh sách đầy đủ.
-  { slug: 'martor', name: 'Martor', origin: 'Đức', desc: 'Dao an toàn, GS certified', logo: '/assets/brands/martor.webp' },
-  { slug: 'morrisflex', name: 'Morrisflex', origin: 'Ireland', desc: 'Mũi mài hợp kim cacbua vonfram', logo: '/assets/brands/morrisflex.webp' },
-  { slug: 'ata', name: 'ATA Air Tools', origin: 'Ireland', desc: 'Máy mài, chà nhám khí nén', logo: '/assets/brands/ata.webp' },
-  { slug: 'technomark', name: 'Technomark', origin: 'Pháp', desc: 'Máy khắc dấu laser & chấm peen' },
-  { slug: 'lenzkes', name: 'Lenzkes', origin: 'Đức', desc: 'Kẹp khuôn, kẹp gá máy công cụ', logo: '/assets/brands/lenzkes.webp' },
-  { slug: 'tschorn', name: 'TSChorn', origin: 'Đức', desc: 'Thiết bị đo, đầu dò 3D', logo: '/assets/brands/tschorn.webp' },
-  { slug: 'fiam', name: 'Fiam', origin: 'Ý', desc: 'Tua vít điện công nghiệp', logo: '/assets/brands/fiam.webp' },
-  { slug: 'tecna', name: 'Tecna', origin: 'Ý', desc: 'Pa lăng cân bằng', logo: '/assets/brands/tecna.webp' },
-  { slug: 'helical', name: 'Helical', origin: 'Mỹ', desc: 'Dao phay ngón hiệu suất cao' },
-  { slug: 'corehog', name: 'Corehog', origin: 'Mỹ', desc: 'Công cụ CNC cho composite, CFRP', logo: '/assets/brands/corehog.webp' },
-  { slug: 'bevel-tools', name: 'Bevel Tools', origin: 'Hà Lan', desc: 'Máy vát mép & bo tròn kim loại' },
-  { slug: 'rocklinizer', name: 'Rocklinizer', origin: 'Mỹ', desc: 'Máy phủ cứng bề mặt khuôn', logo: '/assets/brands/rocklinizer.webp' },
-  { slug: 'buchem', name: 'Buchem', origin: 'Đức', desc: 'Hóa chất vệ sinh khuôn mẫu', logo: '/assets/brands/buchem.webp' },
-  { slug: 'diprofil', name: 'Diprofil', origin: 'Thụy Điển', desc: 'Máy đánh bóng khuôn', logo: '/assets/brands/diprofil.webp' },
-  { slug: 'rtc', name: 'RTC', origin: 'Thổ Nhĩ Kỳ', desc: 'Khớp nối', logo: '/assets/brands/rtc.webp' },
-  { slug: 'sloky', name: 'Sloky', origin: 'Đài Loan', desc: 'Tua vít lực chính xác', logo: '/assets/brands/sloky.webp' },
-  { slug: 'hartner', name: 'Hartner', origin: 'Đức', desc: 'Dụng cụ cắt gọt chính xác', logo: '/assets/brands/hartner.webp' },
-  { slug: 'karnasch', name: 'Karnasch', origin: 'Đức', desc: 'Dụng cụ cắt gọt, mũi khoan chuyên dụng', logo: '/assets/brands/karnasch.webp' },
+  { slug: 'martor', name: 'Martor', origin: 'Đức', desc: 'Thương hiệu hàng đầu về giải pháp cắt an toàn: dao an toàn, kéo an toàn, lưỡi dao và dụng cụ cắt chuyên dụng cho môi trường công nghiệp.', logo: '/assets/brands/norm/martor.webp' },
+  { slug: 'morrisflex', name: 'Morrisflex', origin: 'Ireland', desc: 'Thương hiệu thuộc ATA Group, chuyên mũi mài carbide và dụng cụ mài phục vụ gia công, sửa nguội và hoàn thiện kim loại.', logo: '/assets/brands/norm/morrisflex.webp' },
+  { slug: 'ata', name: 'ATA Air Tools', origin: 'Ireland', desc: 'Thương hiệu dụng cụ khí nén công nghiệp của ATA Group, chuyên máy mài, máy chà nhám và thiết bị hoàn thiện bề mặt.', logo: '/assets/brands/norm/ata.webp' },
+  { slug: 'technomark', name: 'Technomark', origin: 'Pháp', desc: 'Chuyên gia về đánh dấu và truy xuất công nghiệp, với các hệ thống khắc chấm và khắc laser được thiết kế, sản xuất tại Pháp.' },
+  { slug: 'lenzkes', name: 'Lenzkes', origin: 'Đức', desc: 'Nhà cung cấp hàng đầu hệ thống kẹp nhanh cho khuôn và phôi, giúp rút ngắn thời gian thay đổi và nâng cao hiệu quả vận hành máy.', logo: '/assets/brands/norm/lenzkes.webp' },
+  { slug: 'tschorn', name: 'TSChorn', origin: 'Đức', desc: 'Thương hiệu dụng cụ đo và căn chỉnh chính xác cho gia công CNC, nổi bật với đầu dò 3D, dò cạnh và thiết bị xác định vị trí gia công.', logo: '/assets/brands/norm/tschorn.webp' },
+  { slug: 'fiam', name: 'Fiam', origin: 'Ý', desc: 'Chuyên gia về công nghệ siết công nghiệp, cung cấp dụng cụ và hệ thống siết kiểm soát lực cho các dây chuyền lắp ráp.', logo: '/assets/brands/norm/fiam.webp' },
+  { slug: 'tecna', name: 'Tecna', origin: 'Ý', desc: 'Nhà sản xuất thiết bị hàn điện trở, thiết bị kiểm tra thông số hàn và hệ thống pa lăng cân bằng tải phục vụ sản xuất công nghiệp.', logo: '/assets/brands/norm/tecna.webp' },
+  { slug: 'helical', name: 'HELICAL SOLUTIONS', origin: 'Mỹ', desc: 'Thương hiệu dụng cụ phay carbide hiệu suất cao, cung cấp các giải pháp dao phay chuyên dụng cho nhiều vật liệu và ứng dụng gia công CNC.' },
+  { slug: 'corehog', name: 'Corehog', origin: 'Mỹ', desc: 'Thương hiệu dụng cụ cắt chuyên biệt cho composite, với dao phay, mũi khoan và dụng cụ gia công CFRP, fiberglass và cấu trúc honeycomb.', logo: '/assets/brands/norm/corehog.webp' },
+  { slug: 'bevel-tools', name: 'Bevel Tools', origin: 'Hà Lan', desc: 'Chuyên gia về vát mép và bo cạnh kim loại, cung cấp máy cùng dao cắt chuyên dụng cho chuẩn bị mép hàn và hoàn thiện cạnh.' },
+  { slug: 'rocklinizer', name: 'ROCKLIN', origin: 'Mỹ', desc: 'Nhà sản xuất các công nghệ phục hồi và tăng tuổi thọ bề mặt kim loại, nổi bật với Rocklinizer® và hệ thống sửa khuôn MoldMender®.', logo: '/assets/brands/norm/rocklinizer.webp' },
+  { slug: 'buchem', name: 'Buchem', origin: 'Đức', desc: 'Chuyên cung cấp các sản phẩm vệ sinh cho ngành khuôn mẫu và ép nhựa.', logo: '/assets/brands/norm/buchem.webp' },
+  { slug: 'diprofil', name: 'Diprofil', origin: 'Thụy Điển', desc: 'Thương hiệu chuyên dụng cụ và thiết bị đánh bóng, giũa và hoàn thiện chính xác, đặc biệt cho ngành khuôn mẫu và gia công tinh.', logo: '/assets/brands/norm/diprofil.webp' },
+  { slug: 'rtc', name: 'RTC', origin: 'Đức', desc: 'Chuyên công nghệ khớp nối nhanh cho khí nén, thủy lực, nước và các môi chất công nghiệp, với danh mục hơn 10.000 sản phẩm và phụ kiện.', logo: '/assets/brands/norm/rtc.webp' },
+  { slug: 'sloky', name: 'Sloky', origin: 'Đài Loan', desc: 'Chuyên dụng cụ siết lực cầm tay với hệ thống tô vít lực và đầu nối kiểm soát mô-men, giúp hạn chế siết quá lực và bảo vệ dụng cụ.', logo: '/assets/brands/norm/sloky.webp' },
+  { slug: 'hartner', name: 'Hartner', origin: 'Đức', desc: 'Thương hiệu dụng cụ cắt gọt chuyên sâu với các giải pháp khoan, ta rô, doa và gia công lỗ cho sản xuất cơ khí.', logo: '/assets/brands/norm/hartner.webp' },
+  { slug: 'karnasch', name: 'Karnasch', origin: 'Đức', desc: 'Thương hiệu dụng cụ gia công hiệu suất cao với danh mục chuyên sâu về khoan, phay, khoét, ta rô và các dụng cụ cắt gọt kim loại.', logo: '/assets/brands/norm/karnasch.webp' },
 ]
 
 export const CATEGORIES: Category[] = [
-  { slug: 'an-toan', name: 'Dụng cụ an toàn', sub: 'Dao, kéo an toàn, lưỡi dao & phụ kiện', icon: 'shield', image: '/categories/an-toan.webp' },
-  { slug: 'cat-got-cnc', name: 'Dụng cụ cắt gọt CNC', sub: 'Mũi khoan, dao phay, mũi khoét, ta rô', icon: 'drill' },
-  { slug: 'mai-hoan-thien', name: 'Mài, đánh bóng & hoàn thiện bề mặt', sub: 'Máy mài, mũi mài, dụng cụ đánh bóng', icon: 'grind' },
-  { slug: 'kep-ve-sinh-khuon', name: 'Kẹp và vệ sinh khuôn mẫu', sub: 'Kẹp khuôn, kẹp phôi, vệ sinh khuôn', icon: 'clamp' },
-  { slug: 'do-can-chinh', name: 'Thiết bị đo & Căn chỉnh gia công', sub: 'Đầu dò 3D, Dò cạnh, Xác định điểm 0', icon: 'target' },
-  { slug: 'danh-dau', name: 'Đánh dấu & truy xuất', sub: 'Khắc chấm, Khắc laser, Truy xuất nguồn gốc', icon: 'qr', image: '/categories/danh-dau.webp' },
-  { slug: 'nang-ha', name: 'Thiết bị nâng hạ & công thái học', sub: 'Pa lăng cân bằng, Bộ cân bằng tải, Phụ kiện', icon: 'hoist' },
-  { slug: 'siet-cong-nghiep', name: 'Thiết bị siết công nghiệp', sub: 'Tô vít công nghiệp, Máy siết bu lông, Hệ thống siết lực tự động', icon: 'gear' },
-  { slug: 'siet-luc-cam-tay', name: 'Dụng cụ siết lực cầm tay', sub: 'Tô vít lực, Đầu vít, Phụ kiện', icon: 'screwdriver' },
-  { slug: 'vat-mep', name: 'Máy vát mép & bo cạnh', sub: 'Vát mép, Bo tròn cạnh, Chuẩn bị mép hàn', icon: 'bevel' },
-  { slug: 'composite', name: 'Dụng cụ gia công composite', sub: 'Dao phay, Mũi khoan, Dụng cụ Honeycomb', icon: 'honeycomb' },
-  { slug: 'do-kiem-may-han', name: 'Thiết bị đo & Kiểm tra máy hàn', sub: 'Đo dòng điện hàn và lực ép', icon: 'wave' },
-  { slug: 'phuc-hoi-be-mat', name: 'Xử lý & phục hồi bề mặt kim loại', sub: 'Phủ carbide, Sửa chữa khuôn, Phục hồi bề mặt', icon: 'diamond' },
-  { slug: 'khop-noi', name: 'Khớp nối nhanh công nghiệp', sub: 'Khớp nối khí, Khớp nối thủy lực, Khớp nối nước', icon: 'coupling' },
+  { slug: 'an-toan', name: 'Dụng cụ an toàn', sub: 'Dao, kéo an toàn, lưỡi dao & phụ kiện' },
+  { slug: 'cat-got-cnc', name: 'Dụng cụ cắt gọt CNC', sub: 'Mũi khoan, dao phay, mũi khoét, ta rô' },
+  { slug: 'mai-hoan-thien', name: 'Mài, đánh bóng & hoàn thiện bề mặt', sub: 'Máy mài, mũi mài, dụng cụ đánh bóng' },
+  { slug: 'kep-khuon-phoi', name: 'Kẹp khuôn & Kẹp phôi', sub: 'Kẹp khuôn, kẹp phôi, phụ kiện gá kẹp' },
+  { slug: 'do-can-chinh', name: 'Thiết bị đo & Căn chỉnh gia công', sub: 'Đầu dò 3D, Dò cạnh, Xác định điểm 0' },
+  { slug: 'danh-dau', name: 'Đánh dấu & truy xuất', sub: 'Khắc chấm, Khắc laser, Truy xuất nguồn gốc' },
+  { slug: 'nang-ha', name: 'Thiết bị nâng hạ & công thái học', sub: 'Pa lăng cân bằng, Bộ cân bằng tải, Phụ kiện' },
+  { slug: 'siet-cong-nghiep', name: 'Thiết bị siết công nghiệp', sub: 'Tô vít công nghiệp, Máy siết bu lông, Hệ thống siết lực tự động' },
+  { slug: 'siet-luc-cam-tay', name: 'Dụng cụ siết lực cầm tay', sub: 'Tô vít lực, Đầu vít, Phụ kiện' },
+  { slug: 'vat-mep', name: 'Máy vát mép & bo cạnh', sub: 'Vát mép, Bo tròn cạnh, Chuẩn bị mép hàn' },
+  { slug: 'composite', name: 'Dụng cụ gia công composite', sub: 'Dao phay, Mũi khoan, Dụng cụ Honeycomb' },
+  { slug: 'do-kiem-may-han', name: 'Thiết bị đo & Kiểm tra máy hàn', sub: 'Đo dòng điện hàn và lực ép' },
+  { slug: 'phuc-hoi-be-mat', name: 'Xử lý & phục hồi bề mặt kim loại', sub: 'Phủ carbide, Sửa chữa khuôn, Phục hồi bề mặt' },
+  { slug: 'khop-noi', name: 'Khớp nối nhanh công nghiệp', sub: 'Khớp nối khí, thủy lực & Khớp nối khác' },
+  { slug: 've-sinh-khuon', name: 'Vệ sinh & Bảo trì khuôn', sub: 'Vệ sinh khuôn và trục vít' },
 ]
 
 
@@ -122,7 +119,8 @@ export const CATEGORY_SECTORS: Record<string, string[]> = {
   'an-toan': ['Ô tô & linh kiện', 'Điện tử & lắp ráp chính xác', 'Khuôn mẫu & ép nhựa'],
   'cat-got-cnc': ['Gia công cơ khí & CNC', 'Hàng không vũ trụ', 'Đóng tàu & kết cấu kim loại'],
   'mai-hoan-thien': ['Gia công cơ khí & CNC', 'Đóng tàu & kết cấu kim loại', 'Khuôn mẫu & ép nhựa'],
-  'kep-ve-sinh-khuon': ['Khuôn mẫu & ép nhựa', 'Gia công cơ khí & CNC'],
+  'kep-khuon-phoi': ['Khuôn mẫu & ép nhựa', 'Gia công cơ khí & CNC'],
+  've-sinh-khuon': ['Khuôn mẫu & ép nhựa'],
   'do-can-chinh': ['Gia công cơ khí & CNC', 'Khuôn mẫu & ép nhựa'],
   'danh-dau': ['Ô tô & linh kiện', 'Dầu khí & năng lượng', 'Điện tử & lắp ráp chính xác'],
   'nang-ha': ['Ô tô & linh kiện', 'Đóng tàu & kết cấu kim loại', 'Điện tử & lắp ráp chính xác'],
@@ -1079,7 +1077,7 @@ export const PRODUCTS: Product[] = [
     pdf: { name: 'Tecna Balancers', size: '4.0 MB', pages: 18 },
   },
   {
-    part: 'LK-125', name: 'Bộ kẹp khuôn Lenzkes LK-125', brand: 'lenzkes', category: 'kep-ve-sinh-khuon',
+    part: 'LK-125', name: 'Bộ kẹp khuôn Lenzkes LK-125', brand: 'lenzkes', category: 'kep-khuon-phoi',
     series: 'Clamping', origin: 'Đức',
     desc: 'Bộ kẹp gá khuôn trên bàn máy công cụ, lực kẹp cao, tháo lắp nhanh không vặn ren dài.',
     specs: [['Rãnh T', '14 mm'], ['Lực kẹp', '25 kN'], ['Số chi tiết', '58']],
@@ -1128,14 +1126,14 @@ export const PRODUCTS: Product[] = [
   },
   {
     part: 'RTC-40', name: 'Khớp nối RTC-40', brand: 'rtc', category: 'khop-noi',
-    series: 'RTC', origin: 'Thổ Nhĩ Kỳ',
+    series: 'RTC', origin: 'Đức',
     desc: 'Khớp nối truyền động bù lệch tâm, đàn hồi chống rung cho hệ trục.',
     specs: [['Đường kính trục', '40 mm'], ['Mô-men', '120 Nm'], ['Kiểu', 'Đàn hồi']],
     kw: ['khop noi', 'rtc', 'truyen dong'],
     pdf: { name: 'RTC Couplings', size: '1.9 MB', pages: 8 },
   },
   {
-    part: 'BX-88', name: 'Hóa chất vệ sinh khuôn Buchem BX-88', brand: 'buchem', category: 'kep-ve-sinh-khuon',
+    part: 'BX-88', name: 'Hóa chất vệ sinh khuôn Buchem BX-88', brand: 'buchem', category: 've-sinh-khuon',
     series: 'BX', origin: 'Đức',
     desc: 'Dung dịch tẩy nhựa cháy và cặn khuôn ép, an toàn với bề mặt thép khuôn.',
     specs: [['Dạng', 'Bình xịt 500 ml'], ['Ứng dụng', 'Khuôn ép nhựa'], ['Điểm chớp cháy', '> 60 °C']],

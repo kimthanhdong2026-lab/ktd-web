@@ -41,7 +41,7 @@ export const NAV_ITEMS = [
  * Bốn danh mục tiêu biểu, dùng chung cho cột "Danh mục" ở footer và bộ lọc
  * danh mục ở trang Sản phẩm — để hai chỗ không bao giờ lệch nhau.
  */
-export const FEATURED_CATEGORIES = ['mai-hoan-thien', 'cat-got-cnc', 'an-toan', 'kep-ve-sinh-khuon']
+export const FEATURED_CATEGORIES = ['mai-hoan-thien', 'cat-got-cnc', 'an-toan', 'kep-khuon-phoi']
 
 export const HERO_BADGE = 'GIẢI PHÁP TỐI ƯU · THƯƠNG HIỆU UY TÍN · ĐỒNG HÀNH DÀI HẠN'
 /** Bản rút gọn cho điện thoại — câu đầy đủ 56 ký tự không thể nằm một dòng. */
@@ -58,6 +58,15 @@ export const HERO_CHIPS = [
   'Máy mài khí nén',
   'Máy đánh dấu',
 ]
+
+export const CATEGORIES_HEADING = 'Danh mục sản phẩm'
+
+export const BRANDS_EYEBROW = 'Phân phối chính hãng'
+
+export const BRANDS_INTRO =
+  'Mỗi thương hiệu Kim Thành Đông phân phối đảm nhiệm một thế mạnh chuyên biệt. Khi kết hợp lại, các thương hiệu này tạo thành một hệ sản phẩm bổ trợ xuyên suốt nhiều công đoạn của quá trình sản xuất công nghiệp.'
+
+export const BRANDS_CTA = 'Xem tất cả sản phẩm theo thương hiệu →'
 
 export const WHY_ITEMS = [
   {

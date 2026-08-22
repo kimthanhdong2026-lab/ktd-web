@@ -1,7 +1,7 @@
 import Link from 'next/link'
-import Image from 'next/image'
 import { HeroSearch } from '@/components/home/HeroSearch'
 import { HeroVideo } from '@/components/home/HeroVideo'
+import { BrandShowcase } from '@/components/home/BrandShowcase'
 import { CategoryTiles } from '@/components/home/CategoryTiles'
 import { FeaturedProducts } from '@/components/home/FeaturedProducts'
 import { QuoteButton } from '@/components/QuoteButton'
@@ -103,54 +103,8 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ---------- 2. Brand strip ---------- */}
-      <section className="bg-white py-14 md:py-24">
-        <div className="container-ktd">
-          <div className="mb-12 text-center">
-            <p className="label-caps mb-3 text-ktd-600">Phân phối chính hãng</p>
-            <h2 className="font-display text-h2 text-ink-900">
-              {BRANDS.length} thương hiệu quốc tế chúng tôi đang phân phối
-            </h2>
-          </div>
-
-          <ul className="grid grid-cols-3 gap-3 sm:grid-cols-4 md:gap-4 lg:grid-cols-6">
-            {BRANDS.map((b) => (
-              <li key={b.slug}>
-                <Link
-                  href={`/san-pham?brand=${b.slug}`}
-                  title={b.name}
-                  className="flex h-full min-h-[88px] items-center justify-center rounded-[10px] border border-[#e2e7ec] bg-white p-4 transition duration-200 hover:-translate-y-0.5 hover:border-ktd-600 hover:shadow-md"
-                >
-                  {b.logo ? (
-                    // Logo để nguyên màu gốc. Bản trước dùng grayscale + hover mới
-                    // hiện màu, nên trên máy thật và trên điện thoại (không có
-                    // hover) logo luôn bị trắng xám.
-                    <Image
-                      src={b.logo}
-                      alt={b.name}
-                      width={160}
-                      height={56}
-                      className="max-h-12 w-auto max-w-full object-contain"
-                    />
-                  ) : (
-                    // Chưa có file logo thì hiện tên hãng, nếu không ô sẽ trống
-                    // và khách không biết đó là thương hiệu nào.
-                    <span className="text-center font-display text-[15px] font-bold leading-tight text-ink-700">
-                      {b.name}
-                    </span>
-                  )}
-                </Link>
-              </li>
-            ))}
-          </ul>
-
-          <div className="mt-10 text-center">
-            <Link href="/san-pham" className="btn-ghost text-ktd-600">
-              Xem tất cả sản phẩm theo thương hiệu →
-            </Link>
-          </div>
-        </div>
-      </section>
+      {/* ---------- 2. Brand showcase ---------- */}
+      <BrandShowcase />
 
       {/* ---------- 3. Categories ---------- */}
       <CategoryTiles />

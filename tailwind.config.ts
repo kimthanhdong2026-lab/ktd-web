@@ -9,6 +9,9 @@ const config: Config = {
         ktd: {
           50: '#EEF6FC',
           100: '#C7DFEF',
+          // Xanh lấy trực tiếp từ file logo gốc (Logo Công ty.jpg) — dùng cho
+          // các tiêu đề lớn để chữ và logo cùng một sắc xanh.
+          logo: '#005E96',
           600: '#006BB2', // brand primary
           700: '#005490', // primary hover
           800: '#003F6C', // dark section / utility bar
