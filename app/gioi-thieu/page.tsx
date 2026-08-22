@@ -121,7 +121,7 @@ export default function AboutPage() {
       </section>
 
       <section className="container-ktd pb-16 md:pb-20">
-        <h2 className="mb-8 font-display text-h2 text-ktd-600">
+        <h2 className="mb-8 text-center font-display text-h2 text-ktd-600">
           Giá trị chúng tôi theo đuổi
         </h2>
         <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -138,7 +138,7 @@ export default function AboutPage() {
       </section>
 
       <section className="container-ktd pb-16 md:pb-24">
-        <h2 className="mb-8 font-display text-h2 text-ktd-600">
+        <h2 className="mb-8 text-center font-display text-h2 text-ktd-600">
           Chặng đường phát triển
         </h2>
         {/* Máy tính: một hàng 9 mốc, vừa khít bề rộng nên không phải cuộn.
