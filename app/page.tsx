@@ -4,6 +4,7 @@ import { HeroVideo } from '@/components/home/HeroVideo'
 import { BrandShowcase } from '@/components/home/BrandShowcase'
 import { CategoryTiles } from '@/components/home/CategoryTiles'
 import { FeaturedProducts } from '@/components/home/FeaturedProducts'
+import { SectorMarquee } from '@/components/home/SectorMarquee'
 import { QuoteButton } from '@/components/QuoteButton'
 import { BRANDS, NEWS } from '@/lib/ktd-data'
 import {
@@ -11,7 +12,6 @@ import {
   HERO_BADGE_SHORT,
   HERO_SUBTITLE,
   HERO_TITLE,
-  SECTOR_CARDS,
   WHY_ITEMS,
 } from '@/lib/constants'
 
@@ -110,41 +110,7 @@ export default function HomePage() {
       <CategoryTiles />
 
       {/* ---------- 4. Sectors ---------- */}
-      <section className="overflow-hidden bg-ktd-900 pb-4 pt-12 md:pt-14">
-        <div className="container-ktd">
-          <p className="label-caps mb-3 text-[#4f7ea3]">Lĩnh vực phục vụ</p>
-          <h2 className="mb-7 font-display text-h2 text-white">
-            Giải pháp cho các ngành công nghiệp
-          </h2>
-        </div>
-        <ul className="flex snap-x snap-mandatory gap-5 overflow-x-auto px-5 pb-3 sm:px-6 md:px-8 lg:px-10">
-          {SECTOR_CARDS.map((s) => (
-            <li
-              key={s.name}
-              className="relative h-[304px] w-[320px] flex-none snap-start overflow-hidden rounded-lg bg-[#012c48] sm:w-[420px]"
-            >
-              <span className="placeholder-hatch-dark absolute inset-0 opacity-60" aria-hidden="true" />
-              <span
-                className="absolute inset-0"
-                style={{
-                  background:
-                    'linear-gradient(180deg,rgba(0,38,63,0) 40%,rgba(0,38,63,.95) 100%)',
-                }}
-                aria-hidden="true"
-              />
-              <span className="absolute left-4 top-4 font-mono text-[10px] tracking-[0.08em] text-[#4f7ea3]">
-                [ ẢNH NGÀNH ]
-              </span>
-              <span className="absolute bottom-0 left-0 right-0 p-5 sm:p-7">
-                <span className="mb-2 block font-display text-[18px] font-semibold text-white sm:text-[22px]">
-                  {s.name}
-                </span>
-                <span className="block text-sm leading-relaxed text-ktd-100">{s.desc}</span>
-              </span>
-            </li>
-          ))}
-        </ul>
-      </section>
+      <SectorMarquee />
 
       {/* ---------- 5. Featured products ---------- */}
       <FeaturedProducts />

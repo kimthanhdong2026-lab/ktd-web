@@ -116,16 +116,16 @@ export const SLANG_MAP: Record<string, string> = {
 /** Ngành ứng dụng theo từng danh mục — dùng cho tab "Ứng dụng" ở trang chi
     tiết sản phẩm. Tên ngành khớp với SECTOR_CARDS trong lib/constants.ts. */
 export const CATEGORY_SECTORS: Record<string, string[]> = {
-  'an-toan': ['Ô tô & linh kiện', 'Điện tử & lắp ráp chính xác', 'Khuôn mẫu & ép nhựa'],
+  'an-toan': ['Ô tô & linh kiện', 'Điện tử & lắp ráp công nghiệp chính xác', 'Khuôn mẫu & ép nhựa'],
   'cat-got-cnc': ['Gia công cơ khí & CNC', 'Hàng không vũ trụ', 'Đóng tàu & kết cấu kim loại'],
   'mai-hoan-thien': ['Gia công cơ khí & CNC', 'Đóng tàu & kết cấu kim loại', 'Khuôn mẫu & ép nhựa'],
   'kep-khuon-phoi': ['Khuôn mẫu & ép nhựa', 'Gia công cơ khí & CNC'],
   've-sinh-khuon': ['Khuôn mẫu & ép nhựa'],
   'do-can-chinh': ['Gia công cơ khí & CNC', 'Khuôn mẫu & ép nhựa'],
-  'danh-dau': ['Ô tô & linh kiện', 'Dầu khí & năng lượng', 'Điện tử & lắp ráp chính xác'],
-  'nang-ha': ['Ô tô & linh kiện', 'Đóng tàu & kết cấu kim loại', 'Điện tử & lắp ráp chính xác'],
-  'siet-cong-nghiep': ['Ô tô & linh kiện', 'Điện tử & lắp ráp chính xác'],
-  'siet-luc-cam-tay': ['Điện tử & lắp ráp chính xác', 'Gia công cơ khí & CNC'],
+  'danh-dau': ['Ô tô & linh kiện', 'Dầu khí & năng lượng', 'Điện tử & lắp ráp công nghiệp chính xác'],
+  'nang-ha': ['Ô tô & linh kiện', 'Đóng tàu & kết cấu kim loại', 'Điện tử & lắp ráp công nghiệp chính xác'],
+  'siet-cong-nghiep': ['Ô tô & linh kiện', 'Điện tử & lắp ráp công nghiệp chính xác'],
+  'siet-luc-cam-tay': ['Điện tử & lắp ráp công nghiệp chính xác', 'Gia công cơ khí & CNC'],
   'vat-mep': ['Đóng tàu & kết cấu kim loại', 'Gia công cơ khí & CNC'],
   'composite': ['Hàng không vũ trụ', 'Gia công cơ khí & CNC'],
   'do-kiem-may-han': ['Ô tô & linh kiện', 'Đóng tàu & kết cấu kim loại'],

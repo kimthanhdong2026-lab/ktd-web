@@ -87,6 +87,9 @@ export const WHY_ITEMS = [
   },
 ]
 
+export const SECTORS_HEADING = 'Lĩnh vực phục vụ'
+
+/** Thứ tự ở đây quyết định tên file ảnh: mục 1 dùng public/sectors/1.webp … */
 export const SECTOR_CARDS = [
   { name: 'Gia công cơ khí & CNC', desc: 'Cắt gọt, đo kiểm, gá kẹp, hoàn thiện bề mặt.' },
   { name: 'Khuôn mẫu & ép nhựa', desc: 'Gá kẹp, đánh bóng, sửa chữa khuôn, vệ sinh & bảo trì khuôn.' },
@@ -94,7 +97,7 @@ export const SECTOR_CARDS = [
   { name: 'Hàng không vũ trụ', desc: 'Gia công composite, cắt gọt chính xác, hoàn thiện bề mặt.' },
   { name: 'Đóng tàu & kết cấu kim loại', desc: 'Vát mép, mài hoàn thiện, đánh dấu mã code, dụng cụ khí nén.' },
   { name: 'Dầu khí & năng lượng', desc: 'Gia công, bảo trì, đánh dấu, hoàn thiện kim loại.' },
-  { name: 'Điện tử & lắp ráp chính xác', desc: 'Siết kiểm soát lực, đánh dấu mã code, nâng hạ hỗ trợ.' },
+  { name: 'Điện tử & lắp ráp công nghiệp chính xác', desc: 'Siết kiểm soát lực, đánh dấu mã code, nâng hạ hỗ trợ.' },
 ]
 
 export const ABOUT_STORY = [
