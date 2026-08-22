@@ -53,7 +53,9 @@ export function Footer() {
                 </a>
               </div>
             </div>
-            <p className="max-w-[320px] text-sm leading-relaxed text-[#8fb3cf]">
+            {/* Nới bề rộng và bật text-wrap:pretty để câu không rớt một chữ
+                cuối xuống dòng riêng. */}
+            <p className="max-w-[366px] text-sm leading-relaxed text-[#8fb3cf] [text-wrap:pretty]">
               {COMPANY_INTRO}
             </p>
           </div>
