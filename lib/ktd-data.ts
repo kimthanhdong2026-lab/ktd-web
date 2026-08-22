@@ -1005,7 +1005,7 @@ export const PRODUCTS: Product[] = [
     pdf: { name: 'Morrisflex Carbide Burrs', size: '5.6 MB', pages: 24 },
   },
   {
-    part: 'SPM80R', name: 'Mũi mài hợp kim SPM80R', brand: 'morrisflex', category: 'mai-hoan-thien',
+    part: 'SPM80R', name: 'Mũi mài hợp kim', brand: 'morrisflex', category: 'mai-hoan-thien',
     series: 'SPM', origin: 'Ireland',
     desc: 'Mũi mài đầu tròn, gợn xoắn kép cho tốc độ bóc tách vật liệu cao.',
     specs: [['Vật liệu', 'Cacbua vonfram'], ['Đường kính', '8 mm'], ['Kiểu răng', 'Xoắn kép'], ['Tốc độ tối đa', '28.000 rpm']],
@@ -1029,7 +1029,7 @@ export const PRODUCTS: Product[] = [
     pdf: { name: 'Helical End Mills', size: '8.1 MB', pages: 36 },
   },
   {
-    part: 'CH-C4', name: 'Dao CNC composite CH-C4', brand: 'corehog', category: 'composite',
+    part: 'CH-C4', name: 'Dao CNC composite', brand: 'corehog', category: 'composite',
     series: 'C-Series', origin: 'Mỹ',
     desc: 'Công cụ cắt CFRP / honeycomb, hình học chống tưa sợi, tuổi thọ cao.',
     specs: [['Ứng dụng', 'CFRP, composite'], ['Đường kính', '6 mm'], ['Phủ', 'Kim cương (CVD)']],
@@ -1037,7 +1037,7 @@ export const PRODUCTS: Product[] = [
     pdf: { name: 'Corehog Composite Tools', size: '4.9 MB', pages: 20 },
   },
   {
-    part: 'BT-R2', name: 'Máy vát mép Bevel BT-R2', brand: 'bevel-tools', category: 'vat-mep',
+    part: 'BT-R2', name: 'Máy vát mép Bevel', brand: 'bevel-tools', category: 'vat-mep',
     series: 'R', origin: 'Hà Lan',
     desc: 'Dụng cụ vát mép và bo tròn cạnh kim loại cầm tay, thay dao nhanh.',
     specs: [['Góc vát', '45°'], ['Bo tròn', 'R2'], ['Vật liệu', 'Thép, nhôm']],
@@ -1045,7 +1045,7 @@ export const PRODUCTS: Product[] = [
     pdf: { name: 'Bevel Tools Catalog', size: '2.7 MB', pages: 10 },
   },
   {
-    part: 'AT-7033', name: 'Máy mài khí nén AT-7033', brand: 'ata', category: 'mai-hoan-thien',
+    part: 'AT-7033', name: 'Máy mài khí nén', brand: 'ata', category: 'mai-hoan-thien',
     series: 'AT', origin: 'Ireland', featured: true, tag: 'Bán chạy',
     desc: 'Máy mài thẳng khí nén 1/4", vòng bi kín chịu bụi, cân bằng độ rung thấp.',
     specs: [['Tốc độ', '25.000 rpm'], ['Kẹp', '6 mm'], ['Áp suất', '6.3 bar'], ['Tiêu thụ khí', '0.6 m³/min']],
@@ -1053,7 +1053,7 @@ export const PRODUCTS: Product[] = [
     pdf: { name: 'ATA Air Tools', size: '6.3 MB', pages: 28 },
   },
   {
-    part: 'AT-5012', name: 'Máy chà nhám khí nén AT-5012', brand: 'ata', category: 'mai-hoan-thien',
+    part: 'AT-5012', name: 'Máy chà nhám khí nén', brand: 'ata', category: 'mai-hoan-thien',
     series: 'AT', origin: 'Ireland',
     desc: 'Máy chà nhám lệch tâm, đế 125 mm, hút bụi trung tâm, tay cầm chống rung.',
     specs: [['Đế', '125 mm'], ['Quỹ đạo', '5 mm'], ['Tốc độ', '10.000 opm']],
@@ -1069,7 +1069,7 @@ export const PRODUCTS: Product[] = [
     pdf: { name: 'Fiam Screwdrivers', size: '3.4 MB', pages: 16 },
   },
   {
-    part: '9502AX', name: 'Pa lăng cân bằng Tecna 9502AX', brand: 'tecna', category: 'nang-ha',
+    part: '9502AX', name: 'Pa lăng cân bằng Tecna', brand: 'tecna', category: 'nang-ha',
     series: 'Retractor', origin: 'Ý', featured: true,
     desc: 'Pa lăng cân bằng tải trọng, giữ dụng cụ lơ lửng, giảm mỏi cho công nhân lắp ráp.',
     specs: [['Tải trọng', '4 – 6 kg'], ['Hành trình cáp', '2.000 mm'], ['Kiểu', 'Zero Gravity']],
@@ -1077,7 +1077,7 @@ export const PRODUCTS: Product[] = [
     pdf: { name: 'Tecna Balancers', size: '4.0 MB', pages: 18 },
   },
   {
-    part: 'LK-125', name: 'Bộ kẹp khuôn Lenzkes LK-125', brand: 'lenzkes', category: 'kep-khuon-phoi',
+    part: 'LK-125', name: 'Bộ kẹp khuôn Lenzkes', brand: 'lenzkes', category: 'kep-khuon-phoi',
     series: 'Clamping', origin: 'Đức',
     desc: 'Bộ kẹp gá khuôn trên bàn máy công cụ, lực kẹp cao, tháo lắp nhanh không vặn ren dài.',
     specs: [['Rãnh T', '14 mm'], ['Lực kẹp', '25 kN'], ['Số chi tiết', '58']],
@@ -1085,7 +1085,7 @@ export const PRODUCTS: Product[] = [
     pdf: { name: 'Lenzkes Clamping', size: '5.2 MB', pages: 22 },
   },
   {
-    part: 'RK-500', name: 'Máy phủ cứng Rocklinizer RK-500', brand: 'rocklinizer', category: 'phuc-hoi-be-mat',
+    part: 'RK-500', name: 'Máy phủ cứng Rocklinizer', brand: 'rocklinizer', category: 'phuc-hoi-be-mat',
     series: 'RK', origin: 'Mỹ',
     desc: 'Thiết bị phủ cứng bề mặt khuôn bằng phóng điện, tăng tuổi thọ cạnh sắc.',
     specs: [['Công suất', '500 VA'], ['Điện cực', 'Tungsten carbide'], ['Độ cứng phủ', '≤ 90 HRC']],
@@ -1101,7 +1101,7 @@ export const PRODUCTS: Product[] = [
     pdf: { name: 'Diprofil Polishing', size: '3.3 MB', pages: 14 },
   },
   {
-    part: 'MP-350', name: 'Máy khắc dấu Technomark MP-350', brand: 'technomark', category: 'danh-dau',
+    part: 'MP-350', name: 'Máy khắc dấu Technomark', brand: 'technomark', category: 'danh-dau',
     series: 'MarkPro', origin: 'Pháp', featured: true, tag: 'Mới',
     desc: 'Máy khắc dấu chấm peen khắc chữ, số, mã DataMatrix lên kim loại, truy xuất nguồn gốc.',
     specs: [['Vùng khắc', '120 × 100 mm'], ['Kiểu', 'Chấm peen (dot peen)'], ['Mã hỗ trợ', 'Text, DataMatrix']],
@@ -1109,7 +1109,7 @@ export const PRODUCTS: Product[] = [
     pdf: { name: 'Technomark Marking', size: '4.6 MB', pages: 20 },
   },
   {
-    part: 'TS-3D', name: 'Đầu dò 3D TSChorn TS-3D', brand: 'tschorn', category: 'do-can-chinh',
+    part: 'TS-3D', name: 'Đầu dò 3D TSChorn', brand: 'tschorn', category: 'do-can-chinh',
     series: '3D', origin: 'Đức',
     desc: 'Đầu dò 3D dò cạnh và tâm lỗ trên máy phay, đồng hồ so tích hợp độ chính xác cao.',
     specs: [['Độ chính xác', '0.01 mm'], ['Chuôi', '20 mm'], ['Đầu dò', 'Ø 4 mm']],
@@ -1125,7 +1125,7 @@ export const PRODUCTS: Product[] = [
     pdf: { name: 'Sloky Torque Drivers', size: '2.1 MB', pages: 9 },
   },
   {
-    part: 'RTC-40', name: 'Khớp nối RTC-40', brand: 'rtc', category: 'khop-noi',
+    part: 'RTC-40', name: 'Khớp nối truyền động đàn hồi', brand: 'rtc', category: 'khop-noi',
     series: 'RTC', origin: 'Đức',
     desc: 'Khớp nối truyền động bù lệch tâm, đàn hồi chống rung cho hệ trục.',
     specs: [['Đường kính trục', '40 mm'], ['Mô-men', '120 Nm'], ['Kiểu', 'Đàn hồi']],
@@ -1133,7 +1133,7 @@ export const PRODUCTS: Product[] = [
     pdf: { name: 'RTC Couplings', size: '1.9 MB', pages: 8 },
   },
   {
-    part: 'BX-88', name: 'Hóa chất vệ sinh khuôn Buchem BX-88', brand: 'buchem', category: 've-sinh-khuon',
+    part: 'BX-88', name: 'Hóa chất vệ sinh khuôn Buchem', brand: 'buchem', category: 've-sinh-khuon',
     series: 'BX', origin: 'Đức',
     desc: 'Dung dịch tẩy nhựa cháy và cặn khuôn ép, an toàn với bề mặt thép khuôn.',
     specs: [['Dạng', 'Bình xịt 500 ml'], ['Ứng dụng', 'Khuôn ép nhựa'], ['Điểm chớp cháy', '> 60 °C']],

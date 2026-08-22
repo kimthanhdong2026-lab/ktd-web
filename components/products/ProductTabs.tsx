@@ -120,8 +120,8 @@ export function ProductTabs({ product }: { product: Product }) {
                   <span className="block font-display text-base font-semibold text-ink-900">
                     Tài liệu kỹ thuật {product.name}
                   </span>
-                  <span className="mt-1 block font-mono text-[13px] text-ink-500">
-                    PDF · {product.part}
+                  <span className="mt-1 block text-[13px] text-ink-500">
+                    PDF · <span className="part-no">{product.part}</span>
                   </span>
                 </span>
                 <span className="btn-primary">Tải về</span>

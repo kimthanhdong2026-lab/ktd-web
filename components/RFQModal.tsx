@@ -165,8 +165,8 @@ export function RFQModal() {
                           <div className="font-display text-sm font-semibold text-ink-900">
                             {p ? p.name : line.part}
                           </div>
-                          <div className="mt-0.5 font-mono text-xs text-ink-500">
-                            {line.part}
+                          <div className="mt-0.5 text-xs text-ink-500">
+                            <span className="part-no">{line.part}</span>
                             {p ? ` · ${brandName(p.brand)}` : ''}
                           </div>
                         </div>

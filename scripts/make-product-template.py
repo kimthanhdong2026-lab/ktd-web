@@ -64,6 +64,10 @@ line(r, 'Cột MÃ HÀNG phải để định dạng Text',
 line(r, 'Mỗi dòng là một mã hàng',
      'Một sản phẩm có nhiều mã (ví dụ SECUNORM MIZAR có 3 mã) thì tách thành nhiều dòng, '
      'mỗi dòng một mã riêng.'); r += 1
+line(r, 'TÊN SẢN PHẨM không được chứa MÃ HÀNG',
+     'Website đã hiện mã hàng ngay dưới tên rồi. Gõ thêm mã vào cột tên thì thẻ sản phẩm bị '
+     'lặp hai lần, nhìn rất rối. Viết "Máy mài khí nén", KHÔNG viết "Máy mài khí nén AT-7033".',
+     warn=True); r += 1
 line(r, 'Không bỏ trống cột bắt buộc',
      'Các cột có dấu * là bắt buộc. Thiếu thì sản phẩm không lên web được.'); r += 2
 
@@ -125,7 +129,7 @@ COLS = [
     ('STT', 6, '', ''),
     ('THƯƠNG HIỆU *', 20, 'Chọn từ danh sách', 'Martor'),
     ('DANH MỤC *', 30, 'Chọn từ danh sách', 'Dụng cụ an toàn'),
-    ('TÊN SẢN PHẨM *', 34, 'Tối đa 60 ký tự', 'SECUNORM SMARTCUT MDP'),
+    ('TÊN SẢN PHẨM *', 34, 'Tối đa 60 ký tự — KHÔNG chứa mã hàng', 'SECUNORM SMARTCUT MDP'),
     ('MÃ HÀNG *', 18, 'ĐỊNH DẠNG TEXT — giữ nguyên số 0 cuối', '110700.02'),
     ('DÒNG SẢN PHẨM', 18, 'Series', 'SECUNORM'),
     ('XUẤT XỨ', 14, '', 'Đức'),

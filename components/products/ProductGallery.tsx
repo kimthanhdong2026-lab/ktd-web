@@ -60,8 +60,8 @@ export function ProductGallery({ part, images }: { part: string; images?: string
           />
         ) : (
           <div className="relative text-center">
-            <span className="inline-block rounded-md border border-ink-300 bg-white px-3.5 py-1.5 font-mono text-[13px] text-ink-500">
-              {part}
+            <span className="inline-block rounded-md border border-ink-300 bg-white px-3.5 py-1.5 text-[13px] text-ink-500">
+              Đang cập nhật ảnh
             </span>
             <span className="mt-3 block font-mono text-[11px] text-[#9aa3ad]">
               {GALLERY_VIEWS[active]}

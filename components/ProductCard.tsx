@@ -3,7 +3,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { useStore } from './StoreProvider'
-import { brandName, categoryName, productSlug, type Product } from '@/lib/ktd-data'
+import { brandName, productSlug, type Product } from '@/lib/ktd-data'
 
 interface ProductCardProps {
   product: Product
@@ -20,7 +20,6 @@ interface ProductCardProps {
 export function ProductCard({ product, variant = 'full' }: ProductCardProps) {
   const { addToCart } = useStore()
   const href = `/san-pham/${productSlug(product)}`
-  const crumb = `${brandName(product.brand)} › ${categoryName(product.category)}`
 
   return (
     <article className="group card relative flex flex-col overflow-hidden hover:border-[#cdd6de] hover:shadow-md">
@@ -34,17 +33,19 @@ export function ProductCard({ product, variant = 'full' }: ProductCardProps) {
             className="object-contain p-3 transition-transform duration-250 group-hover:scale-[1.04]"
           />
         ) : (
+          /* Ảnh tạm không in mã hàng nữa — mã đã nằm trong ô xám ngay bên dưới. */
           <span className="placeholder-hatch absolute inset-0 flex items-center justify-center bg-ink-100">
-            <span className="rounded-sm border border-ink-300 bg-white px-2.5 py-1 font-mono text-xs text-ink-500">
-              {product.part}
+            <span className="rounded-sm border border-ink-300 bg-white px-2.5 py-1 text-[11px] text-ink-500">
+              Đang cập nhật ảnh
             </span>
           </span>
         )}
       </div>
 
       <div className="flex flex-1 flex-col p-4 md:p-[18px]">
+        {/* Chỉ tên hãng — bỏ nhóm sản phẩm cho đỡ chữ; nhóm đã có ở bộ lọc. */}
         <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.08em] text-ink-500">
-          {crumb}
+          {brandName(product.brand)}
         </p>
 
         <h3 className="mb-2 font-display text-[17px] font-semibold leading-tight text-ink-900 md:text-lg">
@@ -53,7 +54,13 @@ export function ProductCard({ product, variant = 'full' }: ProductCardProps) {
           </Link>
         </h3>
 
-        <p className="part-no mb-2.5 text-[15px] text-ktd-600">{product.part}</p>
+        {/* Mã hàng để trong ô xám, không tô xanh: xanh trên site là màu của
+            thứ bấm được, mà mã hàng thì không bấm được. */}
+        <p className="mb-3">
+          <span className="part-no inline-block rounded-[5px] bg-ink-100 px-2 py-1 text-[13px] font-semibold text-ink-700">
+            {product.part}
+          </span>
+        </p>
 
         {variant === 'full' && (
           <>

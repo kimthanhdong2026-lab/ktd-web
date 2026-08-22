@@ -173,8 +173,9 @@ export function SearchOverlay() {
                       <span className="block font-display text-[15px] font-semibold text-ink-900">
                         {p.name}
                       </span>
-                      <span className="mt-0.5 block font-mono text-[13px] text-ink-500">
-                        {p.part} · {brandName(p.brand)} · {categoryName(p.category)}
+                      <span className="mt-0.5 block text-[13px] text-ink-500">
+                        <span className="part-no">{p.part}</span> · {brandName(p.brand)} ·{' '}
+                        {categoryName(p.category)}
                       </span>
                     </span>
                     <span className="text-lg text-ink-500" aria-hidden="true">→</span>

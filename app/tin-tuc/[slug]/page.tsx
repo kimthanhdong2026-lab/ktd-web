@@ -91,7 +91,7 @@ export default function ArticlePage({ params }: PageProps) {
                 <span className="mb-1.5 block font-display text-[15px] font-semibold leading-tight text-ink-900">
                   {p.name}
                 </span>
-                <span className="part-no block text-[13px] text-ktd-600">{p.part}</span>
+                <span className="part-no block text-[13px] text-ink-500">{p.part}</span>
                 <span className="mt-1 block text-xs text-ink-500">{brandName(p.brand)}</span>
               </Link>
             </li>

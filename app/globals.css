@@ -75,8 +75,11 @@
       0 4px 20px rgba(0, 38, 63, 0.55);
   }
 
+  /* Mã hàng — dùng ở thẻ sản phẩm, trang chi tiết, tìm kiếm và giỏ báo giá.
+     Không dùng font lập trình nữa; chữ tiêu đề với chữ số đều cột nhìn
+     nghiêm túc hơn mà vẫn dễ dò từng ký tự. */
   .part-no {
-    @apply font-mono tracking-[0.02em];
+    @apply font-display font-medium tabular-nums tracking-[0.03em];
   }
 
   .card {

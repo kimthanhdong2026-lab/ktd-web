@@ -98,7 +98,7 @@ export default function ProductDetailPage({ params }: PageProps) {
           <dl className="mb-6 flex flex-col gap-3 border-y border-[#eef1f4] py-5">
             <div className="flex items-center gap-4">
               <dt className="w-[110px] flex-shrink-0 text-sm text-ink-500">Mã hàng</dt>
-              <dd className="part-no text-lg font-medium text-ktd-600">{product.part}</dd>
+              <dd className="part-no text-lg font-semibold text-ink-900">{product.part}</dd>
             </div>
             <div className="flex items-center gap-4">
               <dt className="w-[110px] flex-shrink-0 text-sm text-ink-500">Thương hiệu</dt>
