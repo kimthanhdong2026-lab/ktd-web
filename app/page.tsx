@@ -20,7 +20,7 @@ import {
 const HERO_STATS = [
   { num: '15+', label: 'Năm kinh nghiệm' },
   { num: String(BRANDS.length), label: 'Thương hiệu quốc tế' },
-  { num: '1000+', label: 'Khách hàng doanh nghiệp' },
+  { num: '500+', label: 'Khách hàng doanh nghiệp' },
 ]
 
 export default function HomePage() {

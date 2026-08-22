@@ -37,10 +37,10 @@ const config: Config = {
         mono: ['var(--font-mono)', 'ui-monospace', 'monospace'],
       },
       fontSize: {
-        // Tiêu đề Hero dài 51 ký tự. Ở cỡ 44px nó cần ~1234px, vừa đúng bề
-        // rộng container (1280px) nên nằm gọn một dòng từ màn ~900px trở lên.
-        // Hệ số 3.1vw giữ cho nó không tràn ở các màn hẹp hơn.
-        'display-1': ['clamp(1.5rem, 3.1vw, 2.75rem)', { lineHeight: '1.15', letterSpacing: '-0.01em', fontWeight: '700' }],
+        // Tiêu đề Hero dài 40 ký tự. Ở cỡ 52px cần ~1144px, vừa bề rộng
+        // container (1280px). Hệ số 3.9vw giữ cho nó không tràn ở màn hẹp hơn:
+        // tại 1280px chữ tự co còn ~50px, cần 1098px trong 1200px khả dụng.
+        'display-1': ['clamp(1.5rem, 3.9vw, 3.25rem)', { lineHeight: '1.15', letterSpacing: '-0.01em', fontWeight: '700' }],
         'display-2': ['clamp(2.125rem, 4.5vw, 3.5rem)', { lineHeight: '1.1', fontWeight: '700' }],
         h1: ['clamp(1.875rem, 4vw, 2.75rem)', { lineHeight: '1.15', fontWeight: '700' }],
         h2: ['clamp(1.5625rem, 3vw, 2.25rem)', { lineHeight: '1.2', fontWeight: '700' }],

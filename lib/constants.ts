@@ -47,9 +47,9 @@ export const HERO_BADGE = 'GIẢI PHÁP TỐI ƯU · THƯƠNG HIỆU UY TÍN · 
 /** Bản rút gọn cho điện thoại — câu đầy đủ 56 ký tự không thể nằm một dòng. */
 export const HERO_BADGE_SHORT = 'TỐI ƯU · UY TÍN · DÀI HẠN'
 
-export const HERO_TITLE = 'Giải pháp kỹ thuật & thiết bị cho ngành công nghiệp'
+export const HERO_TITLE = 'Phân phối dụng cụ & thiết bị công nghiệp'
 export const HERO_SUBTITLE =
-  'Đối tác của các thương hiệu quốc tế · Tư vấn kỹ thuật chuyên sâu · Hỗ trợ nhanh chóng'
+  'Hợp tác trực tiếp với hãng sản xuất · Tư vấn sản phẩm phù hợp · Hỗ trợ nhanh chóng'
 
 export const HERO_CHIPS = [
   'Mũi mài',

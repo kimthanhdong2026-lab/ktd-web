@@ -6,6 +6,8 @@ from openpyxl import Workbook
 from openpyxl.styles import Alignment, Border, Font, PatternFill, Side
 from openpyxl.utils import get_column_letter
 from openpyxl.worksheet.datavalidation import DataValidation
+from openpyxl.cell.rich_text import CellRichText, TextBlock
+from openpyxl.cell.text import InlineFont
 
 OUT = 'Hop-thu-den/MAU-NHAP-SAN-PHAM-KTD.xlsx'
 
@@ -94,7 +96,17 @@ line(r, 'Kích thước và nền',
 line(r, 'Đặt tên file nên có mã hàng',
      'Ví dụ: secupro-martego-122001-1.jpg. Giúp ghép ảnh đúng sản phẩm, tránh nhầm lẫn.'); r += 1
 line(r, 'Để ảnh trong thư mục riêng',
-     'Mỗi sản phẩm một thư mục, đặt tên thư mục theo tên sản phẩm.'); r += 2
+     'Cách nhanh hơn liệt kê từng tên file: mỗi sản phẩm một thư mục, đặt tên thư mục theo tên '
+     'sản phẩm, rồi ghi tên thư mục vào cột ảnh. Bên kỹ thuật tự lấy hết ảnh trong đó.'); r += 2
+
+head(r, '🔢 THỨ TỰ HIỂN THỊ'); r += 1
+line(r, 'Cột NỔI BẬT',
+     'Đánh dấu x thì sản phẩm hiện ở khối "Sản phẩm được quan tâm" trên trang chủ. '
+     'Nên chọn khoảng 8 mã tiêu biểu.'); r += 1
+line(r, 'Cột ƯU TIÊN HIỆN MẶC ĐỊNH',
+     'Quyết định thứ tự sản phẩm khi khách vào trang "Sản phẩm" mà chưa lọc gì. '
+     'Điền số: 1 hiện trước, 2 hiện sau... Để trống thì xếp xuống cuối. '
+     'Dùng để đẩy hàng chủ lực lên đầu.'); r += 2
 
 head(r, '📄 TÀI LIỆU'); r += 1
 line(r, 'FILE PDF',
@@ -128,11 +140,16 @@ COLS = [
      'Cơ chế an toàn: Lưỡi tự động thu\nVật liệu: Nhựa MDP\nChứng nhận: GS Certified'),
     ('TỪ KHÓA TÌM KIẾM', 34, 'Cách nhau dấu phẩy, gồm tên dân dã',
      'dao an toan, dao roc giay, smartcut'),
-    ('TÊN FILE ẢNH *', 40, 'Tối đa 5 file, cách nhau dấu phẩy',
+    ('TÊN FILE ẢNH *', 40,
+     CellRichText(
+         TextBlock(InlineFont(sz=9, i=True, color='6B747E'), 'Tối đa 5 file, cách nhau dấu phẩy / '),
+         TextBlock(InlineFont(sz=9, i=True, b=True, color=RED), 'hoặc bỏ vào 1 thư mục'),
+     ),
      'smartcut-mdp-110700-1.jpg, smartcut-mdp-110700-2.jpg'),
     ('TÊN FILE PDF', 26, 'Datasheet nếu có', 'smartcut-mdp-110700.pdf'),
     ('LINK TRANG HÃNG', 34, 'Nếu có', 'https://martor.com/...'),
     ('NỔI BẬT', 12, 'x = hiện ở trang chủ', ''),
+    ('ƯU TIÊN HIỆN MẶC ĐỊNH TRANG "SẢN PHẨM"', 22, 'Số nhỏ hiện trước. Trống = xếp cuối', '1'),
 ]
 
 ws2 = wb.create_sheet('SẢN PHẨM')
@@ -150,7 +167,8 @@ for i, (name, width, hint, example) in enumerate(COLS, start=1):
 
     g = ws2.cell(row=2, column=i, value=hint)
     g.fill = PatternFill('solid', fgColor=LIGHT)
-    g.font = Font(size=9, italic=True, color=RED if 'TEXT' in hint else '6B747E')
+    if isinstance(hint, str):
+        g.font = Font(size=9, italic=True, color=RED if 'TEXT' in hint else '6B747E')
     g.alignment = Alignment(horizontal='center', vertical='center', wrap_text=True)
     g.border = box
 
