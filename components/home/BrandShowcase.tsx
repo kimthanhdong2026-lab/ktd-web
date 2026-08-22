@@ -47,13 +47,13 @@ export function BrandShowcase() {
       className="relative overflow-hidden py-14 md:py-24"
       style={{
         background:
-          'linear-gradient(135deg,#00263F 0%,#003F6C 52%,#0060A0 100%)',
+          'linear-gradient(135deg,#00263F 0%,#003F6C 52%,#005E96 100%)',
       }}
     >
       {/* Vệt sáng nhẹ ở góc phải cho nền xanh đỡ phẳng */}
       <span
         className="pointer-events-none absolute -right-24 -top-24 h-[420px] w-[420px] rounded-full opacity-40"
-        style={{ background: 'radial-gradient(circle,rgba(0,107,178,.55) 0%,rgba(0,107,178,0) 70%)' }}
+        style={{ background: 'radial-gradient(circle,rgba(0,94,150,.55) 0%,rgba(0,94,150,0) 70%)' }}
         aria-hidden="true"
       />
 

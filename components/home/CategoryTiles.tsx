@@ -13,7 +13,7 @@ export function CategoryTiles() {
   return (
     <section className="bg-ktd-50 py-14 md:py-24">
       <div className="container-ktd">
-        <h2 className="mb-10 text-center font-display text-h2 text-ktd-logo md:mb-14">
+        <h2 className="mb-10 text-center font-display text-h2 text-ktd-600 md:mb-14">
           {CATEGORIES_HEADING}
         </h2>
 
