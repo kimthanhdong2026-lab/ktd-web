@@ -15,7 +15,7 @@ export const COMPANY_WEBSITE = 'kimthanhdong.vn'
 export const ZALO_URL = 'https://zalo.me/0914897227'
 
 export const COMPANY_INTRO =
-  'Nhà cung cấp giải pháp, thiết bị và dụng cụ công nghiệp từ các thương hiệu quốc tế uy tín, phục vụ doanh nghiệp sản xuất tại Việt Nam.'
+  'Kim Thành Đông trực tiếp hợp tác với các nhà sản xuất quốc tế để phân phối dụng cụ, thiết bị và sản phẩm công nghiệp tại thị trường Việt Nam.'
 
 export const WORKING_HOURS = [
   '7h30 – 17h00, Thứ 2 đến Thứ 6',
@@ -71,19 +71,19 @@ export const BRANDS_CTA = 'Xem tất cả sản phẩm theo thương hiệu →'
 export const WHY_ITEMS = [
   {
     title: 'Thương hiệu uy tín',
-    body: 'Phân phối sản phẩm từ các nhà sản xuất công nghiệp uy tín trên thế giới.',
+    body: 'Hợp tác trực tiếp với các nhà sản xuất công nghiệp uy tín trên thế giới.',
   },
   {
-    title: 'Tư vấn đúng giải pháp',
-    body: 'Lựa chọn sản phẩm phù hợp yêu cầu và ứng dụng của khách hàng.',
+    title: 'Tư vấn sản phẩm phù hợp',
+    body: 'Hỗ trợ lựa chọn sản phẩm phù hợp với yêu cầu, ứng dụng và điều kiện sử dụng thực tế.',
   },
   {
     title: 'Sản phẩm chính hãng',
-    body: 'Nguồn gốc rõ ràng, tài liệu và bảo hành đầy đủ.',
+    body: 'Nguồn gốc rõ ràng, tài liệu kỹ thuật đầy đủ và chính sách bảo hành theo nhà sản xuất.',
   },
   {
     title: 'Hợp tác, hỗ trợ lâu dài',
-    body: 'Dịch vụ chuyên nghiệp và luôn đồng hành cùng khách hàng.',
+    body: 'Duy trì nguồn cung ổn định và hỗ trợ khách hàng trong suốt quá trình sử dụng sản phẩm.',
   },
 ]
 
