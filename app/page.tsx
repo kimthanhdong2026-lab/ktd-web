@@ -55,7 +55,7 @@ export default function HomePage() {
         <div className="container-ktd relative">
           {/* Câu đầy đủ dài 56 ký tự, không thể nằm một dòng trên màn 375px dù
               có thu nhỏ cỡ chữ. Điện thoại dùng bản rút gọn giữ đủ ba vế. */}
-          <p className="text-on-video mb-6 inline-flex items-center gap-2 whitespace-nowrap rounded-full border border-[rgba(199,223,239,.25)] bg-[rgba(0,38,63,.35)] px-3.5 py-1.5 text-xs font-semibold tracking-[0.04em] text-ktd-100">
+          <p className="text-on-video mb-6 inline-flex items-center gap-2 whitespace-nowrap rounded-full border border-[rgba(199,223,239,.25)] bg-[rgba(0,38,63,.35)] px-3.5 py-1.5 text-xs font-semibold tracking-[0.04em] text-white">
             <span className="md:hidden">{HERO_BADGE_SHORT}</span>
             <span className="hidden md:inline">{HERO_BADGE}</span>
           </p>
@@ -67,7 +67,7 @@ export default function HomePage() {
           </h1>
 
           <div className="max-w-[820px]">
-            <p className="text-on-video mb-8 text-base leading-relaxed text-ktd-100">
+            <p className="text-on-video mb-8 text-base leading-relaxed text-white">
               {HERO_SUBTITLE}
             </p>
 
@@ -88,7 +88,7 @@ export default function HomePage() {
                     <span className="text-on-video block font-display text-[40px] font-bold leading-none text-white">
                       {s.num}
                     </span>
-                    <span className="text-on-video mt-1.5 block text-[13px] uppercase tracking-[0.06em] text-ktd-100">
+                    <span className="text-on-video mt-1.5 block text-[13px] uppercase tracking-[0.06em] text-white/90">
                       {s.label}
                     </span>
                   </dd>
@@ -98,7 +98,7 @@ export default function HomePage() {
           </div>
         </div>
 
-        <div className="absolute bottom-6 left-1/2 hidden -translate-x-1/2 animate-scroll-hint text-xs tracking-[0.1em] text-[#6b93b5] md:block">
+        <div className="absolute bottom-6 left-1/2 hidden -translate-x-1/2 animate-scroll-hint text-xs tracking-[0.1em] text-white/70 md:block">
           ↓ CUỘN XUỐNG
         </div>
       </section>
