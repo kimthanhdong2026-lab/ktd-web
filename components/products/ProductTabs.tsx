@@ -32,7 +32,7 @@ export function ProductTabs({
   }, [product, applications, T])
 
   const [tab, setTab] = useState(tabs[0].id)
-  const line = pdfLine(product)
+  const line = pdfLine(product, T.product.pages)
 
   return (
     <div className="mb-16">

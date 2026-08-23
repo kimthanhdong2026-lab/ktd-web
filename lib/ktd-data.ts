@@ -167,8 +167,10 @@ export function productSectors(p: Product): string[] {
   return CATEGORY_SECTORS[p.category] ?? []
 }
 
-export function pdfLine(p: Product): string | null {
-  return p.pdf ? `${p.pdf.name} · ${p.pdf.size} · ${p.pdf.pages} tr.` : null
+/** Dòng phụ dưới nút tải catalog. Đơn vị "trang" đổi theo ngôn ngữ nên phải
+    nhận hàm dịch từ ngoài vào, không ghép chữ cứng ở đây. */
+export function pdfLine(p: Product, pages: (n: number) => string): string | null {
+  return p.pdf ? `${p.pdf.name} · ${p.pdf.size} · ${pages(p.pdf.pages)}` : null
 }
 
 /** The five prescribed photo angles for a representative part (spec C3). */

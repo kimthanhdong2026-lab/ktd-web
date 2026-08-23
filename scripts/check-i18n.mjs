@@ -20,8 +20,27 @@ for (const line of readFileSync('.env.local', 'utf8').split('\n')) {
   if (m) env[m[1]] = m[2].trim()
 }
 
-const VIET =
+const DAU =
   /[àáảãạăằắẳẵặâầấẩẫậèéẻẽẹêềếểễệìíỉĩịòóỏõọôồốổỗộơờớởỡợùúủũụưừứửữựỳýỷỹỵđ]/i
+
+/**
+ * Tiếng Việt KHÔNG DẤU cũng phải bắt.
+ *
+ * Bộ dò bản đầu chỉ tìm ký tự có dấu, nên bỏ lọt "28 tr." (viết tắt của
+ * "trang") hiện ngay dưới nút tải catalog trên trang tiếng Anh. Chủ đầu tư
+ * nhìn ảnh chụp mới thấy.
+ */
+const KHONG_DAU = [
+  /\b\d+\s*tr\.?(?!\w)/i, // 28 tr. = 28 trang
+  /\bv\/ph\b/i, // vòng/phút
+  /\bcai\b/i,
+  /\bhop\b/i,
+  /\bTNHH\b/,
+]
+
+const VIET = {
+  test: (s) => DAU.test(s) || KHONG_DAU.some((re) => re.test(s)),
+}
 
 let loi = 0
 

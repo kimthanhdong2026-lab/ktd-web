@@ -184,6 +184,7 @@ export const vi = {
     docTitle: (name: string) => `Tài liệu kỹ thuật ${name}`,
     catalogTitle: (series: string) => `Catalog ${series} Series`,
     downloadPdf: 'Tải tài liệu kỹ thuật (PDF)',
+    pages: (n: number) => `${n} tr.`,
     manufacturerPage: 'Trang sản phẩm của hãng',
     descFallback: (series: string) =>
       `Sản phẩm được phân phối chính hãng bởi Kim Thành Đông, kèm hỗ trợ kỹ thuật và catalog đầy đủ của cả dòng ${series}.`,

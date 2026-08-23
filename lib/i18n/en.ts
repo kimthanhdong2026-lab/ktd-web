@@ -196,6 +196,7 @@ export const en: Dictionary = {
     docTitle: (name: string) => `${name} technical datasheet`,
     catalogTitle: (series: string) => `${series} Series catalogue`,
     downloadPdf: 'Download technical datasheet (PDF)',
+    pages: (n: number) => `${n} page${n === 1 ? '' : 's'}`,
     manufacturerPage: "Manufacturer's product page",
     descFallback: (series: string) =>
       `Distributed by Kim Thanh Dong as an authorised partner, with technical support and the full ${series} range catalogue.`,

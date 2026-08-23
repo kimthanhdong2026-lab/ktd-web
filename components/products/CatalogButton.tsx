@@ -19,7 +19,7 @@ export function CatalogButton({
 }) {
   const t = dict(lang)
   const { showToast } = useStore()
-  const line = pdfLine(product)
+  const line = pdfLine(product, t.product.pages)
 
   const shell =
     'mb-6 flex w-full items-center gap-3.5 rounded-[10px] border-[1.5px] border-ktd-600 bg-white px-4 py-3.5 text-left font-semibold text-ktd-600 transition-colors hover:bg-ktd-50'
