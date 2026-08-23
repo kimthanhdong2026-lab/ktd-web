@@ -10,18 +10,22 @@ import {
   useState,
   type ReactNode,
 } from 'react'
-import { getProductByPart } from '@/lib/ktd-data'
+
 
 export interface CartLine {
   part: string
   qty: number
+  /** Tên và hãng chép vào giỏ lúc thêm, để giỏ không phải hỏi lại cơ sở dữ
+      liệu — giỏ nằm ở trình duyệt và còn sống qua cả lần tải trang sau. */
+  name?: string
+  brand?: string
 }
 
 interface Store {
   /** RFQ basket — multiple part numbers quoted in one request (spec C7.2). */
   cart: CartLine[]
   cartCount: number
-  addToCart: (part: string) => void
+  addToCart: (part: string, name?: string, brand?: string) => void
   setQty: (part: string, delta: number) => void
   removeFromCart: (part: string) => void
 
@@ -95,16 +99,15 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   }, [])
 
   const addToCart = useCallback(
-    (part: string) => {
+    (part: string, name?: string, brand?: string) => {
       setCart((prev) => {
         const i = prev.findIndex((c) => c.part === part)
-        if (i < 0) return [...prev, { part, qty: 1 }]
+        if (i < 0) return [...prev, { part, qty: 1, name, brand }]
         const next = prev.slice()
-        next[i] = { part, qty: next[i].qty + 1 }
+        next[i] = { ...next[i], qty: next[i].qty + 1, name: name ?? next[i].name }
         return next
       })
-      const p = getProductByPart(part)
-      showToast(`Đã thêm ${p ? p.name : part} vào yêu cầu báo giá`)
+      showToast(`Đã thêm ${name ?? part} vào yêu cầu báo giá`)
     },
     [showToast]
   )

@@ -8,12 +8,16 @@ export function QuoteButton({
   children = 'Yêu cầu báo giá',
   note,
   addPart,
+  addName,
+  addBrand,
   className,
 }: {
   children?: React.ReactNode
   note?: string
   /** Drop this part into the basket before opening the form (PDP use). */
   addPart?: string
+  addName?: string
+  addBrand?: string
   className?: string
 }) {
   const { openRfq, addToCart } = useStore()
@@ -22,7 +26,7 @@ export function QuoteButton({
     <button
       type="button"
       onClick={() => {
-        if (addPart) addToCart(addPart)
+        if (addPart) addToCart(addPart, addName, addBrand)
         openRfq(note)
       }}
       className={cx('btn-quote', className)}

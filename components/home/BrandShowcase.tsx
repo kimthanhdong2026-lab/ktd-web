@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { BRANDS } from '@/lib/ktd-data'
+import type { Brand } from '@/lib/ktd-data'
 import { BRANDS_CTA, BRANDS_EYEBROW, BRANDS_INTRO } from '@/lib/constants'
 
 /** Nhịp tự chuyển giữa các thương hiệu (ms). */
@@ -14,9 +14,8 @@ const ROTATE_MS = 3600
  * hết thì 5. Danh sách hãng còn thay đổi nên để máy tự chọn, đỡ phải sửa tay
  * mỗi lần thêm hoặc bớt một thương hiệu.
  */
-const WIDE_COLS = BRANDS.length % 6 === 0 ? 6 : 5
-const TILE_WIDTH =
-  WIDE_COLS === 6
+const tileWidth = (soHang: number) =>
+  soHang % 6 === 0
     ? 'xl:w-[calc((100%-3.75rem)/6)] min-[1400px]:w-[calc((100%-5rem)/6)]'
     : 'xl:w-[calc((100%-3rem)/5)] min-[1400px]:w-[calc((100%-4rem)/5)]'
 
@@ -26,7 +25,8 @@ const TILE_WIDTH =
  * cột bên phải. Rê chuột (hoặc tab tới) một logo thì ô đó được chọn ngay và
  * vòng quay tạm dừng cho tới khi rời chuột.
  */
-export function BrandShowcase() {
+export function BrandShowcase({ brands }: { brands: Brand[] }) {
+  const TILE_WIDTH = tileWidth(brands.length)
   const [active, setActive] = useState(0)
   const [paused, setPaused] = useState(false)
   const [visible, setVisible] = useState(false)
@@ -45,11 +45,11 @@ export function BrandShowcase() {
   useEffect(() => {
     if (paused || !visible) return
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
-    const id = window.setInterval(() => setActive((i) => (i + 1) % BRANDS.length), ROTATE_MS)
+    const id = window.setInterval(() => setActive((i) => (i + 1) % brands.length), ROTATE_MS)
     return () => window.clearInterval(id)
   }, [paused, visible])
 
-  const brand = BRANDS[active]
+  const brand = brands[active]
 
   return (
     <section
@@ -74,7 +74,7 @@ export function BrandShowcase() {
         <div className="mb-11 text-center md:mb-16">
           <p className="label-caps mb-3 text-[#7FB3D5]">{BRANDS_EYEBROW}</p>
           <h2 className="mb-5 font-display text-h2 text-white [text-wrap:balance]">
-            {BRANDS.length} thương hiệu quốc tế chúng tôi đang phân phối
+            {brands.length} thương hiệu quốc tế chúng tôi đang phân phối
           </h2>
           <p className="mx-auto max-w-[1100px] text-body-lg text-ktd-100 [text-wrap:balance]">
             {BRANDS_INTRO}
@@ -90,7 +90,7 @@ export function BrandShowcase() {
             className="flex flex-wrap justify-center gap-2.5 sm:gap-3 min-[1400px]:gap-4"
             onMouseLeave={() => setPaused(false)}
           >
-            {BRANDS.map((b, i) => {
+            {brands.map((b, i) => {
               const on = i === active
               return (
                 <li

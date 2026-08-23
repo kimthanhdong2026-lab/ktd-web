@@ -6,13 +6,7 @@ import { ProductGallery } from '@/components/products/ProductGallery'
 import { ProductTabs } from '@/components/products/ProductTabs'
 import { CatalogButton } from '@/components/products/CatalogButton'
 import { QuoteButton } from '@/components/QuoteButton'
-import {
-  PRODUCTS,
-  brandName,
-  categoryName,
-  getProductBySlug,
-  productSlug,
-} from '@/lib/ktd-data'
+import { getAllProductSlugs, getProductBySlug, getRelatedProducts } from '@/lib/db'
 import { COMPANY_HOTLINE, COMPANY_HOTLINE_TEL, ZALO_URL } from '@/lib/constants'
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://kimthanhdong.vn'
@@ -21,30 +15,28 @@ interface PageProps {
   params: { slug: string }
 }
 
-export function generateStaticParams() {
-  return PRODUCTS.map((p) => ({ slug: productSlug(p) }))
+export async function generateStaticParams() {
+  return (await getAllProductSlugs()).map((slug) => ({ slug }))
 }
 
-export function generateMetadata({ params }: PageProps): Metadata {
-  const product = getProductBySlug(params.slug)
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const product = await getProductBySlug(params.slug)
   if (!product) return { title: 'Không tìm thấy sản phẩm' }
 
   return {
-    title: `${product.name} ${product.part} — ${brandName(product.brand)}`,
-    description: `${product.desc} Mã ${product.part}, thương hiệu ${brandName(product.brand)}. Tải catalog PDF, nhận báo giá sớm nhất.`,
+    title: `${product.name} ${product.part} — ${product.brandLabel}`,
+    description: `${product.desc} Mã ${product.part}, thương hiệu ${product.brandLabel}. Tải catalog PDF, nhận báo giá sớm nhất.`,
     alternates: { canonical: `/san-pham/${params.slug}` },
   }
 }
 
-export default function ProductDetailPage({ params }: PageProps) {
-  const product = getProductBySlug(params.slug)
+export default async function ProductDetailPage({ params }: PageProps) {
+  const product = await getProductBySlug(params.slug)
   if (!product) notFound()
 
-  const brand = brandName(product.brand)
-  const category = categoryName(product.category)
-  const related = PRODUCTS.filter(
-    (p) => p.brand === product.brand && p.part !== product.part
-  ).slice(0, 4)
+  const brand = product.brandLabel
+  const category = product.categoryLabel
+  const related = await getRelatedProducts(product.brand, product.part, 4)
 
   // Spec D4: Product schema without `offers` — KTĐ does not publish prices.
   const schema = {

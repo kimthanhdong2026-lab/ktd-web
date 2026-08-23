@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { CATEGORIES } from '@/lib/ktd-data'
+import { getCategories } from '@/lib/db'
 import { CATEGORIES_HEADING } from '@/lib/constants'
 
 /**
@@ -9,7 +9,8 @@ import { CATEGORIES_HEADING } from '@/lib/constants'
  * Ô để nền trắng trên nền xanh rất nhạt của mục, không dùng ảnh nền: theo yêu
  * cầu của team, phần này phải nhạt và đồng bộ với nền chung của website.
  */
-export function CategoryTiles() {
+export async function CategoryTiles() {
+  const categories = await getCategories()
   return (
     <section className="bg-ktd-50 py-14 md:py-24">
       <div className="container-ktd">
@@ -19,7 +20,7 @@ export function CategoryTiles() {
 
         {/* 15 nhóm chia hết cho 5 và cho 3 nên không bao giờ có hàng lẻ. */}
         <ul className="grid grid-cols-2 gap-3.5 sm:grid-cols-3 md:gap-4 lg:grid-cols-5">
-          {CATEGORIES.map((c) => (
+          {categories.map((c) => (
             <li key={c.slug}>
               <Link
                 href={`/san-pham?category=${c.slug}`}

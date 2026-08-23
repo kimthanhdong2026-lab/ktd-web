@@ -14,10 +14,10 @@ import {
   NAV_ITEMS,
   OFFICES,
 } from '@/lib/constants'
-import { CATEGORIES } from '@/lib/ktd-data'
+import { getCategories } from '@/lib/db'
 
-export function Footer() {
-  const categories = CATEGORIES.filter((c) => FEATURED_CATEGORIES.includes(c.slug))
+export async function Footer() {
+  const categories = (await getCategories()).filter((c) => c.featured)
 
   return (
     <footer className="bg-ktd-800 px-0 pb-6 pt-12 text-ktd-100">

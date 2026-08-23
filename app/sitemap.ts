@@ -1,9 +1,10 @@
 import type { MetadataRoute } from 'next'
-import { NEWS, PRODUCTS, productSlug } from '@/lib/ktd-data'
+import { NEWS } from '@/lib/ktd-data'
+import { getAllProductSlugs } from '@/lib/db'
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://kimthanhdong.vn'
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date()
 
   const staticPages: MetadataRoute.Sitemap = [
@@ -14,8 +15,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${SITE_URL}/lien-he`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
   ]
 
-  const products: MetadataRoute.Sitemap = PRODUCTS.map((p) => ({
-    url: `${SITE_URL}/san-pham/${productSlug(p)}`,
+  const products: MetadataRoute.Sitemap = (await getAllProductSlugs()).map((slug) => ({
+    url: `${SITE_URL}/san-pham/${slug}`,
     lastModified: now,
     changeFrequency: 'monthly',
     priority: 0.8,

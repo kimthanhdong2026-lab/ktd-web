@@ -1,13 +1,13 @@
 import { ProductCard } from '@/components/ProductCard'
-import { PRODUCTS } from '@/lib/ktd-data'
+import { getFeaturedProducts } from '@/lib/db'
 
 /**
  * Bỏ bộ tab Tất cả / Mới / Bán chạy theo yêu cầu: gắn nhãn "mới" hay
  * "bán chạy" đòi hỏi phải cập nhật thường xuyên mà không mang lại giá trị
  * tương xứng. Chỉ hiển thị các sản phẩm được đánh dấu nổi bật.
  */
-export function FeaturedProducts() {
-  const products = PRODUCTS.filter((p) => p.featured).slice(0, 8)
+export async function FeaturedProducts() {
+  const products = await getFeaturedProducts(8)
 
   return (
     <section className="bg-white py-14 md:py-24">

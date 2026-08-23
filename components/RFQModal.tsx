@@ -3,7 +3,7 @@
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { useStore } from './StoreProvider'
-import { brandName, getProductByPart } from '@/lib/ktd-data'
+
 
 interface FormState {
   name: string
@@ -155,7 +155,6 @@ export function RFQModal() {
               {cart.length > 0 ? (
                 <ul className="mb-4 flex flex-col gap-2.5">
                   {cart.map((line) => {
-                    const p = getProductByPart(line.part)
                     return (
                       <li
                         key={line.part}
@@ -163,11 +162,11 @@ export function RFQModal() {
                       >
                         <div className="min-w-[140px] flex-1">
                           <div className="font-display text-sm font-semibold text-ink-900">
-                            {p ? p.name : line.part}
+                            {line.name ?? line.part}
                           </div>
                           <div className="mt-0.5 text-xs text-ink-500">
                             <span className="part-no">{line.part}</span>
-                            {p ? ` · ${brandName(p.brand)}` : ''}
+                            {line.brand ? ` · ${line.brand}` : ''}
                           </div>
                         </div>
                         <div className="flex items-center gap-1.5">

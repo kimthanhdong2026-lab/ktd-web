@@ -12,7 +12,8 @@
  * không tạo bản ghi trùng.
  */
 import { writeFileSync } from 'node:fs'
-import { BRANDS, CATEGORIES, PRODUCTS, productSlug } from '../lib/ktd-data'
+import { productSlug } from '../lib/ktd-data'
+import { BRANDS, CATEGORIES, PRODUCTS } from '../lib/seed-data'
 import { FEATURED_CATEGORIES } from '../lib/constants'
 
 /** Chuỗi cho SQL. Nhân đôi dấu nháy đơn, NULL nếu rỗng. */

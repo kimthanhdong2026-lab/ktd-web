@@ -3,7 +3,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { useStore } from './StoreProvider'
-import { brandName, productSlug, type Product } from '@/lib/ktd-data'
+import type { Product } from '@/lib/ktd-data'
 
 interface ProductCardProps {
   product: Product
@@ -19,7 +19,7 @@ interface ProductCardProps {
  */
 export function ProductCard({ product, variant = 'full' }: ProductCardProps) {
   const { addToCart } = useStore()
-  const href = `/san-pham/${productSlug(product)}`
+  const href = `/san-pham/${product.slug}`
 
   return (
     <article className="group card relative flex flex-col overflow-hidden hover:border-[#cdd6de] hover:shadow-md">
@@ -45,7 +45,7 @@ export function ProductCard({ product, variant = 'full' }: ProductCardProps) {
       <div className="flex flex-1 flex-col p-4 md:p-[18px]">
         {/* Chỉ tên hãng — bỏ nhóm sản phẩm cho đỡ chữ; nhóm đã có ở bộ lọc. */}
         <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.08em] text-ink-500">
-          {brandName(product.brand)}
+          {product.brandLabel}
         </p>
 
         <h3 className="mb-2 font-display text-[17px] font-semibold leading-tight text-ink-900 md:text-lg">
@@ -71,7 +71,7 @@ export function ProductCard({ product, variant = 'full' }: ProductCardProps) {
             <div className="relative z-10 mt-auto flex gap-2">
               <button
                 type="button"
-                onClick={() => addToCart(product.part)}
+                onClick={() => addToCart(product.part, product.name)}
                 className="min-h-[44px] flex-1 rounded-[7px] bg-ktd-600 px-2 text-[13px] font-semibold text-white transition-colors hover:bg-ktd-700"
               >
                 + Thêm báo giá

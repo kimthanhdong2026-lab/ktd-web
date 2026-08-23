@@ -1,33 +1,10 @@
 'use client'
 
-import Link from 'next/link'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { useCallback, useMemo, useState } from 'react'
-import { ProductCard } from '@/components/ProductCard'
 import { useStore } from '@/components/StoreProvider'
-import { filterProducts } from '@/lib/search'
-import {
-  BRANDS,
-  CATEGORIES,
-  PRODUCTS,
-  brandName,
-  categoryName,
-  countByBrand,
-  type Product,
-} from '@/lib/ktd-data'
-import { FEATURED_CATEGORIES } from '@/lib/constants'
+import type { Brand, Category } from '@/lib/ktd-data'
 import { cx } from '@/lib/utils'
-
-const PAGE_SIZE = 12
-
-/** Bộ lọc liệt kê thương hiệu theo A–Z; thứ tự trong BRANDS là thứ tự ưu tiên
-    hiển thị ở trang chủ nên giữ nguyên. */
-const BRANDS_AZ = [...BRANDS].sort((a, b) => a.name.localeCompare(b.name, 'vi'))
-
-/** Bộ lọc chỉ liệt kê 4 danh mục tiêu biểu, khớp với cột Danh mục ở footer. */
-const FILTER_CATEGORIES = CATEGORIES.filter((c) => FEATURED_CATEGORIES.includes(c.slug))
-
-type FilterKind = 'brand' | 'category'
 
 const SORTS = [
   { value: 'default', label: 'Mặc định' },
@@ -36,102 +13,98 @@ const SORTS = [
   { value: 'new', label: 'Mới nhất' },
 ] as const
 
-const PARAM: Record<FilterKind, string> = {
-  brand: 'brand',
-  category: 'category',
+export interface BrowserProps {
+  brands: Brand[]
+  categories: Category[]
+  selectedBrands: string[]
+  selectedCategories: string[]
+  query: string
+  sort: string
+  total: number
+  countByBrand: Record<string, number>
+  /** Kết quả do máy chủ dựng sẵn, truyền vào chỗ hiển thị. */
+  children: React.ReactNode
 }
 
 /**
- * Spec C2 — the heart of the site. Brand comes before Category everywhere.
- * Filters are additive, reflected in the query string (shareable links) and
- * applied without a page reload.
+ * Khung của trang Sản phẩm: ô tìm, bộ lọc, sắp xếp, thẻ lọc đang bật.
+ *
+ * Việc lọc đã chuyển hẳn xuống Postgres — component này không giữ danh sách sản
+ * phẩm nào cả, chỉ viết vào địa chỉ trang rồi để máy chủ dựng lại kết quả. Bản
+ * trước nhập cả kho hàng vào trình duyệt, cách đó chỉ chạy được khi còn vài chục
+ * mã và sẽ sập ở mức một nghìn.
  */
-export function ProductBrowser() {
+export function ProductBrowser({
+  brands,
+  categories,
+  selectedBrands,
+  selectedCategories,
+  query,
+  sort,
+  total,
+  children,
+}: BrowserProps) {
   const router = useRouter()
   const params = useSearchParams()
   const { openRfq } = useStore()
 
-  const [query, setQuery] = useState(params.get('q') ?? '')
-  const [sort, setSort] = useState<string>('default')
-  const [limit, setLimit] = useState(PAGE_SIZE)
+  const [q, setQ] = useState(query)
   const [sheetOpen, setSheetOpen] = useState(false)
+  const [pending, setPending] = useState(false)
 
-  const selected = useMemo(
-    () => ({
-      brand: params.getAll('brand'),
-      category: params.getAll('category'),
-    }),
-    [params]
-  )
+  const brandsAZ = [...brands].sort((a, b) => a.name.localeCompare(b.name, 'vi'))
+  const filterCategories = categories.filter((c) => c.featured)
+  const activeCount = selectedBrands.length + selectedCategories.length
 
-  const activeCount =
-    selected.brand.length + selected.category.length
-
-  const writeParams = useCallback(
-    (next: Record<FilterKind, string[]>) => {
-      const sp = new URLSearchParams()
-      ;(Object.keys(next) as FilterKind[]).forEach((kind) => {
-        next[kind].forEach((v) => sp.append(PARAM[kind], v))
-      })
-      if (query) sp.set('q', query)
-      const qs = sp.toString()
-      router.replace(qs ? `/san-pham?${qs}` : '/san-pham', { scroll: false })
-      setLimit(PAGE_SIZE)
-    },
-    [router, query]
-  )
-
-  const toggle = useCallback(
-    (kind: FilterKind, value: string) => {
-      const current = selected[kind]
-      const next = {
-        ...selected,
-        [kind]: current.includes(value)
-          ? current.filter((v) => v !== value)
-          : [...current, value],
+  /** Dựng địa chỉ mới từ địa chỉ hiện tại; giá trị rỗng thì bỏ hẳn tham số. */
+  const go = useCallback(
+    (patch: Record<string, string | string[] | null>) => {
+      const sp = new URLSearchParams(params.toString())
+      for (const [k, v] of Object.entries(patch)) {
+        sp.delete(k)
+        if (Array.isArray(v)) v.forEach((x) => sp.append(k, x))
+        else if (v) sp.set(k, v)
       }
-      writeParams(next)
+      // Đổi bộ lọc thì quay về trang đầu, nếu không sẽ thấy khoảng trống
+      if (!('show' in patch)) sp.delete('show')
+      const qs = sp.toString()
+      setPending(true)
+      router.push(qs ? `/san-pham?${qs}` : '/san-pham', { scroll: false })
     },
-    [selected, writeParams]
+    [params, router]
   )
 
-  const clearAll = useCallback(() => {
-    setQuery('')
-    router.replace('/san-pham', { scroll: false })
-    setLimit(PAGE_SIZE)
-  }, [router])
+  // Địa chỉ đã đổi xong thì tắt trạng thái chờ
+  useEffect(() => {
+    setPending(false)
+    setQ(query)
+  }, [params, query])
 
-  const filtered = useMemo(() => {
-    let list: Product[] = PRODUCTS
-    if (selected.brand.length) list = list.filter((p) => selected.brand.includes(p.brand))
-    if (selected.category.length) list = list.filter((p) => selected.category.includes(p.category))
-    list = filterProducts(list, query)
+  // Gõ tới đâu tìm tới đó, nhưng đợi ngừng gõ mới gọi máy chủ
+  const timer = useRef<ReturnType<typeof setTimeout>>()
+  const onType = (value: string) => {
+    setQ(value)
+    clearTimeout(timer.current)
+    timer.current = setTimeout(() => go({ q: value || null }), 400)
+  }
 
-    const sorted = list.slice()
-    if (sort === 'brand') sorted.sort((a, b) => brandName(a.brand).localeCompare(brandName(b.brand), 'vi'))
-    else if (sort === 'name') sorted.sort((a, b) => a.name.localeCompare(b.name, 'vi'))
-    else if (sort === 'new') sorted.sort((a, b) => Number(b.tag === 'Mới') - Number(a.tag === 'Mới'))
-    return sorted
-  }, [selected, query, sort])
-
-  const shown = filtered.slice(0, limit)
-
-  // One brand selected → drop the brand grouping and sub-group by category (spec C2 rule 3).
-  const singleBrand = selected.brand.length === 1
-  const groups = useMemo(() => {
-    const source = singleBrand ? CATEGORIES : BRANDS
-    return source
-      .map((entry) => ({
-        key: entry.slug,
-        name: entry.name,
-        items: shown.filter((p) => (singleBrand ? p.category : p.brand) === entry.slug),
-      }))
-      .filter((g) => g.items.length > 0)
-  }, [shown, singleBrand])
+  const toggle = (kind: 'brand' | 'category', value: string) => {
+    const current = kind === 'brand' ? selectedBrands : selectedCategories
+    const next = current.includes(value) ? current.filter((v) => v !== value) : [...current, value]
+    go({ [kind]: next })
+  }
 
   const chips = [
-    ...selected.brand.map((v) => ({ kind: 'brand' as const, value: v, label: brandName(v) })),
-    ...selected.category.map((v) => ({ kind: 'category' as const, value: v, label: categoryName(v) })),
+    ...selectedBrands.map((v) => ({
+      kind: 'brand' as const,
+      value: v,
+      label: brands.find((b) => b.slug === v)?.name ?? v,
+    })),
+    ...selectedCategories.map((v) => ({
+      kind: 'category' as const,
+      value: v,
+      label: categories.find((c) => c.slug === v)?.name ?? v,
+    })),
   ]
 
   const filterPanel = (
@@ -140,7 +113,7 @@ export function ProductBrowser() {
         <span className="font-display text-base font-semibold text-ink-900">BỘ LỌC</span>
         <button
           type="button"
-          onClick={clearAll}
+          onClick={() => router.push('/san-pham', { scroll: false })}
           className="text-[13px] text-ink-500 underline hover:text-ktd-600"
         >
           Xóa bộ lọc
@@ -149,11 +122,11 @@ export function ProductBrowser() {
 
       <FilterGroup title="Thương hiệu">
         <div className="max-h-[340px] overflow-y-auto pr-1">
-          {BRANDS_AZ.map((b) => (
+          {brandsAZ.map((b) => (
             <FilterRow
               key={b.slug}
               label={b.name}
-              checked={selected.brand.includes(b.slug)}
+              checked={selectedBrands.includes(b.slug)}
               onChange={() => toggle('brand', b.slug)}
             />
           ))}
@@ -162,17 +135,16 @@ export function ProductBrowser() {
 
       <FilterGroup title="Danh mục">
         <div className="max-h-[260px] overflow-y-auto pr-1">
-          {FILTER_CATEGORIES.map((c) => (
+          {filterCategories.map((c) => (
             <FilterRow
               key={c.slug}
               label={c.name}
-              checked={selected.category.includes(c.slug)}
+              checked={selectedCategories.includes(c.slug)}
               onChange={() => toggle('category', c.slug)}
             />
           ))}
         </div>
       </FilterGroup>
-
     </>
   )
 
@@ -189,11 +161,8 @@ export function ProductBrowser() {
       <div className="mb-8 flex items-center gap-3 rounded-[10px] border border-[#e2e7ec] bg-ink-100 px-4 py-3.5 md:px-5">
         <span className="text-lg" aria-hidden="true">🔍</span>
         <input
-          value={query}
-          onChange={(e) => {
-            setQuery(e.target.value)
-            setLimit(PAGE_SIZE)
-          }}
+          value={q}
+          onChange={(e) => onType(e.target.value)}
           placeholder="Tìm mã hàng, tên sản phẩm, thương hiệu…"
           aria-label="Tìm trong danh mục sản phẩm"
           className="min-w-0 flex-1 border-none bg-transparent text-base outline-none placeholder:text-ink-500"
@@ -206,7 +175,7 @@ export function ProductBrowser() {
         <div>
           <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
             <p className="text-base text-ink-900">
-              <b className="font-display">{filtered.length}</b> sản phẩm phù hợp
+              <b className="font-display">{total}</b> sản phẩm phù hợp
             </p>
             <div className="flex items-center gap-2">
               <button
@@ -220,7 +189,7 @@ export function ProductBrowser() {
                 <span className="hidden sm:inline">Sắp xếp:</span>
                 <select
                   value={sort}
-                  onChange={(e) => setSort(e.target.value)}
+                  onChange={(e) => go({ sort: e.target.value === 'default' ? null : e.target.value })}
                   className="min-h-[44px] cursor-pointer rounded-md border border-ink-300 bg-white px-3 text-sm text-ink-900"
                 >
                   {SORTS.map((s) => (
@@ -249,7 +218,7 @@ export function ProductBrowser() {
             </div>
           )}
 
-          {filtered.length === 0 ? (
+          {total === 0 ? (
             <div className="rounded-lg bg-ink-100 px-5 py-20 text-center">
               <div className="mb-4 text-[44px] opacity-50" aria-hidden="true">🔍</div>
               <p className="mb-2 font-display text-[22px] font-semibold text-ink-900">
@@ -267,50 +236,13 @@ export function ProductBrowser() {
               </button>
             </div>
           ) : (
-            groups.map((g) => (
-              <section key={g.key} className="mb-12">
-                <div className="mb-6 flex items-baseline justify-between gap-4 border-b-2 border-ktd-50 pb-3">
-                  <h2 className="font-display text-[22px] font-bold uppercase text-ktd-800 md:text-[26px]">
-                    {g.name}
-                  </h2>
-                  <span className="flex-shrink-0 text-sm text-ink-500">
-                    {g.items.length} sản phẩm
-                  </span>
-                </div>
-                <div className="grid grid-cols-2 gap-4 lg:grid-cols-3 lg:gap-5">
-                  {g.items.map((p) => (
-                    <ProductCard key={p.part} product={p} />
-                  ))}
-                </div>
-                {!singleBrand && countByBrand(g.key) > g.items.length && (
-                  <div className="mt-5">
-                    <Link
-                      href={`/san-pham?brand=${g.key}`}
-                      className="text-sm font-semibold text-ktd-600 hover:text-ktd-700"
-                    >
-                      Xem tất cả sản phẩm {g.name} →
-                    </Link>
-                  </div>
-                )}
-              </section>
-            ))
-          )}
-
-          {filtered.length > limit && (
-            <div className="mt-4 text-center">
-              <button
-                type="button"
-                onClick={() => setLimit((l) => l + PAGE_SIZE)}
-                className="btn-secondary px-10"
-              >
-                Tải thêm sản phẩm
-              </button>
+            <div className={cx('transition-opacity duration-150', pending && 'opacity-50')}>
+              {children}
             </div>
           )}
         </div>
       </div>
 
-      {/* Mobile bottom sheet (spec C2) */}
       {sheetOpen && (
         <div
           className="fixed inset-0 z-[95] flex items-end bg-[rgba(0,38,63,.6)] lg:hidden"
@@ -325,12 +257,8 @@ export function ProductBrowser() {
           >
             <div className="flex-1 overflow-y-auto p-5">{filterPanel}</div>
             <div className="border-t border-hairline p-4">
-              <button
-                type="button"
-                onClick={() => setSheetOpen(false)}
-                className="btn-primary w-full"
-              >
-                Áp dụng ({filtered.length} sản phẩm)
+              <button type="button" onClick={() => setSheetOpen(false)} className="btn-primary w-full">
+                Áp dụng ({total} sản phẩm)
               </button>
             </div>
           </div>

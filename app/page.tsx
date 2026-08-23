@@ -6,7 +6,8 @@ import { CategoryTiles } from '@/components/home/CategoryTiles'
 import { FeaturedProducts } from '@/components/home/FeaturedProducts'
 import { SectorMarquee } from '@/components/home/SectorMarquee'
 import { QuoteButton } from '@/components/QuoteButton'
-import { BRANDS, NEWS } from '@/lib/ktd-data'
+import { NEWS } from '@/lib/ktd-data'
+import { getBrands } from '@/lib/db'
 import {
   HERO_BADGE,
   HERO_BADGE_SHORT,
@@ -15,15 +16,17 @@ import {
   WHY_ITEMS,
 } from '@/lib/constants'
 
-// Số thương hiệu lấy thẳng từ dữ liệu để không bao giờ lệch với dải logo
-// và bộ lọc ở trang sản phẩm.
-const HERO_STATS = [
-  { num: '15+', label: 'Năm kinh nghiệm' },
-  { num: String(BRANDS.length), label: 'Thương hiệu quốc tế' },
-  { num: '500+', label: 'Khách hàng doanh nghiệp' },
-]
+export default async function HomePage() {
+  const brands = await getBrands()
 
-export default function HomePage() {
+  // Số thương hiệu lấy thẳng từ dữ liệu để không bao giờ lệch với dải logo
+  // và bộ lọc ở trang sản phẩm.
+  const HERO_STATS = [
+    { num: '15+', label: 'Năm kinh nghiệm' },
+    { num: String(brands.length), label: 'Thương hiệu quốc tế' },
+    { num: '500+', label: 'Khách hàng doanh nghiệp' },
+  ]
+
   return (
     <>
       {/* ---------- 1. Hero ---------- */}
@@ -104,7 +107,7 @@ export default function HomePage() {
       </section>
 
       {/* ---------- 2. Brand showcase ---------- */}
-      <BrandShowcase />
+      <BrandShowcase brands={brands} />
 
       {/* ---------- 3. Categories ---------- */}
       <CategoryTiles />

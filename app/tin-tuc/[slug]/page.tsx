@@ -2,7 +2,8 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { QuoteButton } from '@/components/QuoteButton'
-import { NEWS, PRODUCTS, brandName, productSlug } from '@/lib/ktd-data'
+import { NEWS } from '@/lib/ktd-data'
+import { getFeaturedProducts } from '@/lib/db'
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://kimthanhdong.vn'
 
@@ -24,11 +25,11 @@ export function generateMetadata({ params }: PageProps): Metadata {
   }
 }
 
-export default function ArticlePage({ params }: PageProps) {
+export default async function ArticlePage({ params }: PageProps) {
   const article = NEWS.find((n) => n.slug === params.slug)
   if (!article) notFound()
 
-  const related = PRODUCTS.slice(0, 3)
+  const related = await getFeaturedProducts(3)
 
   const schema = {
     '@context': 'https://schema.org',
@@ -85,14 +86,14 @@ export default function ArticlePage({ params }: PageProps) {
           {related.map((p) => (
             <li key={p.part}>
               <Link
-                href={`/san-pham/${productSlug(p)}`}
+                href={`/san-pham/${p.slug}`}
                 className="block h-full rounded-[10px] border border-hairline p-4 transition hover:shadow-md"
               >
                 <span className="mb-1.5 block font-display text-[15px] font-semibold leading-tight text-ink-900">
                   {p.name}
                 </span>
                 <span className="part-no block text-[13px] text-ink-500">{p.part}</span>
-                <span className="mt-1 block text-xs text-ink-500">{brandName(p.brand)}</span>
+                <span className="mt-1 block text-xs text-ink-500">{p.brandLabel}</span>
               </Link>
             </li>
           ))}
