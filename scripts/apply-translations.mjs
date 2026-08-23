@@ -6,7 +6,15 @@
 // Quy tắc quan trọng: KHÔNG bao giờ đè lên bản đã được người duyệt. Cột
 // en_status quyết định — xem supabase/migrations/0006_en_status.sql.
 import { readFileSync } from 'node:fs'
-import { BRANDS, CATEGORIES, ORIGINS, PRODUCTS } from './translations.mjs'
+import {
+  APPLICATIONS,
+  BRANDS,
+  CATEGORIES,
+  ORIGINS,
+  PRODUCTS,
+  SPEC_LABELS,
+  SPEC_VALUES,
+} from './translations.mjs'
 
 const APPLY = process.argv.includes('--apply')
 
@@ -77,8 +85,11 @@ for (const c of cats) {
 console.log(`Danh mục\n  ${nc}/${cats.length} danh mục`)
 
 // ---------------------------------------------------------------- sản phẩm
+/** Chỉ dịch giá trị có chữ tiếng Việt; số đo và đơn vị giữ nguyên. */
+const VIET = /[àáảãạăằắẳẵặâầấẩẫậèéẻẽẹêềếểễệìíỉĩịòóỏõọôồốổỗộơờớởỡợùúủũụưừứửữựỳýỷỹỵđ]/i
+
 const prods = await get(
-  'products?select=part,name_vi,sub_vi,origin_vi,desc_vi,desc_full_en,en_status'
+  'products?select=part,name_vi,sub_vi,origin_vi,desc_vi,desc_full_en,specs_vi,specs_en,applications_vi,applications_en,en_status'
 )
 let np = 0
 let boQua = 0
@@ -101,10 +112,29 @@ for (const p of prods) {
   const desc_en = descIn ?? (p.desc_full_en?.[0] ?? null)
   if (!desc_en) thieu.push(`mô tả ngắn ${p.part}`)
 
+  // Bảng thông số: dịch nhãn theo bảng dùng chung, giá trị chỉ dịch khi có
+  // chữ tiếng Việt — "125 mm" hay "20 000 v/ph" giữ nguyên là đúng.
+  let specs_en = p.specs_en
+  if (!specs_en?.length && p.specs_vi?.length) {
+    specs_en = p.specs_vi.map((sp) => {
+      const label = SPEC_LABELS[sp.label]
+      const value = VIET.test(sp.value) ? SPEC_VALUES[sp.value] : sp.value
+      if (!label) thieu.push(`nhãn thông số "${sp.label}" (${p.part})`)
+      if (value === undefined) thieu.push(`giá trị thông số "${sp.value}" (${p.part})`)
+      return { label: label ?? sp.label, value: value ?? sp.value }
+    })
+  }
+
+  const applications_en =
+    p.applications_en?.length ? p.applications_en : (APPLICATIONS[p.part] ?? null)
+  if (!applications_en && p.applications_vi?.length) thieu.push(`ứng dụng ${p.part}`)
+
   const body = {
     name_en,
     origin_en: ORIGINS[p.origin_vi] ?? null,
     ...(desc_en ? { desc_en } : {}),
+    ...(specs_en?.length ? { specs_en } : {}),
+    ...(applications_en ? { applications_en } : {}),
     // Có bản của hãng thì giữ nhãn "từ hãng"; còn lại là bản do mình dịch
     en_status: p.desc_full_en?.length ? 'từ hãng' : 'máy dịch',
   }
