@@ -121,6 +121,21 @@ console.log('\nKho file')
   const chuaTao = body.code === 'NoSuchBucket'
   dat('bucket ktd tồn tại và công khai', !chuaTao, chuaTao ? 'xem 0002_storage.sql' : body.code)
 }
+{
+  // Cột images chứa đường dẫn chứ không chứa file. Ghi đường dẫn mà quên đẩy
+  // file lên thì bảng vẫn "đúng" nhưng trang sản phẩm hiện toàn ô vỡ ảnh.
+  const r = await api('products?select=part,images&images=neq.{}&limit=40')
+  const rows = r.ok ? await r.json() : []
+  const duongDan = rows.flatMap((p) => p.images)
+  const mau = duongDan.slice(0, 6)
+  const ket = await Promise.all(
+    mau.map((p) =>
+      fetch(`${URL_}/storage/v1/object/public/ktd/${p}`, { method: 'HEAD' }).then((x) => x.ok)
+    )
+  )
+  const so = ket.filter(Boolean).length
+  dat('ảnh tải được thật', so === mau.length, `${so}/${mau.length} mẫu, tổng ${duongDan.length} đường dẫn`)
+}
 
 console.log('\nPhân quyền')
 {
