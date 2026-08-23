@@ -19,22 +19,29 @@ create extension if not exists pg_trgm;
 -- -----------------------------------------------------------------------------
 -- Chuẩn hoá chuỗi để tìm kiếm không dấu
 --
--- unaccent() gốc là STABLE nên Postgres không cho dùng trong generated column
--- hay index. Bọc lại thành IMMUTABLE bằng cách chỉ rõ tên từ điển.
+-- unaccent() của Postgres khai báo là STABLE, không phải IMMUTABLE. Cách xử lý
+-- thông thường là bọc trong một hàm tự khai IMMUTABLE — nhưng nếu viết bằng
+-- language sql thì Postgres nhìn xuyên qua được phần thân, thấy unaccent bên
+-- trong và vẫn báo "generation expression is not immutable".
+--
+-- Viết bằng plpgsql thì phần thân là hộp đen, Postgres tin đúng lời khai.
+--
 -- Bỏ dấu xong vẫn phải xử lý riêng chữ đ: một số bản unaccent không đổi đ->d,
 -- mà khách gõ "dao" để tìm "dao", gõ "dong" để tìm "Đông".
 -- -----------------------------------------------------------------------------
 create or replace function ktd_norm(input text)
   returns text
-  language sql
+  language plpgsql
   immutable
   strict
   parallel safe
 as $ktd$
-  select public.unaccent(
+begin
+  return public.unaccent(
     'public.unaccent',
     translate(lower(input), 'đĐ', 'dd')
-  )
+  );
+end;
 $ktd$;
 
 comment on function ktd_norm(text) is
@@ -126,19 +133,47 @@ create table if not exists products (
   created_at      timestamptz not null default now(),
   updated_at      timestamptz not null default now(),
 
-  -- Cột tìm kiếm dựng sẵn: gộp mọi thứ khách có thể gõ rồi chuẩn hoá một lần.
-  -- Postgres tự tính lại mỗi khi bản ghi đổi nên không bao giờ lệch với dữ liệu.
-  search_vi text generated always as (
-    ktd_norm(
-      coalesce(name_vi, '')  || ' ' ||
-      coalesce(part, '')     || ' ' ||
-      coalesce(series, '')   || ' ' ||
-      coalesce(sub_vi, '')   || ' ' ||
-      coalesce(desc_vi, '')  || ' ' ||
-      array_to_string(coalesce(keywords, '{}'), ' ')
-    )
-  ) stored
+  -- Cột tìm kiếm: gộp mọi thứ khách có thể gõ rồi chuẩn hoá một lần.
+  -- Do trigger bên dưới điền, không phải generated column — xem lý do ở đó.
+  search_vi       text not null default ''
 );
+
+-- -----------------------------------------------------------------------------
+-- Tự điền cột tìm kiếm
+--
+-- Cách gọn hơn là generated column, nhưng Postgres đòi biểu thức phải immutable
+-- tuyệt đối, mà chuỗi bỏ dấu thì phụ thuộc vào từ điển unaccent nên không bao
+-- giờ đạt chuẩn đó một cách chắc chắn qua mọi phiên bản.
+--
+-- Trigger không có ràng buộc ấy và vẫn bảo đảm điều quan trọng nhất: cột này
+-- không bao giờ lệch với dữ liệu, vì mọi lần thêm hay sửa đều chạy lại.
+-- -----------------------------------------------------------------------------
+create or replace function ktd_fill_search()
+  returns trigger
+  language plpgsql
+as $ktd$
+begin
+  new.search_vi := ktd_norm(
+    coalesce(new.name_vi, '')  || ' ' ||
+    coalesce(new.part, '')     || ' ' ||
+    coalesce(new.series, '')   || ' ' ||
+    coalesce(new.sub_vi, '')   || ' ' ||
+    coalesce(new.desc_vi, '')  || ' ' ||
+    array_to_string(coalesce(new.keywords, '{}'), ' ')
+  );
+  return new;
+end;
+$ktd$;
+
+drop trigger if exists products_fill_search on products;
+
+create trigger products_fill_search
+  before insert or update on products
+  for each row execute function ktd_fill_search();
+
+-- Chạy lại file này trên cơ sở dữ liệu đã có dữ liệu thì câu dưới nạp lại cột
+-- tìm kiếm cho toàn bộ bản ghi cũ. Bảng rỗng thì không tốn gì.
+update products set search_vi = '';
 
 -- -----------------------------------------------------------------------------
 -- Chỉ mục
