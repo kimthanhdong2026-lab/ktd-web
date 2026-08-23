@@ -35,8 +35,12 @@ export function Header() {
   const isActive = (href: string) =>
     href === '/' ? pathname === '/' : pathname.startsWith(href)
 
+  // Chưa có bản tiếng Anh. Câu này khách nước ngoài đọc được, và cho họ một
+  // lối liên hệ thay vì ngõ cụt — người bấm EN thường là khách tiềm năng.
   const langNotice = () =>
-    showToast('Bản tiếng Anh đang được xây dựng — sẽ bàn giao ở giai đoạn P1.')
+    showToast(
+      `Trang tiếng Anh đang được hoàn thiện. English version coming soon — please call ${COMPANY_HOTLINE}.`
+    )
 
   return (
     <header
@@ -89,9 +93,12 @@ export function Header() {
           <button
             type="button"
             onClick={langNotice}
-            className="hidden rounded-sm border border-ink-300 px-2 py-1 text-xs font-semibold tracking-[0.05em] text-ink-700 hover:border-ktd-600 hover:text-ktd-600 md:inline-block"
+            aria-label="Chuyển sang tiếng Anh"
+            className="hidden rounded-sm border border-ink-300 px-2 py-1 text-xs font-semibold tracking-[0.05em] hover:border-ktd-600 md:inline-block"
           >
-            VI | EN
+            <span className="text-ktd-600">VI</span>
+            <span className="mx-1 text-ink-300">|</span>
+            <span className="text-ink-500">EN</span>
           </button>
 
           <div className="hidden items-center gap-2 lg:flex">
@@ -174,9 +181,12 @@ export function Header() {
                 <button
                   type="button"
                   onClick={langNotice}
-                  className="rounded-sm border border-ink-300 px-2 py-1 text-xs font-semibold tracking-[0.05em] text-ink-700"
+                  aria-label="Chuyển sang tiếng Anh"
+                  className="rounded-sm border border-ink-300 px-2 py-1 text-xs font-semibold tracking-[0.05em]"
                 >
-                  VI | EN
+                  <span className="text-ktd-600">VI</span>
+                  <span className="mx-1 text-ink-300">|</span>
+                  <span className="text-ink-500">EN</span>
                 </button>
                 <a
                   href="https://www.facebook.com"
