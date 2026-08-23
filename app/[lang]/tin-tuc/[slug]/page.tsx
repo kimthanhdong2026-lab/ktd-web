@@ -2,13 +2,14 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { QuoteButton } from '@/components/QuoteButton'
-import { NEWS } from '@/lib/ktd-data'
+import { NEWS, newsFor } from '@/lib/ktd-data'
 import { getFeaturedProducts } from '@/lib/db'
+import { DEFAULT_LOCALE, dict, href, isLocale, type Locale } from '@/lib/i18n'
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://kimthanhdong.vn'
 
 interface PageProps {
-  params: { slug: string }
+  params: { slug: string; lang: string }
 }
 
 export function generateStaticParams() {
@@ -16,8 +17,9 @@ export function generateStaticParams() {
 }
 
 export function generateMetadata({ params }: PageProps): Metadata {
-  const article = NEWS.find((n) => n.slug === params.slug)
-  if (!article) return { title: 'Không tìm thấy bài viết' }
+  const lang = isLocale(params.lang) ? params.lang : DEFAULT_LOCALE
+  const article = newsFor(lang).find((n) => n.slug === params.slug)
+  if (!article) return { title: dict(lang).product.notFound }
   return {
     title: article.title,
     description: article.excerpt.slice(0, 155),
@@ -26,10 +28,13 @@ export function generateMetadata({ params }: PageProps): Metadata {
 }
 
 export default async function ArticlePage({ params }: PageProps) {
-  const article = NEWS.find((n) => n.slug === params.slug)
+  const lang: Locale = isLocale(params.lang) ? params.lang : DEFAULT_LOCALE
+  const t = dict(lang)
+  const path = (p: string) => href(p, lang)
+  const article = newsFor(lang).find((n) => n.slug === params.slug)
   if (!article) notFound()
 
-  const related = await getFeaturedProducts(3)
+  const related = await getFeaturedProducts(3, lang)
 
   const schema = {
     '@context': 'https://schema.org',
@@ -61,7 +66,7 @@ export default async function ArticlePage({ params }: PageProps) {
       />
 
       <nav aria-label="Breadcrumb" className="mb-6 text-body-sm text-ink-500">
-        <Link href="/">Trang chủ</Link> / <Link href="/tin-tuc">Tin tức</Link>
+        <Link href={path("/")}>{t.nav.home}</Link> / <Link href={path("/tin-tuc")}>{t.nav.news}</Link>
       </nav>
 
       <p className="label-caps mb-3.5 text-ktd-600">{article.cat}</p>
@@ -71,22 +76,21 @@ export default async function ArticlePage({ params }: PageProps) {
       <p className="mb-8 text-sm text-[#9aa3ad]">{article.date}</p>
 
       <div className="placeholder-hatch relative mb-8 flex aspect-video items-center justify-center overflow-hidden rounded-lg bg-ink-100">
-        <span className="relative font-mono text-xs text-[#9aa3ad]">[ ẢNH BÀI VIẾT ]</span>
+        <span className="relative font-mono text-xs text-[#9aa3ad]">{t.news.imagePlaceholder}</span>
       </div>
 
       <p className="mb-5 text-lg leading-[1.8] text-ink-700">{article.excerpt}</p>
       <p className="mb-5 text-[17px] leading-[1.8] text-ink-700">
-        Nội dung chi tiết của bài viết sẽ được đội ngũ kỹ thuật Kim Thành Đông biên soạn, tập trung
-        vào ứng dụng thực tế tại nhà máy và hướng dẫn lựa chọn thiết bị phù hợp.
+        {t.news.bodyPlaceholder}
       </p>
 
       <section className="mt-10 border-t border-hairline pt-8">
-        <h2 className="mb-5 font-display text-[22px] font-bold text-ink-900">Sản phẩm liên quan</h2>
+        <h2 className="mb-5 font-display text-[22px] font-bold text-ink-900">{t.news.related}</h2>
         <ul className="grid gap-4 sm:grid-cols-3">
           {related.map((p) => (
             <li key={p.part}>
               <Link
-                href={`/san-pham/${p.slug}`}
+                href={path(`/san-pham/${p.slug}`)}
                 className="block h-full rounded-[10px] border border-hairline p-4 transition hover:shadow-md"
               >
                 <span className="mb-1.5 block font-display text-[15px] font-semibold leading-tight text-ink-900">

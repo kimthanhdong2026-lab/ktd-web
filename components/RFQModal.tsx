@@ -3,6 +3,7 @@
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { useStore } from './StoreProvider'
+import { useLang } from './LangProvider'
 
 
 interface FormState {
@@ -31,6 +32,7 @@ function makeRequestCode(): string {
  * tỉ lệ gửi càng cao.
  */
 export function RFQModal() {
+  const { t } = useLang()
   const router = useRouter()
   const { rfqOpen, rfqNote, closeRfq, cart, setQty, removeFromCart } = useStore()
 
@@ -137,7 +139,7 @@ export function RFQModal() {
                 <h2 className="mb-1.5 font-display text-2xl font-bold text-ink-900">
                   Yêu cầu báo giá
                 </h2>
-                <p className="text-sm text-ink-500">Chúng tôi sẽ phản hồi sớm nhất.</p>
+                <p className="text-sm text-ink-500">{t.rfq.sentBody}</p>
               </div>
               <button
                 type="button"
@@ -150,7 +152,7 @@ export function RFQModal() {
             </div>
 
             <div className="max-h-[64vh] overflow-y-auto px-6 py-6 md:px-8">
-              <p className="label-caps mb-3 text-ink-900">Danh sách sản phẩm</p>
+              <p className="label-caps mb-3 text-ink-900">{t.rfq.productList}</p>
 
               {cart.length > 0 ? (
                 <ul className="mb-4 flex flex-col gap-2.5">
@@ -173,7 +175,7 @@ export function RFQModal() {
                           <button
                             type="button"
                             onClick={() => setQty(line.part, -1)}
-                            aria-label={`Giảm số lượng ${line.part}`}
+                            aria-label={t.rfq.decrease(line.part)}
                             className="h-8 w-8 rounded-md border border-ink-300 bg-white text-base text-ink-700 hover:border-ktd-600"
                           >
                             −
@@ -182,7 +184,7 @@ export function RFQModal() {
                           <button
                             type="button"
                             onClick={() => setQty(line.part, 1)}
-                            aria-label={`Tăng số lượng ${line.part}`}
+                            aria-label={t.rfq.increase(line.part)}
                             className="h-8 w-8 rounded-md border border-ink-300 bg-white text-base text-ink-700 hover:border-ktd-600"
                           >
                             +
@@ -191,7 +193,7 @@ export function RFQModal() {
                         <button
                           type="button"
                           onClick={() => removeFromCart(line.part)}
-                          aria-label={`Xóa ${line.part}`}
+                          aria-label={t.rfq.remove(line.part)}
                           className="p-1 text-lg text-ink-500 hover:text-quote"
                         >
                           ✕
@@ -219,7 +221,7 @@ export function RFQModal() {
                 </button>
               </div>
 
-              <p className="label-caps mb-3.5 text-ink-900">Thông tin liên hệ</p>
+              <p className="label-caps mb-3.5 text-ink-900">{t.rfq.contactInfo}</p>
 
               <div className="mb-3.5 grid gap-3.5 sm:grid-cols-2">
                 <div>

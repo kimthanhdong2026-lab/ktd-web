@@ -64,9 +64,13 @@ export interface Product {
 export interface Article {
   slug: string
   cat: string
+  /** Chuyên mục bản tiếng Anh. */
+  catEn: string
   date: string
   title: string
+  titleEn: string
   excerpt: string
+  excerptEn: string
 }
 
 /** Spec C4 ★ — shop-floor slang mapped onto standard technical terms. */
@@ -105,23 +109,51 @@ export const CATEGORY_SECTORS: Record<string, string[]> = {
 
 export const NEWS: Article[] = [
   {
-    slug: 'tungsten-carbide', cat: 'Kiến thức kỹ thuật', date: '28/07/2026',
+    slug: 'tungsten-carbide',
+    cat: 'Kiến thức kỹ thuật',
+    catEn: 'Technical knowledge',
+    date: '28/07/2026',
     title: 'Tungsten Carbide: vì sao mũi mài hợp kim bền hơn thép gió',
-    excerpt: 'Cấu trúc hạt cacbua vonfram và chất kết dính cobalt quyết định tuổi thọ và tốc độ bóc tách vật liệu.',
+    titleEn: 'Tungsten carbide: why carbide burrs outlast high-speed steel',
+    excerpt:
+      'Cấu trúc hạt cacbua vonfram và chất kết dính cobalt quyết định tuổi thọ và tốc độ bóc tách vật liệu.',
+    excerptEn:
+      'Tungsten carbide grain structure and the cobalt binder are what determine tool life and material removal rate.',
   },
   {
-    slug: 'chon-dao-phay', cat: 'Kiến thức kỹ thuật', date: '21/07/2026',
+    slug: 'chon-dao-phay',
+    cat: 'Kiến thức kỹ thuật',
+    catEn: 'Technical knowledge',
+    date: '21/07/2026',
     title: 'Hướng dẫn chọn dao phay ngón theo vật liệu phôi',
-    excerpt: 'Số me, lớp phủ và biên dạng — ba yếu tố cần cân nhắc khi phay nhôm, thép tôi hay composite.',
+    titleEn: 'Choosing an end mill to match the workpiece material',
+    excerptEn:
+      'Flute count, coating and geometry — the three things to weigh up when milling aluminium, hardened steel or composites.',
+    excerpt:
+      'Số me, lớp phủ và biên dạng — ba yếu tố cần cân nhắc khi phay nhôm, thép tôi hay composite.',
   },
   {
-    slug: 'mta-2025', cat: 'Tin tức', date: '10/07/2026',
+    slug: 'mta-2025',
+    cat: 'Tin tức',
+    catEn: 'News',
+    date: '10/07/2026',
     title: 'Kim Thành Đông tại triển lãm MTA Vietnam 2025',
-    excerpt: 'KTĐ giới thiệu danh mục dụng cụ an toàn Martor và pa lăng cân bằng Tecna tới khách hàng công nghiệp.',
+    titleEn: 'Kim Thanh Dong at MTA Vietnam 2025',
+    excerpt:
+      'KTĐ giới thiệu danh mục dụng cụ an toàn Martor và pa lăng cân bằng Tecna tới khách hàng công nghiệp.',
+    excerptEn:
+      'KTD presented the Martor safety cutter range and Tecna load balancers to industrial customers.',
   },
 ]
 
 export const NEWS_CATEGORIES = ['Kiến thức kỹ thuật', 'Tin tức'] as const
+export const NEWS_CATEGORIES_EN = ['Technical knowledge', 'News'] as const
+
+/** Bài viết theo ngôn ngữ, đưa về đúng kiểu Article để giao diện không phải biết. */
+export function newsFor(lang: 'vi' | 'en'): Article[] {
+  if (lang === 'vi') return NEWS
+  return NEWS.map((n) => ({ ...n, cat: n.catEn, title: n.titleEn, excerpt: n.excerptEn }))
+}
 
 // ---------------------------------------------------------------- lookups
 

@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import { Be_Vietnam_Pro, Inter, JetBrains_Mono } from 'next/font/google'
-import './globals.css'
+import '../globals.css'
 
 import { StoreProvider } from '@/components/StoreProvider'
 import { Header } from '@/components/Header'
@@ -9,12 +9,9 @@ import { FloatingCTA } from '@/components/FloatingCTA'
 import { Toast } from '@/components/Toast'
 import { SearchOverlay } from '@/components/SearchOverlay'
 import { RFQModal } from '@/components/RFQModal'
-import {
-  COMPANY_EMAIL,
-  COMPANY_NAME,
-  COMPANY_PHONE,
-  OFFICES,
-} from '@/lib/constants'
+import { LangProvider } from '@/components/LangProvider'
+import { COMPANY_EMAIL, COMPANY_NAME, COMPANY_PHONE, OFFICES } from '@/lib/constants'
+import { DEFAULT_LOCALE, LOCALES, dict, href, isLocale, type Locale } from '@/lib/i18n'
 
 // Spec B2: three families, only the weights actually used, font-display: swap.
 const display = Be_Vietnam_Pro({
@@ -40,24 +37,33 @@ const mono = JetBrains_Mono({
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://kimthanhdong.vn'
 
-export const metadata: Metadata = {
-  metadataBase: new URL(SITE_URL),
-  title: {
-    default: 'Kim Thành Đông — Thiết bị công nghiệp & Giải pháp kỹ thuật',
-    template: '%s | Kim Thành Đông',
-  },
-  description:
-    'Nhà phân phối thiết bị công nghiệp chính hãng từ 2011. Morrisflex, Martor, Helical, ATA, Tecna… Kho Hà Nội – HCM – Vũng Tàu. Báo giá sớm nhất.',
-  alternates: { canonical: '/' },
-  openGraph: {
-    type: 'website',
-    locale: 'vi_VN',
-    siteName: COMPANY_NAME,
-    title: 'Kim Thành Đông — Thiết bị công nghiệp & Giải pháp kỹ thuật',
-    description:
-      'Thương hiệu quốc tế chính hãng · Kỹ sư tư vấn kỹ thuật · Báo giá sớm nhất.',
-  },
-  robots: { index: true, follow: true },
+/** Dựng sẵn cả hai ngôn ngữ lúc build. */
+export function generateStaticParams() {
+  return LOCALES.map((lang) => ({ lang }))
+}
+
+export function generateMetadata({ params }: { params: { lang: string } }): Metadata {
+  const lang: Locale = isLocale(params.lang) ? params.lang : DEFAULT_LOCALE
+  const t = dict(lang)
+  return {
+    metadataBase: new URL(SITE_URL),
+    title: { default: t.meta.siteTitle, template: `%s | ${t.company.legalName}` },
+    description: t.meta.siteDesc,
+    alternates: {
+      canonical: href('/', lang),
+      // Google cần biết hai bản này là cùng một trang ở hai ngôn ngữ, nếu
+      // không nó coi bản tiếng Anh là nội dung trùng lặp.
+      languages: { 'vi-VN': '/', 'en-US': '/en' },
+    },
+    openGraph: {
+      type: 'website',
+      locale: lang === 'vi' ? 'vi_VN' : 'en_US',
+      siteName: COMPANY_NAME,
+      title: t.meta.siteTitle,
+      description: t.meta.siteDesc,
+    },
+    robots: { index: true, follow: true },
+  }
 }
 
 /** Spec D4 — Organization + WebSite/SearchAction, site-wide. */
@@ -85,7 +91,7 @@ const organizationSchema = {
       '@id': `${SITE_URL}/#website`,
       url: SITE_URL,
       name: COMPANY_NAME,
-      inLanguage: 'vi-VN',
+      inLanguage: ['vi-VN', 'en-US'],
       publisher: { '@id': `${SITE_URL}/#organization` },
       potentialAction: {
         '@type': 'SearchAction',
@@ -96,23 +102,33 @@ const organizationSchema = {
   ],
 }
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+  params,
+}: {
+  children: React.ReactNode
+  params: { lang: string }
+}) {
+  const lang: Locale = isLocale(params.lang) ? params.lang : DEFAULT_LOCALE
+
   return (
-    <html lang="vi" className={`${display.variable} ${body.variable} ${mono.variable}`}>
+    <html lang={lang} className={`${display.variable} ${body.variable} ${mono.variable}`}>
       <body>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
         />
-        <StoreProvider>
-          <Header />
-          <main id="main">{children}</main>
-          <Footer />
-          <FloatingCTA />
-          <Toast />
-          <SearchOverlay />
-          <RFQModal />
-        </StoreProvider>
+        <LangProvider lang={lang}>
+          <StoreProvider>
+            <Header />
+            <main id="main">{children}</main>
+            <Footer lang={lang} />
+            <FloatingCTA />
+            <Toast />
+            <SearchOverlay />
+            <RFQModal />
+          </StoreProvider>
+        </LangProvider>
       </body>
     </html>
   )

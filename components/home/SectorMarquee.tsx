@@ -1,7 +1,7 @@
 import { existsSync } from 'node:fs'
 import { join } from 'node:path'
 import Image from 'next/image'
-import { SECTOR_CARDS, SECTORS_HEADING } from '@/lib/constants'
+import { DEFAULT_LOCALE, dict, type Locale } from '@/lib/i18n'
 
 /** Ảnh ngành đặt tên theo số thứ tự trong SECTOR_CARDS: public/sectors/1.webp …
  *  Kiểm tra lúc build, chưa có file thì ô dùng nền kẻ nhạt thay ảnh. */
@@ -10,7 +10,7 @@ const imageOf = (i: number) => {
   return existsSync(join(process.cwd(), 'public', rel)) ? rel : null
 }
 
-const CARDS = SECTOR_CARDS.map((s, i) => ({ ...s, image: imageOf(i) }))
+
 
 /**
  * Lĩnh vực phục vụ — băng ảnh tự chạy ngang, không cần bấm hay kéo.
@@ -20,12 +20,14 @@ const CARDS = SECTOR_CARDS.map((s, i) => ({ ...s, image: imageOf(i) }))
  * để khách đọc kịp; máy bật "giảm chuyển động" thì tắt hẳn và chuyển sang kéo
  * ngang bằng tay.
  */
-export function SectorMarquee() {
+export function SectorMarquee({ lang = DEFAULT_LOCALE }: { lang?: Locale }) {
+  const t = dict(lang)
+  const CARDS = t.sectors.cards.map((s, i) => ({ ...s, image: imageOf(i) }))
   return (
     <section className="overflow-hidden bg-white py-14 md:py-24">
       <div className="container-ktd">
         <h2 className="mb-10 text-center font-display text-h2 text-ktd-600 md:mb-14">
-          {SECTORS_HEADING}
+          {t.sectors.heading}
         </h2>
       </div>
 

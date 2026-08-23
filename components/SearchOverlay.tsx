@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useStore } from './StoreProvider'
 import type { SearchPayload } from '@/app/api/search/route'
+import { useLang } from './LangProvider'
 
 type Row = { key: string; label: string; sub?: string; go: () => void }
 
@@ -26,6 +27,7 @@ export function SearchOverlay() {
     pushRecent,
   } = useStore()
 
+  const { lang, t } = useLang()
   const [active, setActive] = useState(0)
   const inputRef = useRef<HTMLInputElement>(null)
 
@@ -41,7 +43,7 @@ export function SearchOverlay() {
     }
     const bo = new AbortController()
     const hen = setTimeout(() => {
-      fetch(`/api/search?q=${encodeURIComponent(searchQuery)}`, { signal: bo.signal })
+      fetch(`/api/search?q=${encodeURIComponent(searchQuery)}&lang=${lang}`, { signal: bo.signal })
         .then((r) => (r.ok ? r.json() : EMPTY))
         .then(setResults)
         .catch(() => {})
@@ -50,7 +52,7 @@ export function SearchOverlay() {
       clearTimeout(hen)
       bo.abort()
     }
-  }, [searchQuery, isEmptyQuery])
+  }, [searchQuery, isEmptyQuery, lang])
 
   const rows: Row[] = useMemo(() => {
     // Máy chủ đã dựng sẵn nhãn và đường dẫn, ở đây chỉ gắn thêm hành vi bấm
@@ -77,7 +79,7 @@ export function SearchOverlay() {
   if (!searchOpen) return null
 
   const askEngineer = () => {
-    openRfq(`Tôi đang tìm: "${searchQuery}". Nhờ kỹ sư tư vấn giúp.`)
+    openRfq(t.search.askNote(searchQuery))
   }
 
   const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -108,7 +110,7 @@ export function SearchOverlay() {
         onClick={(e) => e.stopPropagation()}
         role="dialog"
         aria-modal="true"
-        aria-label="Tìm kiếm sản phẩm"
+        aria-label={t.search.dialogLabel}
         className="flex max-h-[76vh] w-full max-w-[720px] flex-col self-start overflow-hidden rounded-2xl bg-white shadow-overlay"
       >
         <div className="flex items-center gap-4 border-b border-[#eef1f4] px-5 py-5 md:px-6">
@@ -134,7 +136,7 @@ export function SearchOverlay() {
         <div className="overflow-y-auto py-2">
           {isEmptyQuery && (
             <div className="px-6 py-4">
-              <p className="label-caps mb-3 text-ink-500">Tìm kiếm gần đây</p>
+              <p className="label-caps mb-3 text-ink-500">{t.search.recent}</p>
               <div className="flex flex-wrap gap-2">
                 {recent.map((r) => (
                   <button
@@ -153,8 +155,8 @@ export function SearchOverlay() {
           {results.products.length > 0 && (
             <div className="py-2">
               <div className="label-caps flex justify-between px-6 py-2 text-ink-500">
-                <span>Sản phẩm</span>
-                <span>{results.products.length} kết quả</span>
+                <span>{t.search.products}</span>
+                <span>{t.search.results(results.products.length)}</span>
               </div>
               {results.products.map((p) => {
                 index += 1
@@ -179,7 +181,7 @@ export function SearchOverlay() {
 
           {results.brands.length > 0 && (
             <div className="border-t border-ink-100 py-2">
-              <div className="label-caps px-6 py-2 text-ink-500">Thương hiệu</div>
+              <div className="label-caps px-6 py-2 text-ink-500">{t.search.brands}</div>
               {results.brands.map((b) => {
                 index += 1
                 const i = index
@@ -198,7 +200,7 @@ export function SearchOverlay() {
 
           {results.categories.length > 0 && (
             <div className="border-t border-ink-100 py-2">
-              <div className="label-caps px-6 py-2 text-ink-500">Danh mục</div>
+              <div className="label-caps px-6 py-2 text-ink-500">{t.search.categories}</div>
               {results.categories.map((c) => {
                 index += 1
                 const i = index
@@ -226,7 +228,7 @@ export function SearchOverlay() {
 
           {results.any && (
             <div className="flex flex-wrap items-center justify-between gap-2 border-t border-ink-100 px-6 py-4">
-              <span className="text-[13px] text-ink-500">Không thấy thứ bạn cần?</span>
+              <span className="text-[13px] text-ink-500">{t.search.noResultsTitle}</span>
               <button
                 type="button"
                 onClick={askEngineer}

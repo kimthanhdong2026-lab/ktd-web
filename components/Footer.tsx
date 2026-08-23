@@ -4,20 +4,28 @@ import {
   COMPANY_EMAIL,
   COMPANY_HOTLINE,
   COMPANY_HOTLINE_TEL,
-  COMPANY_INTRO,
   COMPANY_NAME,
   COMPANY_HOTLINE_2,
   COMPANY_HOTLINE_2_TEL,
   COMPANY_PHONE,
   COMPANY_PHONE_TEL,
-  FEATURED_CATEGORIES,
-  NAV_ITEMS,
   OFFICES,
 } from '@/lib/constants'
 import { getCategories } from '@/lib/db'
+import { DEFAULT_LOCALE, dict, href, type Locale } from '@/lib/i18n'
 
-export async function Footer() {
-  const categories = (await getCategories()).filter((c) => c.featured)
+export async function Footer({ lang = DEFAULT_LOCALE }: { lang?: Locale }) {
+  const t = dict(lang)
+  const path = (p: string) => href(p, lang)
+  const categories = (await getCategories(lang)).filter((c) => c.featured)
+
+  const NAV = [
+    { label: t.nav.home, href: '/' },
+    { label: t.nav.about, href: '/gioi-thieu' },
+    { label: t.nav.products, href: '/san-pham' },
+    { label: t.nav.news, href: '/tin-tuc' },
+    { label: t.nav.contact, href: '/lien-he' },
+  ]
 
   return (
     <footer className="bg-ktd-800 px-0 pb-6 pt-12 text-ktd-100">
@@ -59,16 +67,16 @@ export async function Footer() {
             {/* Nới bề rộng và bật text-wrap:pretty để câu không rớt một chữ
                 cuối xuống dòng riêng. */}
             <p className="max-w-[366px] text-sm leading-relaxed text-[#8fb3cf] [text-wrap:pretty]">
-              {COMPANY_INTRO}
+              {t.footer.intro}
             </p>
           </div>
 
           <div>
-            <h2 className="mb-4 font-display text-sm font-semibold text-white">Liên kết</h2>
+            <h2 className="mb-4 font-display text-sm font-semibold text-white">{t.footer.links}</h2>
             <ul className="flex flex-col gap-2.5 text-sm">
-              {NAV_ITEMS.map((item) => (
+              {NAV.map((item) => (
                 <li key={item.href}>
-                  <Link href={item.href} className="text-[#8fb3cf] hover:text-white">
+                  <Link href={path(item.href)} className="text-[#8fb3cf] hover:text-white">
                     {item.label.charAt(0) + item.label.slice(1).toLowerCase()}
                   </Link>
                 </li>
@@ -77,26 +85,26 @@ export async function Footer() {
           </div>
 
           <div>
-            <h2 className="mb-4 font-display text-sm font-semibold text-white">Danh mục</h2>
+            <h2 className="mb-4 font-display text-sm font-semibold text-white">{t.footer.categories}</h2>
             <ul className="flex flex-col gap-2.5 text-sm">
               {categories.map((c) => (
                 <li key={c.slug}>
-                  <Link href={`/san-pham?category=${c.slug}`} className="text-[#8fb3cf] hover:text-white">
+                  <Link href={path(`/san-pham?category=${c.slug}`)} className="text-[#8fb3cf] hover:text-white">
                     {c.name}
                   </Link>
                 </li>
               ))}
               {/* Footer chỉ liệt kê 4 nhóm tiêu biểu; dòng này dẫn tới đủ 15 nhóm. */}
               <li className="pt-1">
-                <Link href="/san-pham" className="font-semibold text-white hover:underline">
-                  Xem tất cả danh mục →
+                <Link href={path('/san-pham')} className="font-semibold text-white hover:underline">
+                  {t.footer.viewAllCategories}
                 </Link>
               </li>
             </ul>
           </div>
 
           <div>
-            <h2 className="mb-4 font-display text-sm font-semibold text-white">Liên hệ</h2>
+            <h2 className="mb-4 font-display text-sm font-semibold text-white">{t.footer.contact}</h2>
             <ul className="flex flex-col gap-2.5 text-sm text-[#8fb3cf]">
               <li>
                 <a href={`tel:${COMPANY_HOTLINE_TEL}`} className="text-[#8fb3cf] hover:text-white">
@@ -119,7 +127,7 @@ export async function Footer() {
                 </a>
               </li>
               <li className="leading-relaxed">
-                {OFFICES[0].name}: {OFFICES[0].addr}
+                {t.contact.offices[0]}: {t.company.addresses[1]}
               </li>
             </ul>
           </div>
@@ -127,7 +135,7 @@ export async function Footer() {
 
         <div className="pt-6">
           <p className="text-[13px] text-[#8fb3cf]">
-            © {new Date().getFullYear()} {COMPANY_NAME}. Bản quyền được bảo lưu.
+            {t.footer.rights(new Date().getFullYear(), t.company.legalName)}
           </p>
         </div>
       </div>

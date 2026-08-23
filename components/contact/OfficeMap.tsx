@@ -2,17 +2,31 @@
 
 import { useState } from 'react'
 import { OFFICES, REGISTERED_OFFICE } from '@/lib/constants'
+import type { Locale } from '@/lib/i18n'
 import { cx } from '@/lib/utils'
+import { useLang } from '@/components/LangProvider'
 
 /**
  * Spec C7.1 — office list on the left with the shared contact details beneath it,
  * map on the right following the selection.
  */
 /** Ô đầu là trụ sở đăng ký kinh doanh, ba ô sau là địa điểm làm việc thật. */
-const ADDRESSES = [REGISTERED_OFFICE, ...OFFICES]
+const ADDR = [REGISTERED_OFFICE, ...OFFICES]
 
-export function OfficeMap({ children }: { children?: React.ReactNode }) {
+export function OfficeMap({
+  children,
+}: {
+  children?: React.ReactNode
+  /** Nhận để trang cha truyền xuống được; chữ lấy từ ngữ cảnh. */
+  lang?: Locale
+}) {
+  const { t } = useLang()
   const [active, setActive] = useState(1)
+  // Nhãn địa điểm dịch theo ngôn ngữ; địa chỉ giữ nguyên vì là địa chỉ vật lý.
+  const ADDRESSES = ADDR.map((o, i) => ({
+    name: i === 0 ? t.contact.registeredOffice : t.contact.offices[i - 1],
+    addr: t.company.addresses[i] ?? o.addr,
+  }))
   const office = ADDRESSES[active]
 
   return (
@@ -49,7 +63,7 @@ export function OfficeMap({ children }: { children?: React.ReactNode }) {
             <div className="mb-2.5 text-[32px]" aria-hidden="true">📍</div>
             <p className="font-display text-lg font-semibold text-ink-900">{office.name}</p>
             <p className="mt-2 max-w-[280px] px-4 text-sm text-ink-500">{office.addr}</p>
-            <p className="mt-2 font-mono text-xs text-ink-500">[ BẢN ĐỒ NHÚNG — SEAVIEW 4 ]</p>
+            <p className="mt-2 font-mono text-xs text-ink-500">{t.contact.mapPlaceholder}</p>
           </div>
         </div>
       </div>

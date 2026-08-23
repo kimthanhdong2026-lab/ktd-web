@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { getCategories } from '@/lib/db'
-import { CATEGORIES_HEADING } from '@/lib/constants'
+import { DEFAULT_LOCALE, dict, href, type Locale } from '@/lib/i18n'
 
 /**
  * Danh mục sản phẩm dạng ô lớn — 15 nhóm, mỗi ô dẫn tới trang Sản phẩm đã lọc
@@ -9,13 +9,14 @@ import { CATEGORIES_HEADING } from '@/lib/constants'
  * Ô để nền trắng trên nền xanh rất nhạt của mục, không dùng ảnh nền: theo yêu
  * cầu của team, phần này phải nhạt và đồng bộ với nền chung của website.
  */
-export async function CategoryTiles() {
-  const categories = await getCategories()
+export async function CategoryTiles({ lang = DEFAULT_LOCALE }: { lang?: Locale }) {
+  const t = dict(lang)
+  const categories = await getCategories(lang)
   return (
     <section className="bg-ktd-50 py-14 md:py-24">
       <div className="container-ktd">
         <h2 className="mb-10 text-center font-display text-h2 text-ktd-600 md:mb-14">
-          {CATEGORIES_HEADING}
+          {t.categories.heading}
         </h2>
 
         {/* 15 nhóm chia hết cho 5 và cho 3 nên không bao giờ có hàng lẻ. */}
@@ -23,7 +24,7 @@ export async function CategoryTiles() {
           {categories.map((c) => (
             <li key={c.slug}>
               <Link
-                href={`/san-pham?category=${c.slug}`}
+                href={href(`/san-pham?category=${c.slug}`, lang)}
                 className="group flex h-full min-h-[150px] flex-col rounded-xl border border-hairline bg-white p-4 transition duration-200 hover:-translate-y-0.5 hover:border-ktd-600 hover:shadow-md md:p-5"
               >
                 <span className="mb-1.5 block font-display text-[17px] font-semibold leading-snug text-ink-900 md:text-[19px]">

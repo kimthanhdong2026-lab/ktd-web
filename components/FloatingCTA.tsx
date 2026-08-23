@@ -5,6 +5,7 @@ import { useStore } from './StoreProvider'
 import { IconArrowUp, IconChat, IconPhone, IconQuote, IconSearch } from './Icons'
 import { COMPANY_HOTLINE_TEL, ZALO_URL } from '@/lib/constants'
 import { cx } from '@/lib/utils'
+import { useLang } from './LangProvider'
 
 /**
  * Bộ nút nổi (spec B6).
@@ -34,6 +35,7 @@ function Item({ className, children }: { className?: string; children: React.Rea
 
 export function FloatingCTA() {
   const { openRfq, openSearch, cartCount } = useStore()
+  const { t } = useLang()
   const [showTop, setShowTop] = useState(false)
 
   // Chỉ hiện sau khi đã cuộn sâu, lúc đó việc quay lại đầu trang mới có nghĩa.
@@ -50,8 +52,8 @@ export function FloatingCTA() {
         <button
           type="button"
           onClick={() => openRfq()}
-          aria-label="Yêu cầu báo giá"
-          title="Yêu cầu báo giá"
+          aria-label={t.cta.quote}
+          title={t.cta.quote}
           className={cx(TILE, 'relative text-ktd-600')}
         >
           <IconQuote className={ICON} />
@@ -68,8 +70,8 @@ export function FloatingCTA() {
           href={ZALO_URL}
           target="_blank"
           rel="noopener noreferrer"
-          aria-label="Chat Zalo"
-          title="Chat Zalo"
+          aria-label={t.cta.chatZalo}
+          title={t.cta.chatZalo}
           className={cx(TILE, 'text-zalo')}
         >
           <IconChat className={ICON} />
@@ -80,8 +82,8 @@ export function FloatingCTA() {
       <Item className="md:hidden">
         <a
           href={`tel:${COMPANY_HOTLINE_TEL}`}
-          aria-label="Gọi hotline"
-          title="Gọi ngay"
+          aria-label={t.cta.call}
+          title={t.cta.call}
           className={cx(TILE, 'text-ktd-600')}
         >
           <IconPhone className={ICON} />
@@ -92,8 +94,8 @@ export function FloatingCTA() {
         <button
           type="button"
           onClick={() => openSearch('')}
-          aria-label="Mở ô tìm kiếm"
-          title="Tìm kiếm sản phẩm"
+          aria-label={t.cta.search}
+          title={t.cta.search}
           className={cx(TILE, 'text-ink-900')}
         >
           <IconSearch className={ICON} />

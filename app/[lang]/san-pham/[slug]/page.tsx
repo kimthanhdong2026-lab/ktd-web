@@ -7,36 +7,49 @@ import { ProductTabs } from '@/components/products/ProductTabs'
 import { CatalogButton } from '@/components/products/CatalogButton'
 import { QuoteButton } from '@/components/QuoteButton'
 import { getAllProductSlugs, getProductBySlug, getRelatedProducts } from '@/lib/db'
+import { DEFAULT_LOCALE, LOCALES, dict, href, isLocale, type Locale } from '@/lib/i18n'
 import { COMPANY_HOTLINE, COMPANY_HOTLINE_TEL, ZALO_URL } from '@/lib/constants'
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://kimthanhdong.vn'
 
 interface PageProps {
-  params: { slug: string }
+  params: { slug: string; lang: string }
 }
 
 export async function generateStaticParams() {
-  return (await getAllProductSlugs()).map((slug) => ({ slug }))
+  const slugs = await getAllProductSlugs()
+  return LOCALES.flatMap((lang) => slugs.map((slug) => ({ lang, slug })))
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const product = await getProductBySlug(params.slug)
-  if (!product) return { title: 'Không tìm thấy sản phẩm' }
+  const lang: Locale = isLocale(params.lang) ? params.lang : DEFAULT_LOCALE
+  const t = dict(lang)
+  const product = await getProductBySlug(params.slug, lang)
+  if (!product) return { title: t.product.notFound }
 
   return {
     title: `${product.name} ${product.part} — ${product.brandLabel}`,
-    description: `${product.desc} Mã ${product.part}, thương hiệu ${product.brandLabel}. Tải catalog PDF, nhận báo giá sớm nhất.`,
-    alternates: { canonical: `/san-pham/${params.slug}` },
+    description: t.product.metaDesc(product.desc, product.part, product.brandLabel),
+    alternates: {
+      canonical: href(`/san-pham/${params.slug}`, lang),
+      languages: {
+        'vi-VN': `/san-pham/${params.slug}`,
+        'en-US': `/en/san-pham/${params.slug}`,
+      },
+    },
   }
 }
 
 export default async function ProductDetailPage({ params }: PageProps) {
-  const product = await getProductBySlug(params.slug)
+  const lang: Locale = isLocale(params.lang) ? params.lang : DEFAULT_LOCALE
+  const t = dict(lang)
+  const path = (p: string) => href(p, lang)
+  const product = await getProductBySlug(params.slug, lang)
   if (!product) notFound()
 
   const brand = product.brandLabel
   const category = product.categoryLabel
-  const related = await getRelatedProducts(product.brand, product.part, 4)
+  const related = await getRelatedProducts(product.brand, product.part, 4, lang)
 
   // Spec D4: Product schema without `offers` — KTĐ does not publish prices.
   const schema = {
@@ -71,8 +84,8 @@ export default async function ProductDetailPage({ params }: PageProps) {
       />
 
       <nav aria-label="Breadcrumb" className="mb-7 text-body-sm text-ink-500">
-        <Link href="/">Trang chủ</Link> / <Link href="/san-pham">Sản phẩm</Link> /{' '}
-        <Link href={`/san-pham?brand=${product.brand}`}>{brand}</Link> /{' '}
+        <Link href={path("/")}>{t.nav.home}</Link> / <Link href={path("/san-pham")}>{t.nav.products}</Link> /{' '}
+        <Link href={path(`/san-pham?brand=${product.brand}`)}>{brand}</Link> /{' '}
         <span className="text-ink-900">{product.name}</span>
       </nav>
 
@@ -89,35 +102,35 @@ export default async function ProductDetailPage({ params }: PageProps) {
 
           <dl className="mb-6 flex flex-col gap-3 border-y border-[#eef1f4] py-5">
             <div className="flex items-center gap-4">
-              <dt className="w-[110px] flex-shrink-0 text-sm text-ink-500">Mã hàng</dt>
+              <dt className="w-[110px] flex-shrink-0 text-sm text-ink-500">{t.product.partNo}</dt>
               <dd className="part-no text-lg font-semibold text-ink-900">{product.part}</dd>
             </div>
             <div className="flex items-center gap-4">
-              <dt className="w-[110px] flex-shrink-0 text-sm text-ink-500">Thương hiệu</dt>
+              <dt className="w-[110px] flex-shrink-0 text-sm text-ink-500">{t.product.brand}</dt>
               <dd className="font-display text-[15px] font-semibold text-ink-900">{brand}</dd>
             </div>
             <div className="flex items-center gap-4">
-              <dt className="w-[110px] flex-shrink-0 text-sm text-ink-500">Xuất xứ</dt>
+              <dt className="w-[110px] flex-shrink-0 text-sm text-ink-500">{t.product.origin}</dt>
               <dd className="text-[15px] text-ink-900">{product.origin}</dd>
             </div>
           </dl>
 
           <p className="mb-7 text-body-lg text-ink-700">{product.desc}</p>
 
-          <QuoteButton addPart={product.part} className="mb-3 w-full">
-            + THÊM VÀO YÊU CẦU BÁO GIÁ
+          <QuoteButton addPart={product.part} addName={product.name} addBrand={product.brandLabel} className="mb-3 w-full">
+            {t.product.addToQuote}
           </QuoteButton>
 
-          <CatalogButton product={product} />
+          <CatalogButton product={product} lang={lang} />
         </div>
       </div>
 
-      <ProductTabs product={product} />
+      <ProductTabs product={product} lang={lang} />
 
       {related.length > 0 && (
         <section className="mb-14">
           <h2 className="mb-6 font-display text-[22px] font-bold text-ink-900 md:text-[26px]">
-            Sản phẩm cùng dòng
+            {t.product.related}
           </h2>
           <div className="grid grid-cols-2 gap-4 lg:grid-cols-4 lg:gap-5">
             {related.map((p) => (
@@ -129,9 +142,9 @@ export default async function ProductDetailPage({ params }: PageProps) {
 
       <section className="grid gap-8 rounded-lg bg-ktd-600 px-6 py-7 md:px-8 lg:grid-cols-[1fr_1px_1fr] lg:items-center">
         <div className="flex flex-col items-start gap-2.5">
-          <h2 className="font-display text-xl font-bold text-white">Cần tư vấn kỹ thuật?</h2>
+          <h2 className="font-display text-xl font-bold text-white">{t.product.needAdvice}</h2>
           <p className="text-sm leading-relaxed text-ktd-100">
-            Kỹ sư giàu kinh nghiệm sẵn sàng hỗ trợ chọn đúng thông số.
+            {t.product.adviceBody}
           </p>
           <div className="mt-1 flex flex-wrap gap-2.5">
             <a href={`tel:${COMPANY_HOTLINE_TEL}`} className="btn bg-white text-ktd-600 hover:bg-ktd-50">
@@ -151,12 +164,12 @@ export default async function ProductDetailPage({ params }: PageProps) {
         <div className="hidden h-full w-px bg-white/25 lg:block" aria-hidden="true" />
 
         <div className="flex flex-col items-start gap-2.5">
-          <h2 className="font-display text-xl font-bold text-white">Yêu cầu báo giá sỉ / lẻ</h2>
+          <h2 className="font-display text-xl font-bold text-white">{t.product.requestQuote}</h2>
           <p className="text-sm leading-relaxed text-ktd-100">
-            Nhận báo giá sớm nhất.
+            {t.product.quoteBody}
           </p>
-          <QuoteButton addPart={product.part} className="mt-1">
-            Gửi yêu cầu báo giá
+          <QuoteButton addPart={product.part} addName={product.name} addBrand={product.brandLabel} className="mt-1">
+            {t.product.sendQuote}
           </QuoteButton>
         </div>
       </section>

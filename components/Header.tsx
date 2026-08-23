@@ -5,7 +5,9 @@ import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { useStore } from './StoreProvider'
-import { COMPANY_HOTLINE, COMPANY_HOTLINE_TEL, NAV_ITEMS } from '@/lib/constants'
+import { COMPANY_HOTLINE, COMPANY_HOTLINE_TEL } from '@/lib/constants'
+import { useLang } from './LangProvider'
+import { LOCALES, href as localeHref, stripLocale } from '@/lib/i18n'
 import { cx } from '@/lib/utils'
 
 /**
@@ -15,6 +17,20 @@ import { cx } from '@/lib/utils'
  */
 export function Header() {
   const pathname = usePathname()
+  const { lang, t, path } = useLang()
+
+  const NAV = [
+    { label: t.nav.home, href: '/' },
+    { label: t.nav.about, href: '/gioi-thieu' },
+    { label: t.nav.products, href: '/san-pham' },
+    { label: t.nav.news, href: '/tin-tuc' },
+    { label: t.nav.contact, href: '/lien-he' },
+  ]
+
+  // Đường dẫn hiện tại ở ngôn ngữ còn lại, để nút chuyển giữ nguyên trang khách
+  // đang đọc thay vì quăng họ về trang chủ.
+  const other = LOCALES.find((l) => l !== lang)!
+  const otherHref = localeHref(stripLocale(pathname), other)
   const { openSearch, openRfq, cartCount, showToast } = useStore()
   const [scrolled, setScrolled] = useState(false)
   const [mobileNavOpen, setMobileNavOpen] = useState(false)
@@ -32,15 +48,11 @@ export function Header() {
     setMobileNavOpen(false)
   }, [pathname])
 
-  const isActive = (href: string) =>
-    href === '/' ? pathname === '/' : pathname.startsWith(href)
+  const isActive = (h: string) => {
+    const here = stripLocale(pathname)
+    return h === '/' ? here === '/' : here.startsWith(h)
+  }
 
-  // Chưa có bản tiếng Anh. Câu này khách nước ngoài đọc được, và cho họ một
-  // lối liên hệ thay vì ngõ cụt — người bấm EN thường là khách tiềm năng.
-  const langNotice = () =>
-    showToast(
-      `Trang tiếng Anh đang được hoàn thiện. English version coming soon — please call ${COMPANY_HOTLINE}.`
-    )
 
   return (
     <header
@@ -53,7 +65,7 @@ export function Header() {
     >
       {/* py 5px + hàng nút 44px + viền 2px = 56px, gọn hơn ~10% so với 62px. */}
       <div className="container-ktd flex items-center gap-4 py-[5px] lg:gap-6">
-        <Link href="/" className="flex-shrink-0" aria-label="Kim Thành Đông — trang chủ">
+        <Link href={path('/')} className="flex-shrink-0" aria-label="Kim Thành Đông">
           <Image
             src="/assets/ktd-logo.webp"
             alt="Kim Thành Đông"
@@ -65,10 +77,10 @@ export function Header() {
         </Link>
 
         <nav className="hidden gap-1 lg:flex" aria-label="Điều hướng chính">
-          {NAV_ITEMS.map((item) => (
+          {NAV.map((item) => (
             <Link
               key={item.href}
-              href={item.href}
+              href={path(item.href)}
               className={cx(
                 'rounded-md px-3 py-[7px] text-sm font-semibold transition-colors hover:bg-ktd-50',
                 isActive(item.href) ? 'text-ktd-600' : 'text-ink-700'
@@ -90,16 +102,17 @@ export function Header() {
             {COMPANY_HOTLINE}
           </a>
 
-          <button
-            type="button"
-            onClick={langNotice}
-            aria-label="Chuyển sang tiếng Anh"
+          {/* Chuyển sang trang tương ứng ở ngôn ngữ kia, không quăng về trang chủ */}
+          <Link
+            href={otherHref}
+            hrefLang={other}
+            aria-label={t.header.switchTo}
             className="hidden rounded-sm border border-ink-300 px-2 py-1 text-xs font-semibold tracking-[0.05em] hover:border-ktd-600 md:inline-block"
           >
-            <span className="text-ktd-600">VI</span>
+            <span className={lang === 'vi' ? 'text-ktd-600' : 'text-ink-500'}>VI</span>
             <span className="mx-1 text-ink-300">|</span>
-            <span className="text-ink-500">EN</span>
-          </button>
+            <span className={lang === 'en' ? 'text-ktd-600' : 'text-ink-500'}>EN</span>
+          </Link>
 
           <div className="hidden items-center gap-2 lg:flex">
             <a
@@ -129,7 +142,7 @@ export function Header() {
             aria-label="Mở ô tìm kiếm sản phẩm"
           >
             <span aria-hidden="true">🔍</span>
-            <span className="hidden md:inline">Tìm kiếm sản phẩm</span>
+            <span className="hidden md:inline">{t.header.searchPlaceholder}</span>
           </button>
 
           <button
@@ -137,7 +150,7 @@ export function Header() {
             onClick={() => openRfq()}
             className="relative flex min-h-[44px] items-center gap-2 rounded-md bg-ktd-600 px-4 text-[13px] font-semibold text-white transition-colors hover:bg-ktd-700 md:px-[18px]"
           >
-            Báo giá
+            {t.header.quote}
             {cartCount > 0 && (
               <span className="absolute -right-2 -top-2 flex h-[19px] min-w-[19px] items-center justify-center rounded-full border-2 border-white bg-ktd-800 px-[3px] text-[11px] font-bold text-white">
                 {cartCount}
@@ -160,10 +173,10 @@ export function Header() {
       {mobileNavOpen && (
         <nav className="border-t border-hairline bg-white lg:hidden" aria-label="Điều hướng chính">
           <div className="container-ktd flex flex-col py-2">
-            {NAV_ITEMS.map((item) => (
+            {NAV.map((item) => (
               <Link
                 key={item.href}
-                href={item.href}
+                href={path(item.href)}
                 className={cx(
                   'py-3 text-sm font-semibold',
                   isActive(item.href) ? 'text-ktd-600' : 'text-ink-700'
@@ -178,16 +191,16 @@ export function Header() {
                 ☎ {COMPANY_HOTLINE}
               </a>
               <div className="flex items-center gap-4">
-                <button
-                  type="button"
-                  onClick={langNotice}
-                  aria-label="Chuyển sang tiếng Anh"
+                <Link
+                  href={otherHref}
+                  hrefLang={other}
+                  aria-label={t.header.switchTo}
                   className="rounded-sm border border-ink-300 px-2 py-1 text-xs font-semibold tracking-[0.05em]"
                 >
-                  <span className="text-ktd-600">VI</span>
+                  <span className={lang === 'vi' ? 'text-ktd-600' : 'text-ink-500'}>VI</span>
                   <span className="mx-1 text-ink-300">|</span>
-                  <span className="text-ink-500">EN</span>
-                </button>
+                  <span className={lang === 'en' ? 'text-ktd-600' : 'text-ink-500'}>EN</span>
+                </Link>
                 <a
                   href="https://www.facebook.com"
                   target="_blank"

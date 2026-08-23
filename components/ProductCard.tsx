@@ -3,6 +3,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { useStore } from './StoreProvider'
+import { useLang } from './LangProvider'
 import type { Product } from '@/lib/ktd-data'
 
 interface ProductCardProps {
@@ -19,7 +20,8 @@ interface ProductCardProps {
  */
 export function ProductCard({ product, variant = 'full' }: ProductCardProps) {
   const { addToCart } = useStore()
-  const href = `/san-pham/${product.slug}`
+  const { t, path } = useLang()
+  const href = path(`/san-pham/${product.slug}`)
 
   return (
     <article className="group card relative flex flex-col overflow-hidden hover:border-[#cdd6de] hover:shadow-md">
@@ -36,7 +38,7 @@ export function ProductCard({ product, variant = 'full' }: ProductCardProps) {
           /* Ảnh tạm không in mã hàng nữa — mã đã nằm trong ô xám ngay bên dưới. */
           <span className="placeholder-hatch absolute inset-0 flex items-center justify-center bg-ink-100">
             <span className="rounded-sm border border-ink-300 bg-white px-2.5 py-1 text-[11px] text-ink-500">
-              Đang cập nhật ảnh
+              {t.product.updatingImage}
             </span>
           </span>
         )}
@@ -74,14 +76,14 @@ export function ProductCard({ product, variant = 'full' }: ProductCardProps) {
                 onClick={() => addToCart(product.part, product.name)}
                 className="min-h-[44px] flex-1 rounded-[7px] bg-ktd-600 px-2 text-[13px] font-semibold text-white transition-colors hover:bg-ktd-700"
               >
-                + Thêm báo giá
+                {t.product.addToQuoteShort}
               </button>
               <Link
                 href={href}
                 className="flex min-h-[44px] items-center rounded-[7px] border-[1.5px] border-ktd-600 px-3.5 text-[13px] font-semibold text-ktd-600 transition-colors hover:bg-ktd-50"
-                aria-label={`Xem chi tiết ${product.name}`}
+                aria-label={t.product.detailOf(product.name)}
               >
-                Chi tiết →
+                {t.product.detail}
               </Link>
             </div>
           </>

@@ -3,13 +3,23 @@ import { ProductBrowser } from '@/components/products/ProductBrowser'
 import { MAX_SHOW, PAGE_SIZE } from '@/lib/browse'
 import { ProductGroups } from '@/components/products/ProductGroups'
 import { browseProducts, countProducts, getBrands, getCategories } from '@/lib/db'
+import { DEFAULT_LOCALE, dict, href, isLocale, type Locale } from '@/lib/i18n'
 
-export async function generateMetadata(): Promise<Metadata> {
-  const [brands, n] = await Promise.all([getBrands(), countProducts()])
+export async function generateMetadata({
+  params,
+}: {
+  params: { lang: string }
+}): Promise<Metadata> {
+  const lang: Locale = isLocale(params.lang) ? params.lang : DEFAULT_LOCALE
+  const t = dict(lang)
+  const [brands, n] = await Promise.all([getBrands(lang), countProducts()])
   return {
-    title: 'Sản phẩm — Thiết bị công nghiệp chính hãng',
-    description: `${brands.length} thương hiệu chính hãng · ${n} mã hàng. Lọc theo thương hiệu, danh mục hoặc lĩnh vực; tải catalog PDF và nhận báo giá sớm nhất.`,
-    alternates: { canonical: '/san-pham' },
+    title: t.products.metaTitle,
+    description: t.products.metaDesc(brands.length, n),
+    alternates: {
+      canonical: href('/san-pham', lang),
+      languages: { 'vi-VN': '/san-pham', 'en-US': '/en/san-pham' },
+    },
   }
 }
 
@@ -23,10 +33,12 @@ const one = (v: string | string[] | undefined): string =>
   v === undefined ? '' : Array.isArray(v) ? (v[0] ?? '') : v
 
 interface PageProps {
+  params: { lang: string }
   searchParams: Record<string, string | string[] | undefined>
 }
 
-export default async function ProductsPage({ searchParams }: PageProps) {
+export default async function ProductsPage({ params, searchParams }: PageProps) {
+  const lang: Locale = isLocale(params.lang) ? params.lang : DEFAULT_LOCALE
   const query = one(searchParams.q)
   const selectedBrands = many(searchParams.brand)
   const selectedCategories = many(searchParams.category)
@@ -38,14 +50,15 @@ export default async function ProductsPage({ searchParams }: PageProps) {
   )
 
   const [brands, categories, result] = await Promise.all([
-    getBrands(),
-    getCategories(),
+    getBrands(lang),
+    getCategories(lang),
     browseProducts({
       q: query,
       brands: selectedBrands,
       categories: selectedCategories,
       sort,
       limit: show,
+      lang,
     }),
   ])
 
@@ -56,7 +69,7 @@ export default async function ProductsPage({ searchParams }: PageProps) {
   selectedCategories.forEach((c) => sp.append('category', c))
   if (sort !== 'default') sp.set('sort', sort)
   sp.set('show', String(nextShow))
-  const nextHref = result.total > show && show < MAX_SHOW ? `/san-pham?${sp}` : null
+  const nextHref = result.total > show && show < MAX_SHOW ? href(`/san-pham?${sp}`, lang) : null
 
   // Spec D4 — ItemList + BreadcrumbList. Chỉ liệt kê những gì đang hiện, vì
   // đây là mô tả của chính trang này chứ không phải của cả kho hàng.
@@ -66,8 +79,13 @@ export default async function ProductsPage({ searchParams }: PageProps) {
       {
         '@type': 'BreadcrumbList',
         itemListElement: [
-          { '@type': 'ListItem', position: 1, name: 'Trang chủ', item: SITE_URL },
-          { '@type': 'ListItem', position: 2, name: 'Sản phẩm', item: `${SITE_URL}/san-pham` },
+          { '@type': 'ListItem', position: 1, name: dict(lang).nav.home, item: SITE_URL },
+          {
+            '@type': 'ListItem',
+            position: 2,
+            name: dict(lang).nav.products,
+            item: `${SITE_URL}${href('/san-pham', lang)}`,
+          },
         ],
       },
       {
@@ -77,7 +95,7 @@ export default async function ProductsPage({ searchParams }: PageProps) {
           '@type': 'ListItem',
           position: i + 1,
           name: p.name,
-          url: `${SITE_URL}/san-pham/${p.slug}`,
+          url: `${SITE_URL}${href(`/san-pham/${p.slug}`, lang)}`,
         })),
       },
     ],
@@ -100,6 +118,7 @@ export default async function ProductsPage({ searchParams }: PageProps) {
         countByBrand={result.byBrand}
       >
         <ProductGroups
+          lang={lang}
           items={result.items}
           brands={brands}
           categories={categories}

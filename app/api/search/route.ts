@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { browseProducts, getBrands, getCategories, searchFuzzy } from '@/lib/db'
 import { SLANG_MAP } from '@/lib/ktd-data'
+import { DEFAULT_LOCALE, href, isLocale } from '@/lib/i18n'
 import { levenshtein, normalizeVi } from '@/lib/utils'
 
 /**
@@ -37,7 +38,10 @@ function expandSlang(q: string): string {
 }
 
 export async function GET(request: Request) {
-  const raw = new URL(request.url).searchParams.get('q') ?? ''
+  const sp = new URL(request.url).searchParams
+  const raw = sp.get('q') ?? ''
+  const langRaw = sp.get('lang') ?? ''
+  const lang = isLocale(langRaw) ? langRaw : DEFAULT_LOCALE
   const q = normalizeVi(raw)
 
   if (q.length < 2) {
@@ -45,12 +49,12 @@ export async function GET(request: Request) {
   }
 
   const [products, brands, categories, all] = await Promise.all([
-    searchFuzzy(expandSlang(q), 5),
-    getBrands(),
-    getCategories(),
+    searchFuzzy(expandSlang(q), 5, lang),
+    getBrands(lang),
+    getCategories(lang),
     // Một lượt gọi lấy số sản phẩm theo hãng và theo nhóm cho cả kho, thay vì
     // hỏi riêng từng hãng.
-    browseProducts({ limit: 1 }),
+    browseProducts({ limit: 1, lang }),
   ])
 
   const brandRows = brands
@@ -60,7 +64,7 @@ export async function GET(request: Request) {
       key: `b-${b.slug}`,
       label: b.name,
       sub: `${b.desc} · ${all.byBrand[b.slug] ?? 0} sản phẩm`,
-      href: `/san-pham?brand=${b.slug}`,
+      href: href(`/san-pham?brand=${b.slug}`, lang),
     }))
 
   const categoryRows = categories
@@ -70,14 +74,14 @@ export async function GET(request: Request) {
       key: `c-${c.slug}`,
       label: `${c.name} · ${all.byCategory[c.slug] ?? 0} sản phẩm`,
       sub: c.sub,
-      href: `/san-pham?category=${c.slug}`,
+      href: href(`/san-pham?category=${c.slug}`, lang),
     }))
 
   const productRows = products.map((p) => ({
     key: `p-${p.part}`,
     label: p.name,
     sub: `${p.part} · ${p.brandLabel} · ${p.categoryLabel}`,
-    href: `/san-pham/${p.slug}`,
+    href: href(`/san-pham/${p.slug}`, lang),
   }))
 
   const payload: SearchPayload = {

@@ -1,17 +1,16 @@
 import type { Metadata } from 'next'
-import {
-  ABOUT_MISSION,
-  ABOUT_STORY,
-  ABOUT_TIMELINE,
-  ABOUT_VALUES,
-  ABOUT_VISION,
-} from '@/lib/constants'
+import { DEFAULT_LOCALE, dict, isLocale, type Dictionary, type Locale } from '@/lib/i18n'
 
-export const metadata: Metadata = {
-  title: 'Giới thiệu — Đồng hành cùng công nghiệp Việt Nam từ 2011',
-  description:
-    'Công ty TNHH Kim Thành Đông thành lập 2011, cung cấp thiết bị, dụng cụ công nghiệp chất lượng cao và giải pháp phục vụ sản xuất tại Việt Nam.',
-  alternates: { canonical: '/gioi-thieu' },
+export function generateMetadata({ params }: { params: { lang: string } }): Metadata {
+  const t = dict(isLocale(params.lang) ? params.lang : DEFAULT_LOCALE)
+  return {
+    title: t.about.metaTitle,
+    description: t.about.metaDesc,
+    alternates: {
+      canonical: params.lang === 'en' ? '/en/gioi-thieu' : '/gioi-thieu',
+      languages: { 'vi-VN': '/gioi-thieu', 'en-US': '/en/gioi-thieu' },
+    },
+  }
 }
 
 // Bố cục một hàng timeline: tổng chiều cao, vị trí trục, độ dài nét đứt.
@@ -20,7 +19,7 @@ const AXIS_TOP = 220
 const CONNECTOR = 38
 
 /** Timeline ngang 9 mốc trên một hàng, nội dung so le trên/dưới trục. */
-function TimelineTrack({ items }: { items: typeof ABOUT_TIMELINE }) {
+function TimelineTrack({ items }: { items: Dictionary['about']['timeline'] }) {
   return (
     <div className="relative" style={{ height: TRACK_HEIGHT }}>
       <div
@@ -71,13 +70,15 @@ function TimelineTrack({ items }: { items: typeof ABOUT_TIMELINE }) {
   )
 }
 
-export default function AboutPage() {
+export default function AboutPage({ params }: { params: { lang: string } }) {
+  const lang: Locale = isLocale(params.lang) ? params.lang : DEFAULT_LOCALE
+  const t = dict(lang)
   return (
     <>
       <section className="bg-white px-5 py-8 md:py-10">
         <div className="container-ktd text-center">
           <h1 className="font-display text-h2 leading-tight text-ktd-600">
-            Đồng hành cùng công nghiệp Việt Nam từ 2011
+            {t.about.heading}
           </h1>
         </div>
       </section>
@@ -85,7 +86,7 @@ export default function AboutPage() {
       <section className="mx-auto max-w-[900px] px-5 pb-12 md:pb-16">
         {/* Cả phần này dùng đúng một cỡ chữ và một màu chữ; trước đây đoạn đầu
             to và đậm hơn nên nhìn như hai khối khác nhau. */}
-        {ABOUT_STORY.map((para, i) => (
+        {t.about.story.map((para, i) => (
           <p key={i} className="mb-5 text-[17px] leading-[1.75] text-ink-700">
             {para}
           </p>
@@ -95,12 +96,12 @@ export default function AboutPage() {
       {/* Chờ Marketing cấp ảnh nhà xưởng, văn phòng và triển lãm (spec E4 mục 11). */}
       <section className="container-ktd pb-16 md:pb-20">
         <ul className="grid gap-4 sm:grid-cols-3">
-          {['Văn phòng & kho hàng', 'Đội ngũ kỹ thuật', 'Triển lãm MTA Vietnam'].map((caption) => (
+          {t.about.photos.map((caption) => (
             <li
               key={caption}
               className="placeholder-hatch relative flex aspect-[4/3] flex-col items-center justify-center gap-2 overflow-hidden rounded-lg bg-ink-100"
             >
-              <span className="relative font-mono text-[11px] text-[#9aa3ad]">[ ẢNH ]</span>
+              <span className="relative font-mono text-[11px] text-[#9aa3ad]">{t.about.photoPlaceholder}</span>
               <span className="relative text-sm text-ink-500">{caption}</span>
             </li>
           ))}
@@ -110,22 +111,22 @@ export default function AboutPage() {
       <section className="container-ktd pb-16 md:pb-20">
         <div className="grid gap-6 md:grid-cols-2">
           <div className="rounded-lg bg-ktd-50 p-8 md:p-10">
-            <h2 className="mb-4 text-center font-display text-h2 text-ktd-600">Tầm nhìn</h2>
-            <p className="text-base leading-relaxed text-ink-700">{ABOUT_VISION}</p>
+            <h2 className="mb-4 text-center font-display text-h2 text-ktd-600">{t.about.visionHeading}</h2>
+            <p className="text-base leading-relaxed text-ink-700">{t.about.vision}</p>
           </div>
           <div className="rounded-lg bg-ktd-50 p-8 md:p-10">
-            <h2 className="mb-4 text-center font-display text-h2 text-ktd-600">Sứ mệnh</h2>
-            <p className="text-base leading-relaxed text-ink-700">{ABOUT_MISSION}</p>
+            <h2 className="mb-4 text-center font-display text-h2 text-ktd-600">{t.about.missionHeading}</h2>
+            <p className="text-base leading-relaxed text-ink-700">{t.about.mission}</p>
           </div>
         </div>
       </section>
 
       <section className="container-ktd pb-16 md:pb-20">
         <h2 className="mb-8 text-center font-display text-h2 text-ktd-600">
-          Giá trị chúng tôi theo đuổi
+          {t.about.valuesHeading}
         </h2>
         <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {ABOUT_VALUES.map((v, i) => (
+          {t.about.values.map((v, i) => (
             <li key={v.title} className="rounded-xl bg-ktd-50 p-5 md:p-6">
               <span className="mb-3 block text-center font-display text-[28px] font-bold text-ktd-600/30">
                 {String(i + 1).padStart(2, '0')}
@@ -139,17 +140,17 @@ export default function AboutPage() {
 
       <section className="container-ktd pb-16 md:pb-24">
         <h2 className="mb-8 text-center font-display text-h2 text-ktd-600">
-          Chặng đường phát triển
+          {t.about.timelineHeading}
         </h2>
         {/* Máy tính: một hàng 9 mốc, vừa khít bề rộng nên không phải cuộn.
             Điện thoại: chuyển sang trục dọc vì 9 cột trên màn hẹp là không đọc được. */}
         <div className="hidden md:block">
-          <TimelineTrack items={ABOUT_TIMELINE} />
+          <TimelineTrack items={t.about.timeline} />
         </div>
 
         <ol className="relative md:hidden">
           <span className="absolute bottom-2 left-[5px] top-2 w-[2px] bg-ktd-100" aria-hidden="true" />
-          {ABOUT_TIMELINE.map((t) => (
+          {t.about.timeline.map((t) => (
             <li key={t.year} className="relative pb-7 pl-7 last:pb-0">
               <span
                 className="absolute left-0 top-1.5 h-3 w-3 rounded-full border-[3px] border-white bg-ktd-600"

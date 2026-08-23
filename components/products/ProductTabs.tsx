@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from 'react'
 import { pdfLine, productSectors, type Product } from '@/lib/ktd-data'
+import { DEFAULT_LOCALE, dict, type Locale } from '@/lib/i18n'
 import { cx } from '@/lib/utils'
 
 /**
@@ -9,18 +10,26 @@ import { cx } from '@/lib/utils'
  * chưa có bảng thông số, nếu vẫn hiện tab rỗng thì khách bấm vào lại thấy
  * trang trắng.
  */
-export function ProductTabs({ product }: { product: Product }) {
+export function ProductTabs({
+  product,
+  lang = DEFAULT_LOCALE,
+}: {
+  product: Product
+  lang?: Locale
+}) {
+  const T = dict(lang)
   const applications = product.applications?.length
     ? product.applications
     : productSectors(product)
 
   const tabs = useMemo(() => {
-    const t: { id: string; label: string }[] = [{ id: 'mota', label: 'MÔ TẢ' }]
-    if (product.specs?.length) t.push({ id: 'spec', label: 'THÔNG SỐ KỸ THUẬT' })
-    if (applications.length) t.push({ id: 'app', label: 'ỨNG DỤNG' })
-    if (product.docPdf || product.pdf || product.docUrl) t.push({ id: 'doc', label: 'TÀI LIỆU' })
-    return t
-  }, [product, applications])
+    const out: { id: string; label: string }[] = [{ id: 'mota', label: T.product.tabs.desc }]
+    if (product.specs?.length) out.push({ id: 'spec', label: T.product.tabs.specs })
+    if (applications.length) out.push({ id: 'app', label: T.product.tabs.apps })
+    if (product.docPdf || product.pdf || product.docUrl)
+      out.push({ id: 'doc', label: T.product.tabs.docs })
+    return out
+  }, [product, applications, T])
 
   const [tab, setTab] = useState(tabs[0].id)
   const line = pdfLine(product)
@@ -29,7 +38,7 @@ export function ProductTabs({ product }: { product: Product }) {
     <div className="mb-16">
       <div
         role="tablist"
-        aria-label="Thông tin sản phẩm"
+        aria-label={T.product.tabs.desc}
         className="mb-8 flex gap-1 overflow-x-auto border-b border-hairline"
       >
         {tabs.map((t) => (
@@ -65,8 +74,7 @@ export function ProductTabs({ product }: { product: Product }) {
             </div>
           ) : (
             <p className="text-[17px] leading-[1.75] text-ink-700">
-              {product.desc} Sản phẩm được phân phối chính hãng bởi Kim Thành Đông, kèm hỗ trợ kỹ
-              thuật và catalog đầy đủ của cả dòng {product.series}.
+              {product.desc} {T.product.descFallback(product.series)}
             </p>
           ))}
 
@@ -118,13 +126,13 @@ export function ProductTabs({ product }: { product: Product }) {
                 <span className="text-[32px]" aria-hidden="true">📄</span>
                 <span className="min-w-[160px] flex-1">
                   <span className="block font-display text-base font-semibold text-ink-900">
-                    Tài liệu kỹ thuật {product.name}
+                    {T.product.docTitle(product.name)}
                   </span>
                   <span className="mt-1 block text-[13px] text-ink-500">
                     PDF · <span className="part-no">{product.part}</span>
                   </span>
                 </span>
-                <span className="btn-primary">Tải về</span>
+                <span className="btn-primary">{T.product.download}</span>
               </a>
             )}
 
@@ -133,7 +141,7 @@ export function ProductTabs({ product }: { product: Product }) {
                 <span className="text-[32px]" aria-hidden="true">📄</span>
                 <span className="min-w-[160px] flex-1">
                   <span className="block font-display text-base font-semibold text-ink-900">
-                    Catalog {product.series} Series
+                    {T.product.catalogTitle(product.series)}
                   </span>
                   <span className="mt-1 block font-mono text-[13px] text-ink-500">{line}</span>
                 </span>

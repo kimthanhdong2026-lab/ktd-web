@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { useStore } from '@/components/StoreProvider'
-import { HERO_CHIPS } from '@/lib/constants'
+import { useLang } from '@/components/LangProvider'
 
 /**
  * Spec C1 — the hero search box is a real input, not a fake button:
@@ -10,6 +10,7 @@ import { HERO_CHIPS } from '@/lib/constants'
  */
 export function HeroSearch() {
   const { openSearch } = useStore()
+  const { t } = useLang()
   const [q, setQ] = useState('')
 
   const submit = () => openSearch(q)
@@ -25,8 +26,8 @@ export function HeroSearch() {
             onKeyDown={(e) => {
               if (e.key === 'Enter') submit()
             }}
-            placeholder="Nhập mã hàng, tên sản phẩm hoặc thương hiệu…"
-            aria-label="Tìm kiếm sản phẩm"
+            placeholder={t.hero.searchPlaceholder}
+            aria-label={t.hero.searchLabel}
             className="min-w-0 flex-1 border-none bg-transparent text-base text-ink-900 outline-none placeholder:text-ink-500"
           />
           <button
@@ -34,7 +35,7 @@ export function HeroSearch() {
             onClick={submit}
             className="min-h-[44px] flex-shrink-0 rounded-md bg-ktd-600 px-5 text-[15px] font-semibold text-white transition-colors hover:bg-ktd-700 sm:px-7"
           >
-            Tìm
+            {t.hero.searchButton}
           </button>
         </div>
       </div>
@@ -42,8 +43,8 @@ export function HeroSearch() {
       {/* Luôn giữ đúng một dòng: không xuống dòng, thừa thì cuộn ngang.
           Điện thoại chỉ hiện 3 gợi ý đầu cho gọn. */}
       <div className="mb-10 flex items-center gap-2.5 overflow-x-auto whitespace-nowrap text-[13px] text-white/75 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-        <span className="flex-shrink-0">Tìm nhiều:</span>
-        {HERO_CHIPS.map((chip, i) => (
+        <span className="flex-shrink-0">{t.hero.chipsPrefix}</span>
+        {t.hero.chips.map((chip, i) => (
           <button
             key={chip}
             type="button"

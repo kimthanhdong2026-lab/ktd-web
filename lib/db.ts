@@ -12,6 +12,7 @@
  * dùng, nên phần lớn giao diện không phải sửa gì.
  */
 import type { Brand, Category, Product } from './ktd-data'
+import { DEFAULT_LOCALE, type Locale } from './i18n/config'
 
 const URL_ = process.env.NEXT_PUBLIC_SUPABASE_URL ?? ''
 const KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? ''
@@ -57,13 +58,20 @@ interface ProductRow {
   brand_label?: string
   category_label?: string
   name_vi: string
+  name_en: string | null
   sub_vi: string | null
+  sub_en: string | null
   series: string | null
   origin_vi: string | null
+  origin_en: string | null
   desc_vi: string
+  desc_en: string | null
   desc_full_vi: string[] | null
+  desc_full_en: string[] | null
   applications_vi: string[] | null
+  applications_en: string[] | null
   specs_vi: { label: string; value: string }[] | null
+  specs_en: { label: string; value: string }[] | null
   images: string[] | null
   doc_pdf: string | null
   doc_url: string | null
@@ -72,25 +80,43 @@ interface ProductRow {
   featured: boolean
   tag: string | null
   brands?: { name: string }
-  categories?: { name_vi: string }
+  categories?: { name_vi: string; name_en: string | null }
 }
 
-function toProduct(r: ProductRow): Product {
+/**
+ * Chọn bản theo ngôn ngữ, thiếu thì lùi về tiếng Việt.
+ *
+ * Lùi về tiếng Việt chứ không để trống: bản tiếng Anh còn đang điền dần, và
+ * khách đọc được tiếng Việt vẫn hơn nhìn ô rỗng.
+ */
+const pick = <T>(en: T | null | undefined, vi: T, lang: Locale): T =>
+  lang === 'en' && en !== null && en !== undefined && (!Array.isArray(en) || en.length > 0)
+    ? en
+    : vi
+
+function toProduct(r: ProductRow, lang: Locale = DEFAULT_LOCALE): Product {
+  const specs = pick(r.specs_en, r.specs_vi ?? [], lang)
   return {
     part: r.part,
     slug: r.slug,
-    name: r.name_vi,
+    name: pick(r.name_en, r.name_vi, lang),
     brand: r.brand_slug,
     category: r.category_slug,
     brandLabel: r.brand_label ?? r.brands?.name ?? r.brand_slug,
-    categoryLabel: r.category_label ?? r.categories?.name_vi ?? r.category_slug,
-    sub: r.sub_vi ?? undefined,
+    categoryLabel:
+      r.category_label ??
+      pick(r.categories?.name_en, r.categories?.name_vi ?? r.category_slug, lang),
+    sub: pick(r.sub_en, r.sub_vi, lang) ?? undefined,
     series: r.series ?? '',
-    origin: r.origin_vi ?? '',
-    desc: r.desc_vi,
-    descFull: r.desc_full_vi?.length ? r.desc_full_vi : undefined,
-    applications: r.applications_vi?.length ? r.applications_vi : undefined,
-    specs: r.specs_vi?.length ? r.specs_vi.map((s) => [s.label, s.value] as [string, string]) : undefined,
+    origin: pick(r.origin_en, r.origin_vi, lang) ?? '',
+    desc: pick(r.desc_en, r.desc_vi, lang),
+    descFull: pick(r.desc_full_en, r.desc_full_vi ?? [], lang).length
+      ? pick(r.desc_full_en, r.desc_full_vi ?? [], lang)
+      : undefined,
+    applications: pick(r.applications_en, r.applications_vi ?? [], lang).length
+      ? pick(r.applications_en, r.applications_vi ?? [], lang)
+      : undefined,
+    specs: specs.length ? specs.map((s) => [s.label, s.value] as [string, string]) : undefined,
     // Ảnh lưu đường dẫn tương đối, dựng URL ở đây để bảng không phụ thuộc tên miền
     images: r.images?.length ? r.images.map((p) => fileUrl(p)!) : undefined,
     docPdf: fileUrl(r.doc_pdf),
@@ -103,62 +129,86 @@ function toProduct(r: ProductRow): Product {
 }
 
 const PRODUCT_COLS =
-  'part,slug,brand_slug,category_slug,name_vi,sub_vi,series,origin_vi,desc_vi,' +
-  'desc_full_vi,applications_vi,specs_vi,images,doc_pdf,doc_url,catalog,keywords,featured,tag,' +
-  'brands(name),categories(name_vi)'
+  'part,slug,brand_slug,category_slug,name_vi,name_en,sub_vi,sub_en,series,' +
+  'origin_vi,origin_en,desc_vi,desc_en,desc_full_vi,desc_full_en,' +
+  'applications_vi,applications_en,specs_vi,specs_en,' +
+  'images,doc_pdf,doc_url,catalog,keywords,featured,tag,' +
+  'brands(name),categories(name_vi,name_en)'
 
 // ------------------------------------------------------------ hãng và danh mục
 
-export async function getBrands(): Promise<Brand[]> {
+export async function getBrands(lang: Locale = DEFAULT_LOCALE): Promise<Brand[]> {
   const rows = await rest<
-    { slug: string; name: string; origin_vi: string; desc_vi: string; logo: string | null }[]
-  >('brands?select=slug,name,origin_vi,desc_vi,logo&order=sort_order')
+    {
+      slug: string
+      name: string
+      origin_vi: string
+      origin_en: string | null
+      desc_vi: string
+      desc_en: string | null
+      logo: string | null
+    }[]
+  >('brands?select=slug,name,origin_vi,origin_en,desc_vi,desc_en,logo&order=sort_order')
   return rows.map((b) => ({
     slug: b.slug,
     name: b.name,
-    origin: b.origin_vi,
-    desc: b.desc_vi,
+    origin: pick(b.origin_en, b.origin_vi, lang),
+    desc: pick(b.desc_en, b.desc_vi, lang),
     logo: fileUrl(b.logo),
   }))
 }
 
-export async function getCategories(): Promise<Category[]> {
-  const rows = await rest<{ slug: string; name_vi: string; sub_vi: string; featured: boolean }[]>(
-    'categories?select=slug,name_vi,sub_vi,featured&order=sort_order'
+export async function getCategories(lang: Locale = DEFAULT_LOCALE): Promise<Category[]> {
+  const rows = await rest<
+    {
+      slug: string
+      name_vi: string
+      name_en: string | null
+      sub_vi: string
+      sub_en: string | null
+      featured: boolean
+    }[]
+  >(
+    'categories?select=slug,name_vi,name_en,sub_vi,sub_en,featured&order=sort_order'
   )
-  return rows.map((c) => ({ slug: c.slug, name: c.name_vi, sub: c.sub_vi, featured: c.featured }))
+  return rows.map((c) => ({
+    slug: c.slug,
+    name: pick(c.name_en, c.name_vi, lang),
+    sub: pick(c.sub_en, c.sub_vi, lang),
+    featured: c.featured,
+  }))
 }
 
 // -------------------------------------------------------------------- sản phẩm
 
-export async function getProductBySlug(slug: string): Promise<Product | undefined> {
+export async function getProductBySlug(slug: string, lang: Locale = DEFAULT_LOCALE): Promise<Product | undefined> {
   const rows = await rest<ProductRow[]>(
     `products?select=${PRODUCT_COLS}&slug=eq.${encodeURIComponent(slug)}&limit=1`
   )
-  return rows[0] ? toProduct(rows[0]) : undefined
+  return rows[0] ? toProduct(rows[0], lang) : undefined
 }
 
-export async function getProductByPart(part: string): Promise<Product | undefined> {
+export async function getProductByPart(part: string, lang: Locale = DEFAULT_LOCALE): Promise<Product | undefined> {
   const rows = await rest<ProductRow[]>(
     `products?select=${PRODUCT_COLS}&part=eq.${encodeURIComponent(part)}&limit=1`
   )
-  return rows[0] ? toProduct(rows[0]) : undefined
+  return rows[0] ? toProduct(rows[0], lang) : undefined
 }
 
-export async function getFeaturedProducts(limit = 4): Promise<Product[]> {
+export async function getFeaturedProducts(limit = 4, lang: Locale = DEFAULT_LOCALE): Promise<Product[]> {
   const rows = await rest<ProductRow[]>(
     `products?select=${PRODUCT_COLS}&featured=is.true&order=priority.nullslast,name_vi&limit=${limit}`
   )
-  return rows.map(toProduct)
+  return rows.map((r) => toProduct(r, lang))
 }
 
 /** Sản phẩm cùng hãng, dùng cho dải "sản phẩm liên quan" ở trang chi tiết. */
-export async function getRelatedProducts(brand: string, exceptPart: string, limit = 4): Promise<Product[]> {
+export async function getRelatedProducts(brand: string, exceptPart: string, limit = 4, lang: Locale = DEFAULT_LOCALE): Promise<Product[]> {
   const rows = await rest<ProductRow[]>(
     `products?select=${PRODUCT_COLS}&brand_slug=eq.${encodeURIComponent(brand)}` +
       `&part=neq.${encodeURIComponent(exceptPart)}&order=priority.nullslast,name_vi&limit=${limit}`
   )
-  return rows.map(toProduct)
+  return rows.map((r) => toProduct(r, lang))
 }
 
 export async function getAllProductSlugs(): Promise<string[]> {
@@ -190,6 +240,7 @@ export interface BrowseArgs {
   sort?: string
   limit?: number
   offset?: number
+  lang?: Locale
 }
 
 /** Lọc, sắp xếp, cắt trang và đếm — một lượt gọi, xem 0005_browse.sql. */
@@ -210,8 +261,9 @@ export async function browseProducts(a: BrowseArgs = {}): Promise<BrowseResult> 
     lim: Number.isFinite(a.limit) ? a.limit : 24,
     off: Number.isFinite(a.offset) ? a.offset : 0,
   })
+  const lang = a.lang ?? DEFAULT_LOCALE
   return {
-    items: (raw.items ?? []).map(toProduct),
+    items: (raw.items ?? []).map((r) => toProduct(r, lang)),
     total: raw.total ?? 0,
     byBrand: raw.by_brand ?? {},
     byCategory: raw.by_category ?? {},
@@ -219,15 +271,18 @@ export async function browseProducts(a: BrowseArgs = {}): Promise<BrowseResult> 
 }
 
 /** Tìm chịu được gõ sai, dùng cho ô tìm kiếm nổi — xem 0003_search.sql. */
-export async function searchFuzzy(q: string, limit = 8): Promise<Product[]> {
+export async function searchFuzzy(q: string, limit = 8, lang: Locale = DEFAULT_LOCALE): Promise<Product[]> {
   if (!q.trim()) return []
   const rows = await rpc<ProductRow[]>('search_products_fuzzy', { q, max_rows: limit }, 60)
   if (!rows.length) return []
   // RPC trả về setof products nên không kèm tên hãng; tra thêm một lượt cho nhãn
-  const [brands, cats] = await Promise.all([getBrands(), getCategories()])
+  const [brands, cats] = await Promise.all([getBrands(lang), getCategories(lang)])
   const bn = new Map(brands.map((b) => [b.slug, b.name]))
   const cn = new Map(cats.map((c) => [c.slug, c.name]))
   return rows.map((r) =>
-    toProduct({ ...r, brand_label: bn.get(r.brand_slug), category_label: cn.get(r.category_slug) })
+    toProduct(
+      { ...r, brand_label: bn.get(r.brand_slug), category_label: cn.get(r.category_slug) },
+      lang
+    )
   )
 }

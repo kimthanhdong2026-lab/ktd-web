@@ -4,7 +4,8 @@ import { useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import type { Brand } from '@/lib/ktd-data'
-import { BRANDS_CTA, BRANDS_EYEBROW, BRANDS_INTRO } from '@/lib/constants'
+import { useLang } from '@/components/LangProvider'
+import type { Locale } from '@/lib/i18n'
 
 /** Nhịp tự chuyển giữa các thương hiệu (ms). */
 const ROTATE_MS = 3600
@@ -25,7 +26,8 @@ const tileWidth = (soHang: number) =>
  * cột bên phải. Rê chuột (hoặc tab tới) một logo thì ô đó được chọn ngay và
  * vòng quay tạm dừng cho tới khi rời chuột.
  */
-export function BrandShowcase({ brands }: { brands: Brand[] }) {
+export function BrandShowcase({ brands }: { brands: Brand[]; lang?: Locale }) {
+  const { t, path } = useLang()
   const TILE_WIDTH = tileWidth(brands.length)
   const [active, setActive] = useState(0)
   const [paused, setPaused] = useState(false)
@@ -72,12 +74,12 @@ export function BrandShowcase({ brands }: { brands: Brand[] }) {
           không bị trống và tiêu đề mới đủ chỗ nằm một dòng. */}
       <div className="relative mx-auto w-full max-w-[1600px] px-5 sm:px-6 md:px-8 lg:px-10">
         <div className="mb-11 text-center md:mb-16">
-          <p className="label-caps mb-3 text-[#7FB3D5]">{BRANDS_EYEBROW}</p>
+          <p className="label-caps mb-3 text-[#7FB3D5]">{t.brands.eyebrow}</p>
           <h2 className="mb-5 font-display text-h2 text-white [text-wrap:balance]">
-            {brands.length} thương hiệu quốc tế chúng tôi đang phân phối
+            {t.brands.heading(brands.length)}
           </h2>
           <p className="mx-auto max-w-[1100px] text-body-lg text-ktd-100 [text-wrap:balance]">
-            {BRANDS_INTRO}
+            {t.brands.intro}
           </p>
         </div>
 
@@ -102,8 +104,8 @@ export function BrandShowcase({ brands }: { brands: Brand[] }) {
                   }}
                 >
                   <Link
-                    href={`/san-pham?brand=${b.slug}`}
-                    title={`Sản phẩm ${b.name}`}
+                    href={path(`/san-pham?brand=${b.slug}`)}
+                    title={t.brands.productsOf(b.name)}
                     onFocus={() => setActive(i)}
                     className={`relative flex aspect-[5/2] items-center justify-center overflow-hidden rounded-xl bg-white p-2 transition-all duration-300 ease-entrance sm:p-2.5 min-[1400px]:p-3.5 ${
                       on
@@ -143,10 +145,10 @@ export function BrandShowcase({ brands }: { brands: Brand[] }) {
               </h3>
               <p className="mb-6 text-[15px] leading-relaxed text-ktd-100">{brand.desc}</p>
               <Link
-                href={`/san-pham?brand=${brand.slug}`}
+                href={path(`/san-pham?brand=${brand.slug}`)}
                 className="inline-flex min-h-[44px] items-center text-sm font-semibold text-white underline-offset-4 hover:underline"
               >
-                Xem sản phẩm {brand.name} →
+                {t.brands.viewProducts(brand.name)}
               </Link>
             </div>
           </div>
@@ -154,10 +156,10 @@ export function BrandShowcase({ brands }: { brands: Brand[] }) {
 
         <div className="mt-10 text-center md:mt-12">
           <Link
-            href="/san-pham"
+            href={path('/san-pham')}
             className="inline-flex min-h-[44px] items-center rounded-md border border-[rgba(199,223,239,.35)] px-6 text-[15px] font-semibold text-white transition-colors hover:bg-[rgba(199,223,239,.12)]"
           >
-            {BRANDS_CTA}
+            {t.brands.cta}
           </Link>
         </div>
       </div>

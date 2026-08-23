@@ -5,13 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { useStore } from '@/components/StoreProvider'
 import type { Brand, Category } from '@/lib/ktd-data'
 import { cx } from '@/lib/utils'
-
-const SORTS = [
-  { value: 'default', label: 'Mặc định' },
-  { value: 'brand', label: 'Thương hiệu A–Z' },
-  { value: 'name', label: 'Tên A–Z' },
-  { value: 'new', label: 'Mới nhất' },
-] as const
+import { useLang } from '@/components/LangProvider'
 
 export interface BrowserProps {
   brands: Brand[]
@@ -47,6 +41,14 @@ export function ProductBrowser({
   const router = useRouter()
   const params = useSearchParams()
   const { openRfq } = useStore()
+  const { t, path } = useLang()
+
+  const SORTS = [
+    { value: 'default', label: t.products.sorts.default },
+    { value: 'brand', label: t.products.sorts.brand },
+    { value: 'name', label: t.products.sorts.name },
+    { value: 'new', label: t.products.sorts.new },
+  ]
 
   const [q, setQ] = useState(query)
   const [sheetOpen, setSheetOpen] = useState(false)
@@ -69,7 +71,7 @@ export function ProductBrowser({
       if (!('show' in patch)) sp.delete('show')
       const qs = sp.toString()
       setPending(true)
-      router.push(qs ? `/san-pham?${qs}` : '/san-pham', { scroll: false })
+      router.push(path(qs ? `/san-pham?${qs}` : '/san-pham'), { scroll: false })
     },
     [params, router]
   )
@@ -110,17 +112,17 @@ export function ProductBrowser({
   const filterPanel = (
     <>
       <div className="mb-5 flex items-center justify-between">
-        <span className="font-display text-base font-semibold text-ink-900">BỘ LỌC</span>
+        <span className="font-display text-base font-semibold text-ink-900">{t.products.filters}</span>
         <button
           type="button"
-          onClick={() => router.push('/san-pham', { scroll: false })}
+          onClick={() => router.push(path('/san-pham'), { scroll: false })}
           className="text-[13px] text-ink-500 underline hover:text-ktd-600"
         >
-          Xóa bộ lọc
+          {t.products.clearFilters}
         </button>
       </div>
 
-      <FilterGroup title="Thương hiệu">
+      <FilterGroup title={t.products.brand}>
         <div className="max-h-[340px] overflow-y-auto pr-1">
           {brandsAZ.map((b) => (
             <FilterRow
@@ -133,7 +135,7 @@ export function ProductBrowser({
         </div>
       </FilterGroup>
 
-      <FilterGroup title="Danh mục">
+      <FilterGroup title={t.products.category}>
         <div className="max-h-[260px] overflow-y-auto pr-1">
           {filterCategories.map((c) => (
             <FilterRow
@@ -151,11 +153,10 @@ export function ProductBrowser({
   return (
     <div className="container-ktd pb-16 pt-6 md:pb-24">
       <h1 className="mb-3 font-display text-h3 text-ktd-600">
-        Khám phá danh mục sản phẩm Kim Thành Đông đang phân phối
+        {t.products.title}
       </h1>
       <p className="mb-6 max-w-[1280px] text-body-lg text-ink-500">
-        Tìm kiếm nhanh theo tên sản phẩm, mã hàng, thương hiệu hoặc danh mục bằng tiếng Việt hoặc
-        tiếng Anh.
+        {t.products.subtitle}
       </p>
 
       <div className="mb-8 flex items-center gap-3 rounded-[10px] border border-[#e2e7ec] bg-ink-100 px-4 py-3.5 md:px-5">
@@ -163,8 +164,8 @@ export function ProductBrowser({
         <input
           value={q}
           onChange={(e) => onType(e.target.value)}
-          placeholder="Tìm mã hàng, tên sản phẩm, thương hiệu…"
-          aria-label="Tìm trong danh mục sản phẩm"
+          placeholder={t.products.searchPlaceholder}
+          aria-label={t.products.searchLabel}
           className="min-w-0 flex-1 border-none bg-transparent text-base outline-none placeholder:text-ink-500"
         />
       </div>
@@ -175,7 +176,7 @@ export function ProductBrowser({
         <div>
           <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
             <p className="text-base text-ink-900">
-              <b className="font-display">{total}</b> sản phẩm phù hợp
+              <b className="font-display">{total}</b> {t.products.matched}
             </p>
             <div className="flex items-center gap-2">
               <button
@@ -183,10 +184,10 @@ export function ProductBrowser({
                 onClick={() => setSheetOpen(true)}
                 className="flex min-h-[44px] items-center rounded-md border border-ink-300 px-3.5 text-sm font-semibold text-ink-700 lg:hidden"
               >
-                ⚙ Bộ lọc{activeCount > 0 ? ` (${activeCount})` : ''}
+                ⚙ {t.products.filterButton}{activeCount > 0 ? ` (${activeCount})` : ''}
               </button>
               <label className="flex items-center gap-2 text-sm text-ink-500">
-                <span className="hidden sm:inline">Sắp xếp:</span>
+                <span className="hidden sm:inline">{t.products.sortLabel}</span>
                 <select
                   value={sort}
                   onChange={(e) => go({ sort: e.target.value === 'default' ? null : e.target.value })}
@@ -212,7 +213,7 @@ export function ProductBrowser({
                   className="flex items-center gap-2 rounded-md border border-ktd-100 bg-ktd-50 px-3 py-1.5 text-[13px] font-medium text-ktd-700"
                 >
                   {c.label} <span aria-hidden="true">×</span>
-                  <span className="sr-only">Bỏ lọc</span>
+                  <span className="sr-only">{t.products.removeFilter}</span>
                 </button>
               ))}
             </div>
@@ -222,17 +223,17 @@ export function ProductBrowser({
             <div className="rounded-lg bg-ink-100 px-5 py-20 text-center">
               <div className="mb-4 text-[44px] opacity-50" aria-hidden="true">🔍</div>
               <p className="mb-2 font-display text-[22px] font-semibold text-ink-900">
-                Không tìm thấy sản phẩm phù hợp
+                {t.products.emptyTitle}
               </p>
               <p className="mb-6 text-[15px] text-ink-500">
-                Thử bỏ bớt bộ lọc, hoặc để kỹ sư của chúng tôi tìm giúp bạn.
+                {t.products.emptyBody}
               </p>
               <button
                 type="button"
-                onClick={() => openRfq('Nhờ kỹ sư tư vấn sản phẩm phù hợp với nhu cầu của tôi.')}
+                onClick={() => openRfq(t.products.emptyNote)}
                 className="btn-quote"
               >
-                Nhờ kỹ sư tìm giúp
+                {t.products.emptyCta}
               </button>
             </div>
           ) : (
@@ -252,13 +253,13 @@ export function ProductBrowser({
             onClick={(e) => e.stopPropagation()}
             role="dialog"
             aria-modal="true"
-            aria-label="Bộ lọc sản phẩm"
+            aria-label={t.products.filterSheetLabel}
             className="flex max-h-[90vh] w-full flex-col rounded-t-2xl bg-white"
           >
             <div className="flex-1 overflow-y-auto p-5">{filterPanel}</div>
             <div className="border-t border-hairline p-4">
               <button type="button" onClick={() => setSheetOpen(false)} className="btn-primary w-full">
-                Áp dụng ({total} sản phẩm)
+                {t.products.apply(total)}
               </button>
             </div>
           </div>

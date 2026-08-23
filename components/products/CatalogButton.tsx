@@ -2,6 +2,7 @@
 
 import { useStore } from '@/components/StoreProvider'
 import { pdfLine, type Product } from '@/lib/ktd-data'
+import { DEFAULT_LOCALE, dict, type Locale } from '@/lib/i18n'
 
 /**
  * Spec C3 — nút tải tài liệu.
@@ -9,7 +10,14 @@ import { pdfLine, type Product } from '@/lib/ktd-data'
  *  - Chỉ có catalog series demo: báo toast cho tới khi có file thật.
  *  - Không có gì: ẩn nút, không để nút chết trên giao diện.
  */
-export function CatalogButton({ product }: { product: Product }) {
+export function CatalogButton({
+  product,
+  lang = DEFAULT_LOCALE,
+}: {
+  product: Product
+  lang?: Locale
+}) {
+  const t = dict(lang)
   const { showToast } = useStore()
   const line = pdfLine(product)
 
@@ -29,7 +37,7 @@ export function CatalogButton({ product }: { product: Product }) {
   if (product.docPdf) {
     return (
       <a href={product.docPdf} target="_blank" rel="noopener noreferrer" className={shell}>
-        {label('Tải tài liệu kỹ thuật (PDF)', `${product.name} · ${product.part}`)}
+        {label(t.product.downloadPdf, `${product.name} · ${product.part}`)}
       </a>
     )
   }
@@ -41,7 +49,7 @@ export function CatalogButton({ product }: { product: Product }) {
         onClick={() => showToast(`Đang tải Catalog ${product.pdf!.name} (${product.pdf!.size})…`)}
         className={shell}
       >
-        {label('Tải Catalog Series (PDF)', line)}
+        {label(t.product.catalogTitle(product.series), line)}
       </button>
     )
   }
@@ -49,7 +57,7 @@ export function CatalogButton({ product }: { product: Product }) {
   if (product.docUrl) {
     return (
       <a href={product.docUrl} target="_blank" rel="noopener noreferrer" className={shell}>
-        {label('Xem thông tin trên trang hãng', 'martor.com')}
+        {label(t.product.manufacturerPage)}
       </a>
     )
   }

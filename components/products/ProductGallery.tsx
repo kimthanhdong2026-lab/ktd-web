@@ -2,7 +2,7 @@
 
 import Image from 'next/image'
 import { useState } from 'react'
-import { GALLERY_VIEWS } from '@/lib/ktd-data'
+import { useLang } from '@/components/LangProvider'
 import { cx } from '@/lib/utils'
 
 /**
@@ -11,10 +11,11 @@ import { cx } from '@/lib/utils'
  * không phóng to logo công ty như website cũ.
  */
 export function ProductGallery({ part, images }: { part: string; images?: string[] }) {
+  const { t } = useLang()
   const [active, setActive] = useState(0)
   const list = images?.slice(0, 5) ?? []
   const hasImages = list.length > 0
-  const thumbs = hasImages ? list : (GALLERY_VIEWS as readonly string[])
+  const thumbs = hasImages ? list : t.news.galleryViews
 
   return (
     <div className="grid gap-4 sm:grid-cols-[76px_1fr] lg:sticky lg:top-[100px]">
@@ -61,10 +62,10 @@ export function ProductGallery({ part, images }: { part: string; images?: string
         ) : (
           <div className="relative text-center">
             <span className="inline-block rounded-md border border-ink-300 bg-white px-3.5 py-1.5 text-[13px] text-ink-500">
-              Đang cập nhật ảnh
+              {t.product.updatingImage}
             </span>
             <span className="mt-3 block font-mono text-[11px] text-[#9aa3ad]">
-              {GALLERY_VIEWS[active]}
+              {t.news.galleryViews[active]}
             </span>
           </div>
         )}

@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { ProductCard } from '@/components/ProductCard'
 import type { Brand, Category, Product } from '@/lib/ktd-data'
+import { DEFAULT_LOCALE, dict, href as localeHref, type Locale } from '@/lib/i18n'
 
 interface Props {
   items: Product[]
@@ -13,6 +14,7 @@ interface Props {
   total: number
   show: number
   nextHref: string | null
+  lang?: Locale
 }
 
 /**
@@ -31,7 +33,9 @@ export function ProductGroups({
   total,
   show,
   nextHref,
+  lang = DEFAULT_LOCALE,
 }: Props) {
+  const t = dict(lang)
   const source = singleBrand ? categories : brands
   const groups = source
     .map((entry) => ({
@@ -49,7 +53,7 @@ export function ProductGroups({
             <h2 className="font-display text-[22px] font-bold uppercase text-ktd-800 md:text-[26px]">
               {g.name}
             </h2>
-            <span className="flex-shrink-0 text-sm text-ink-500">{g.items.length} sản phẩm</span>
+            <span className="flex-shrink-0 text-sm text-ink-500">{t.products.countOf(g.items.length)}</span>
           </div>
           <div className="grid grid-cols-2 gap-4 lg:grid-cols-3 lg:gap-5">
             {g.items.map((p) => (
@@ -59,10 +63,10 @@ export function ProductGroups({
           {!singleBrand && (countByBrand[g.key] ?? 0) > g.items.length && (
             <div className="mt-5">
               <Link
-                href={`/san-pham?brand=${g.key}`}
+                href={localeHref(`/san-pham?brand=${g.key}`, lang)}
                 className="text-sm font-semibold text-ktd-600 hover:text-ktd-700"
               >
-                Xem tất cả sản phẩm {g.name} →
+                {t.products.viewAllOf(g.name)}
               </Link>
             </div>
           )}
@@ -72,14 +76,14 @@ export function ProductGroups({
       {nextHref && (
         <div className="mt-4 text-center">
           <Link href={nextHref} scroll={false} className="btn-secondary px-10">
-            Tải thêm sản phẩm
+            {t.products.loadMore}
           </Link>
         </div>
       )}
 
       {!nextHref && total > show && (
         <p className="mt-4 text-center text-sm text-ink-500">
-          Đang hiện {show} trong {total} sản phẩm. Dùng bộ lọc để thu hẹp kết quả.
+          {t.products.showing(show, total)}
         </p>
       )}
     </>

@@ -1,11 +1,12 @@
 'use client'
 
 import { useStore } from './StoreProvider'
+import { useLang } from './LangProvider'
 import { cx } from '@/lib/utils'
 
 /** Opens the RFQ modal from anywhere inside a server-rendered page. */
 export function QuoteButton({
-  children = 'Yêu cầu báo giá',
+  children,
   note,
   addPart,
   addName,
@@ -21,6 +22,7 @@ export function QuoteButton({
   className?: string
 }) {
   const { openRfq, addToCart } = useStore()
+  const { t } = useLang()
 
   return (
     <button
