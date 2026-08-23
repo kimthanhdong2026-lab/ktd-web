@@ -11,7 +11,8 @@
     "typecheck": "tsc --noEmit",
     "optimize:assets": "node scripts/optimize-assets.mjs",
     "db:seed-sql": "tsx scripts/gen-seed-sql.ts",
-    "db:check": "node scripts/check-sql.mjs"
+    "db:check": "node scripts/check-sql.mjs",
+    "db:verify": "node scripts/db-verify.mjs"
   },
   "dependencies": {
     "autoprefixer": "^10.4.17",
