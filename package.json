@@ -15,7 +15,8 @@
     "db:verify": "node scripts/db-verify.mjs",
     "db:upload": "node scripts/upload-storage.mjs",
     "i18n:check": "node scripts/check-i18n.mjs",
-    "i18n:apply": "node scripts/apply-translations.mjs --apply"
+    "i18n:apply": "node scripts/apply-translations.mjs --apply",
+    "health": "node scripts/health-check.mjs"
   },
   "dependencies": {
     "autoprefixer": "^10.4.17",

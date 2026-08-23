@@ -1,0 +1,52 @@
+# Giữ cho cơ sở dữ liệu Supabase không bị tạm dừng.
+#
+# VÌ SAO CẦN: gói miễn phí của Supabase tự tạm dừng dự án sau 7 NGÀY không có
+# truy vấn nào. Dự án bị dừng nghĩa là toàn bộ website sập — mọi trang đều đọc
+# dữ liệu từ đó. Đúng dịp nghỉ Tết hay nghỉ lễ dài là kịch bản nguy hiểm nhất.
+#
+# Chạy 2 ngày một lần chứ không phải 3: lịch của GitHub Actions có thể bị hoãn
+# vài giờ khi hệ thống bận, nên cần biên an toàn so với mốc 7 ngày.
+#
+# CẢNH BÁO: GitHub tự TẮT các workflow theo lịch nếu kho mã không có hoạt động
+# nào trong 60 ngày. Sau một thời gian dài không commit, phải vào tab Actions
+# bật lại — nếu không thì chính cái bảo vệ này lại chết trước.
+
+name: Giữ cơ sở dữ liệu thức
+
+on:
+  schedule:
+    - cron: '0 2 */2 * *' # 02:00 UTC = 09:00 giờ Việt Nam, hai ngày một lần
+  workflow_dispatch: # cho phép bấm chạy tay khi cần
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Gọi một truy vấn thật qua website
+        run: |
+          # Thêm dấu thời gian để không trúng bộ đệm — phải chạm tới cơ sở dữ
+          # liệu thật thì Supabase mới tính là có hoạt động.
+          URL="https://ktd-web.vercel.app/api/search?q=secumax$(date +%s)"
+          echo "Gọi: $URL"
+          CODE=$(curl -s -o /tmp/res.json -w '%{http_code}' --max-time 45 "$URL")
+          echo "Mã trả về: $CODE"
+          cat /tmp/res.json | head -c 300
+          echo
+          if [ "$CODE" != "200" ]; then
+            echo "::error::Website không phản hồi (HTTP $CODE). Kiểm tra Vercel và Supabase."
+            exit 1
+          fi
+
+      - name: Đọc thẳng cơ sở dữ liệu
+        # Bước này cho biết rõ hơn: website hỏng hay chính cơ sở dữ liệu hỏng.
+        # Bỏ qua nếu chưa khai hai biến bí mật trong Settings > Secrets.
+        if: ${{ vars.SUPABASE_URL != '' }}
+        run: |
+          CODE=$(curl -s -o /tmp/db.json -w '%{http_code}' --max-time 45 \
+            "${{ vars.SUPABASE_URL }}/rest/v1/products?select=part&limit=1" \
+            -H "apikey: ${{ secrets.SUPABASE_ANON_KEY }}")
+          echo "Cơ sở dữ liệu trả về: $CODE"
+          if [ "$CODE" != "200" ]; then
+            echo "::error::Supabase không phản hồi (HTTP $CODE) — dự án có thể đã bị tạm dừng."
+            exit 1
+          fi
