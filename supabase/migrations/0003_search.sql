@@ -34,7 +34,7 @@ as $ktd$
   where needle.n <> ''
     and (
       p.search_vi like '%' || needle.n || '%'
-      or similarity(p.search_vi, needle.n) > min_score
+      or word_similarity(needle.n, p.search_vi) > min_score
     )
   order by
     case
@@ -44,7 +44,7 @@ as $ktd$
       when p.search_vi like '%' || needle.n || '%'            then 3
       else 4
     end,
-    similarity(p.search_vi, needle.n) desc,
+    word_similarity(needle.n, p.search_vi) desc,
     p.priority nulls last,
     p.name_vi
   limit max_rows
@@ -53,8 +53,16 @@ $ktd$;
 comment on function search_products_fuzzy(text, integer, real) is
   'Tim san pham chiu duoc go sai. Dung cho o tim kiem noi; trang San pham dung ilike.';
 
--- Ngưỡng similarity mặc định của pg_trgm là 0.3, hơi chặt với chuỗi dài như
--- search_vi. Hàm trên nhận min_score làm tham số nên không cần đổi cấu hình
--- toàn cục — tránh ảnh hưởng tới thứ khác dùng chung cơ sở dữ liệu.
+-- Vì sao word_similarity chứ không phải similarity
+--
+-- similarity(a, b) so hai chuỗi theo TỔNG THỂ: nó chia số trigram chung cho
+-- tổng số trigram của cả hai. Cột search_vi gộp cả mô tả nên dài hàng trăm ký
+-- tự; đem so với chuỗi tìm 6 ký tự thì điểm luôn xấp xỉ 0,01 — không bao giờ
+-- vượt ngưỡng. Đây chính là lý do bản đầu tiên tìm "secumx" ra 0 kết quả.
+--
+-- word_similarity(a, b) tìm ĐOẠN GIỐNG NHẤT của b khớp với a, nên độ dài của b
+-- không làm loãng điểm. "secumx" so với đoạn "secumax" cho khoảng 0,6.
+--
+-- Thứ tự tham số quan trọng: chuỗi tìm đứng trước, chuỗi bị tìm đứng sau.
 
 grant execute on function search_products_fuzzy(text, integer, real) to anon, authenticated;

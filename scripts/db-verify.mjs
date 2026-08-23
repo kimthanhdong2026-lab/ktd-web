@@ -79,6 +79,17 @@ console.log('\nCột tìm kiếm do Postgres tự tính')
   dat('bỏ dấu tiếng Việt', rows.length > 0, `khớp ${rows.length} sản phẩm với "dao an toan"`)
 }
 
+console.log('\nTìm theo tên hãng và tên nhóm')
+for (const [q, mongDoi] of [
+  ['morrisflex', true], // tên hãng, đúng chính tả
+  ['air tools', true], // một phần tên hiển thị của ATA
+  ['dung cu an toan', true], // tên nhóm
+]) {
+  const r = await api(`products?select=part&search_vi=like.*${encodeURIComponent(q)}*&limit=3`)
+  const rows = r.ok ? await r.json() : []
+  dat(`"${q}"`, rows.length > 0 === mongDoi, `${rows.length} kết quả`)
+}
+
 console.log('\nTìm kiếm chịu gõ sai')
 for (const [q, mongDoi] of [
   ['secumax', true],
@@ -101,16 +112,14 @@ for (const [q, mongDoi] of [
 
 console.log('\nKho file')
 {
-  const r = await fetch(`${URL_}/storage/v1/bucket/ktd`, {
-    headers: { apikey: SERVICE ?? ANON, Authorization: `Bearer ${SERVICE ?? ANON}` },
-  })
-  if (!r.ok) {
-    dat('bucket ktd', false, `HTTP ${r.status} — có thể chưa tạo, xem 0002_storage.sql`)
-  } else {
-    const b = await r.json()
-    dat('bucket ktd tồn tại', true)
-    dat('bucket công khai', b.public === true, `public = ${b.public}`)
-  }
+  // Endpoint quản trị /storage/v1/bucket/... đòi service_role. Không có khoá đó
+  // thì hỏi một file không tồn tại qua đường công khai: bucket có thật sẽ trả
+  // "Object not found", bucket chưa tạo trả "Bucket not found". Cách này cũng
+  // chứng minh luôn bucket đang ở chế độ công khai.
+  const r = await fetch(`${URL_}/storage/v1/object/public/ktd/__kiem-tra__.webp`)
+  const body = await r.json().catch(() => ({}))
+  const chuaTao = body.code === 'NoSuchBucket'
+  dat('bucket ktd tồn tại và công khai', !chuaTao, chuaTao ? 'xem 0002_storage.sql' : body.code)
 }
 
 console.log('\nPhân quyền')

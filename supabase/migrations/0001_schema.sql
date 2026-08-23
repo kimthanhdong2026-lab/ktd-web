@@ -152,13 +152,27 @@ create or replace function ktd_fill_search()
   returns trigger
   language plpgsql
 as $ktd$
+declare
+  ten_hang text;
+  ten_nhom text;
 begin
+  -- Tên hãng và tên nhóm nằm ở bảng khác, phải tra vào đây. Thiếu chúng thì
+  -- khách gõ "morrisflex" hay "dụng cụ an toàn" sẽ không ra gì — mà đó lại là
+  -- hai kiểu tìm phổ biến nhất trên trang của nhà phân phối.
+  select name    into ten_hang from brands     where slug = new.brand_slug;
+  select name_vi into ten_nhom from categories where slug = new.category_slug;
+
   new.search_vi := ktd_norm(
-    coalesce(new.name_vi, '')  || ' ' ||
-    coalesce(new.part, '')     || ' ' ||
-    coalesce(new.series, '')   || ' ' ||
-    coalesce(new.sub_vi, '')   || ' ' ||
-    coalesce(new.desc_vi, '')  || ' ' ||
+    coalesce(new.name_vi, '')       || ' ' ||
+    coalesce(new.part, '')          || ' ' ||
+    coalesce(new.series, '')        || ' ' ||
+    coalesce(new.sub_vi, '')        || ' ' ||
+    coalesce(new.desc_vi, '')       || ' ' ||
+    -- Cả slug lẫn tên hiển thị: slug bắt được "ata", tên bắt được "air tools"
+    coalesce(new.brand_slug, '')    || ' ' ||
+    coalesce(ten_hang, '')          || ' ' ||
+    coalesce(new.category_slug, '') || ' ' ||
+    coalesce(ten_nhom, '')          || ' ' ||
     array_to_string(coalesce(new.keywords, '{}'), ' ')
   );
   return new;
@@ -173,6 +187,9 @@ create trigger products_fill_search
 
 -- Chạy lại file này trên cơ sở dữ liệu đã có dữ liệu thì câu dưới nạp lại cột
 -- tìm kiếm cho toàn bộ bản ghi cũ. Bảng rỗng thì không tốn gì.
+--
+-- Cũng cần chạy lại câu này sau khi đổi TÊN một thương hiệu hay một danh mục:
+-- tên đó đã được chép vào search_vi của từng sản phẩm nên không tự cập nhật.
 update products set search_vi = '';
 
 -- -----------------------------------------------------------------------------
