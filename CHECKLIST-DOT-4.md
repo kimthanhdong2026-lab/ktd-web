@@ -80,5 +80,20 @@ Không còn. Toàn bộ 35 đoạn của "Sửa web 4" đã xử lý.
 
 ## Chờ bên ngoài
 
-- Ba mã `BT-R2`, `LK-125`, `RTC-40` — chờ BGĐ xác nhận nhóm nhỏ
-- Đường dẫn thật: Shopee, Facebook, YouTube, LinkedIn
+- Đường dẫn thật của gian hàng Shopee, Facebook, YouTube và LinkedIn. Hiện cả
+  bốn biểu tượng trỏ về trang chủ của từng mạng. Sửa `MANG_XA_HOI` và `SHOPEE`
+  trong `lib/constants.ts` là xong.
+
+## Đã khép lại
+
+- **Logo 5 hãng Martor, Buchem, Tschorn, Lenzkes, ATA** — chốt ngày 04/10/2026:
+  dùng luôn file hiện có, không xin bản gốc từ hãng nữa. Lúc đầu đánh giá là
+  "quá nhỏ", nhưng đó là vì file còn viền trắng thừa bao quanh nên phần chữ chỉ
+  chiếm một góc. Sau khi cắt viền, ba hãng Tschorn, Lenzkes, ATA thực ra đang bị
+  *thu nhỏ* khi hiển thị (0,56–0,71×), tức còn dư độ phân giải; Martor và Buchem
+  phóng 1,09–1,22× nhưng là chữ màu phẳng nên không thấy rỗ.
+- **Ba mã `BT-R2`, `LK-125`, `RTC-40`** — đã gán theo phỏng đoán và đã chạy vào
+  cơ sở dữ liệu, website hiển thị bình thường. Bảng đối chiếu 35 sản phẩm đã gửi
+  BGĐ ngày 03/10/2026 (dòng 3, 12, 31, cột "BGĐ sửa lại"). BGĐ trả lời khác thì
+  sửa `scripts/doi-chieu-danh-muc.json`, chạy lại `gen-gan-san-pham-sql.mjs` rồi
+  chạy file SQL sinh ra — không chặn việc gì.
