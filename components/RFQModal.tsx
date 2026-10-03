@@ -166,7 +166,7 @@ export function RFQModal() {
                           <div className="font-display text-sm font-semibold text-ink-900">
                             {line.name ?? line.part}
                           </div>
-                          <div className="mt-0.5 text-xs text-ink-500">
+                          <div className="mt-0.5 text-[13px] text-ink-500">
                             <span className="part-no">{line.part}</span>
                             {line.brand ? ` · ${line.brand}` : ''}
                           </div>
@@ -237,7 +237,7 @@ export function RFQModal() {
                     className={fieldClass('name')}
                   />
                   {showError('name') && (
-                    <p className="mt-1 text-xs text-quote">⚠ {showError('name')}</p>
+                    <p className="mt-1 text-[13px] text-quote">⚠ {showError('name')}</p>
                   )}
                 </div>
 
@@ -268,7 +268,7 @@ export function RFQModal() {
                     className={fieldClass('phone')}
                   />
                   {showError('phone') && (
-                    <p className="mt-1 text-xs text-quote">⚠ {showError('phone')}</p>
+                    <p className="mt-1 text-[13px] text-quote">⚠ {showError('phone')}</p>
                   )}
                 </div>
 
@@ -286,7 +286,7 @@ export function RFQModal() {
                     className={fieldClass('email')}
                   />
                   {showError('email') && (
-                    <p className="mt-1 text-xs text-quote">⚠ {showError('email')}</p>
+                    <p className="mt-1 text-[13px] text-quote">⚠ {showError('email')}</p>
                   )}
                 </div>
               </div>

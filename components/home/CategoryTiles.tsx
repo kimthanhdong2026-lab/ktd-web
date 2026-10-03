@@ -1,43 +1,78 @@
+import Image from 'next/image'
 import Link from 'next/link'
 import { getCategories } from '@/lib/db'
 import { DEFAULT_LOCALE, dict, href, type Locale } from '@/lib/i18n'
 
 /**
- * Danh mục sản phẩm dạng ô lớn — 15 nhóm, mỗi ô dẫn tới trang Sản phẩm đã lọc
- * sẵn theo nhóm đó nên bấm chỗ nào trong ô cũng đi đúng chỗ.
+ * Danh mục sản phẩm dạng ô lớn — 12 nhóm chính, mỗi ô dẫn tới trang Sản phẩm đã
+ * lọc sẵn theo nhóm đó nên bấm chỗ nào trong ô cũng đi đúng chỗ.
  *
- * Ô để nền trắng trên nền xanh rất nhạt của mục, không dùng ảnh nền: theo yêu
- * cầu của team, phần này phải nhạt và đồng bộ với nền chung của website.
+ * Bố cục theo đoạn 13 của "Sửa web 4": ảnh ở trên, tên nhóm và dòng chữ nhỏ đẩy
+ * xuống dưới ảnh.
+ *
+ * Ảnh do scripts/build-category-images.mjs dựng ra ở
+ * public/assets/categories/{slug}.webp, đặt tên theo slug nhóm chính.
  */
 export async function CategoryTiles({ lang = DEFAULT_LOCALE }: { lang?: Locale }) {
   const t = dict(lang)
-  const categories = await getCategories(lang)
+  // Chỉ ô của NHÓM CHÍNH. Từ khi danh mục có hai cấp, getCategories trả về cả
+  // 41 nhóm nhỏ — để nguyên thì trang chủ bày ra 53 ô, không ai đọc nổi.
+  const categories = (await getCategories(lang)).filter((c) => !c.parent)
+
   return (
-    <section className="bg-ktd-50 py-14 md:py-24">
+    <section className="bg-surface py-14 md:py-24">
       <div className="container-ktd">
         <h2 className="mb-10 text-center font-display text-h2 text-ktd-600 md:mb-14">
           {t.categories.heading}
         </h2>
 
-        {/* 15 nhóm chia hết cho 5 và cho 3 nên không bao giờ có hàng lẻ. */}
-        <ul className="grid grid-cols-2 gap-3.5 sm:grid-cols-3 md:gap-4 lg:grid-cols-5">
+        {/* 12 nhóm chính: lưới 4 cột cho đúng 3 hàng đầy. Lưới 5 cột của bản cũ
+            hợp với 15 nhóm, nhưng với 12 nhóm sẽ thành 5+5+2, hàng cuối trống
+            hai phần ba. */}
+        <ul className="grid grid-cols-2 gap-3.5 sm:grid-cols-3 md:gap-4 lg:grid-cols-4">
           {categories.map((c) => (
             <li key={c.slug}>
+              {/* Bo góc lớn thay cho khung chữ nhật — đoạn 16: "trang chủ đang
+                  chủ yếu là khung chữ nhật". Giữ dạng thẻ chứ không cắt thành
+                  lục giác, vì tên nhóm dài tới hai dòng và hình lục giác sẽ cắt
+                  mất chữ ở hai góc. */}
               <Link
                 href={href(`/san-pham?category=${c.slug}`, lang)}
-                className="group flex h-full min-h-[150px] flex-col rounded-xl border border-hairline bg-white p-4 transition duration-200 hover:-translate-y-0.5 hover:border-ktd-600 hover:shadow-md md:p-5"
+                className="group flex h-full flex-col overflow-hidden rounded-[26px] border border-hairline bg-white transition duration-200 hover:-translate-y-0.5 hover:border-ktd-600 hover:shadow-md"
               >
-                <span className="mb-1.5 block font-display text-[17px] font-semibold leading-snug text-ink-900 md:text-[19px]">
-                  {c.name}
-                </span>
-                <span className="block text-[13px] leading-relaxed text-ink-500">{c.sub}</span>
+                <div className="relative aspect-[4/3] w-full overflow-hidden bg-white">
+                  <Image
+                    src={`/assets/categories/${c.slug}.webp`}
+                    alt=""
+                    width={640}
+                    height={480}
+                    sizes="(max-width: 640px) 46vw, (max-width: 1024px) 30vw, 300px"
+                    className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.04]"
+                  />
+                  {/* Dải chuyển mờ sang trắng ở đáy ảnh. Nền ảnh gốc là xám xanh
+                      rất nhạt chứ không trắng hẳn, nên nếu để nguyên sẽ thấy một
+                      đường ranh giới ngang giữa ảnh và phần chữ. Đoạn 13 yêu cầu
+                      "đồng bộ màu nền của ảnh với nội dung bên dưới". */}
+                  <span
+                    aria-hidden="true"
+                    className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-b from-transparent to-white"
+                  />
+                </div>
 
-                <span
-                  className="mt-auto flex h-7 w-7 items-center justify-center self-end rounded-full border border-ink-300 text-[13px] text-ktd-600 transition-colors group-hover:border-ktd-600 group-hover:bg-ktd-600 group-hover:text-white"
-                  aria-hidden="true"
-                >
-                  →
-                </span>
+                <div className="flex flex-1 flex-col p-5 pt-3 md:p-6 md:pt-3">
+                  <span className="mb-1.5 block font-display text-[17px] font-semibold leading-snug text-ink-900 md:text-[19px]">
+                    {c.name}
+                  </span>
+                  {/* Đồng nhất màu chữ với cả trang — đoạn 15. */}
+                  <span className="block text-[14px] leading-relaxed text-ink-600">{c.sub}</span>
+
+                  <span
+                    className="mt-auto flex h-7 w-7 items-center justify-center self-end rounded-full border border-ink-300 text-[13px] text-ktd-600 transition-colors group-hover:border-ktd-600 group-hover:bg-ktd-600 group-hover:text-white"
+                    aria-hidden="true"
+                  >
+                    →
+                  </span>
+                </div>
               </Link>
             </li>
           ))}

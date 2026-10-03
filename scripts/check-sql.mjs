@@ -47,7 +47,12 @@ function canDauNhay(sql) {
     .reduce((n, l, i) => (l.split("'").length % 2 === 0 ? [...n, i + 1] : n), [])
 }
 
-const pg = await initPg()
+// Mỗi file một thực thể phân tích riêng.
+//
+// Bản WASM không giải phóng bộ nhớ giữa các lần gọi parse. Dùng chung một thực
+// thể cho cả thư mục thì tới file thứ mười nó cạn vùng nhớ và gãy giữa chừng —
+// báo "LỖI" cho một file có cú pháp hoàn toàn sạch. Dựng lại tốn vài trăm mili
+// giây mỗi file, đổi lại kết quả đáng tin.
 let hong = 0
 
 for (const f of readdirSync(DIR).filter((x) => x.endsWith('.sql')).sort()) {
@@ -63,6 +68,7 @@ for (const f of readdirSync(DIR).filter((x) => x.endsWith('.sql')).sort()) {
   const sql = lon ? rutGon(goc) : goc
   let res
   try {
+    const pg = await initPg()
     res = pg.parse(sql)
   } catch (e) {
     hong++

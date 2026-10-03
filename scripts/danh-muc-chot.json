@@ -1,0 +1,172 @@
+[
+ {
+  "stt": 1,
+  "name": "Dụng cụ cắt an toàn",
+  "sub": "Dao an toàn, kéo an toàn, lưỡi dao & phụ kiện",
+  "children": [
+   "Dao an toàn",
+   "Kéo an toàn",
+   "Lưỡi dao & phụ kiện"
+  ],
+  "brands": [
+   "Martor"
+  ]
+ },
+ {
+  "stt": 2,
+  "name": "Dụng cụ cắt gọt CNC & composite",
+  "sub": "Mũi khoan, dao phay, ta rô, doa, mũi khoét & dụng cụ gia công composite",
+  "children": [
+   "Mũi khoan",
+   "Dao phay",
+   "Ta rô & dụng cụ tạo ren",
+   "Dao doa",
+   "Mũi khoét & mũi cưa lỗ",
+   "Dụng cụ gia công composite & honeycomb"
+  ],
+  "brands": [
+   "Karnasch",
+   "Hartner",
+   "Helical",
+   "CoreHog"
+  ]
+ },
+ {
+  "stt": 3,
+  "name": "Mài, nhám & hoàn thiện bề mặt",
+  "sub": "Máy mài khí nén, mũi mài carbide, đĩa nhám, bánh nhám & vật tư mài",
+  "children": [
+   "Máy mài & máy chà nhám khí nén",
+   "Mũi mài hợp kim",
+   "Các loại nhám & phụ kiện"
+  ],
+  "brands": [
+   "ATA",
+   "Morrisflex",
+   "Garryson"
+  ]
+ },
+ {
+  "stt": 4,
+  "name": "Vát mép & bo cạnh kim loại",
+  "sub": "Máy vát mép, bo tròn cạnh, chuẩn bị mép hàn & dao cắt",
+  "children": [
+   "Máy vát mép & bo cạnh cầm tay",
+   "Máy vát mép để bàn",
+   "Dao vát mép, bo cạnh & phụ kiện"
+  ],
+  "brands": [
+   "Beveltools"
+  ]
+ },
+ {
+  "stt": 5,
+  "name": "Khuôn mẫu & bảo trì khuôn",
+  "sub": "Máy giũa, dụng cụ đánh bóng khuôn, hóa chất bảo trì & thiết bị sửa chữa khuôn",
+  "children": [
+   "Máy giũa & máy đánh bóng khuôn",
+   "Giũa, đá đánh bóng, dụng cụ kim cương & CBN",
+   "Hóa chất bảo dưỡng, vệ sinh khuôn & trục vít",
+   "Thiết bị sửa chữa khuôn"
+  ],
+  "brands": [
+   "Diprofil",
+   "Buchem",
+   "Rocklin/MoldMender"
+  ]
+ },
+ {
+  "stt": 6,
+  "name": "Đo kiểm & xác định điểm 0",
+  "sub": "Đầu dò 3D, dò cạnh, đầu dò máy & thiết bị xác định điểm 0",
+  "children": [
+   "Đầu dò 3D & đầu dò tiếp xúc",
+   "Dụng cụ dò cạnh",
+   "Thiết bị xác định điểm 0"
+  ],
+  "brands": [
+   "Tschorn"
+  ]
+ },
+ {
+  "stt": 7,
+  "name": "Gá kẹp & định vị gia công",
+  "sub": "Kẹp nhanh, khung kẹp, kẹp cạnh, hệ thống zero-point & phụ kiện gá kẹp",
+  "children": [
+   "Kẹp nhanh Multi-Quick",
+   "Khung kẹp S-Series",
+   "Kẹp cạnh",
+   "Kẹp xích"
+  ],
+  "brands": [
+   "Lenzkes"
+  ]
+ },
+ {
+  "stt": 8,
+  "name": "Siết lực & lắp ráp công nghiệp",
+  "sub": "Tô vít công nghiệp, cấp vít tự động, hệ thống siết & dụng cụ kiểm soát lực",
+  "children": [
+   "Tô vít công nghiệp cầm tay",
+   "Tô vít cầm tay cấp vít tự động",
+   "Hệ thống siết tự động",
+   "Tô vít lực, bộ dụng cụ & phụ kiện",
+   "Pa lăng cân bằng"
+  ],
+  "brands": [
+   "Fiam",
+   "Sloky",
+   "Tecna"
+  ]
+ },
+ {
+  "stt": 9,
+  "name": "Đánh dấu & truy xuất công nghiệp",
+  "sub": "Khắc chấm, khắc laser, máy di động, để bàn & tích hợp dây chuyền",
+  "children": [
+   "Máy khắc chấm",
+   "Máy khắc laser"
+  ],
+  "brands": [
+   "Technomark"
+  ]
+ },
+ {
+  "stt": 10,
+  "name": "Hàn điện trở & cân bằng tải",
+  "sub": "Máy/thiết bị đo kiểm hàn điện trở, bộ cân bằng tải & phụ kiện",
+  "children": [
+   "Thiết bị đo thông số hàn",
+   "Phụ kiện đo"
+  ],
+  "brands": [
+   "Tecna"
+  ]
+ },
+ {
+  "stt": 11,
+  "name": "Phủ carbide & chống mài mòn",
+  "sub": "Thiết bị phủ carbide, điện cực & vật tư tăng độ bám, chống mài mòn kim loại",
+  "children": [
+   "Thiết bị Rocklinizer",
+   "Điện cực & phụ kiện Rocklinizer"
+  ],
+  "brands": [
+   "Rocklin/Rocklinizer"
+  ]
+ },
+ {
+  "stt": 12,
+  "name": "Khớp nối nhanh & phụ kiện môi chất",
+  "sub": "Khớp nối đơn/đa, manifold, ống, điều khiển dòng & phụ kiện kết nối",
+  "children": [
+   "Khớp nối nhanh đơn",
+   "Khớp nối nhanh đa đường",
+   "Bộ chia dòng & ống dẫn",
+   "Bộ điều khiển lưu lượng & phụ kiện"
+  ],
+  "brands": [
+   "RTC"
+  ]
+ }
+]

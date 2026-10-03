@@ -38,14 +38,22 @@ const MIME = {
 /**
  * Đường dẫn trong kho ứng với file nào dưới public/.
  *
- * Hầu hết trùng nhau, riêng logo hãng thì không: trong kho là brands/martor.webp
- * nhưng dưới máy nằm ở public/assets/brands/norm/martor.webp — bản đã chuẩn hoá
- * về khung 320x128, không phải bản gốc ở thư mục cha.
+ * Hầu hết trùng nhau, riêng hai loại ảnh thương hiệu thì không:
+ *
+ *   brands/martor.webp         -> public/assets/brands/norm/martor.webp
+ *       Logo đã chuẩn hoá về khung 320x128, không phải bản gốc ở thư mục cha.
+ *
+ *   brand-banner/martor.webp   -> public/assets/brands/banner/martor.webp
+ *       Ảnh banner 1200x900 của trang thương hiệu. Phải dùng tiền tố riêng chứ
+ *       không lồng vào brands/, nếu không sẽ bị quy tắc trên kéo vào norm/.
  */
-const nguon = (duongDanKho) =>
-  duongDanKho.startsWith('brands/')
-    ? join('public', 'assets', 'brands', 'norm', duongDanKho.slice('brands/'.length))
-    : join('public', duongDanKho)
+const nguon = (duongDanKho) => {
+  if (duongDanKho.startsWith('brand-banner/'))
+    return join('public', 'assets', 'brands', 'banner', duongDanKho.slice('brand-banner/'.length))
+  if (duongDanKho.startsWith('brands/'))
+    return join('public', 'assets', 'brands', 'norm', duongDanKho.slice('brands/'.length))
+  return join('public', duongDanKho)
+}
 
 // --------------------------------------------------------- lấy danh sách cần
 const doc = async (path) => {
@@ -57,14 +65,17 @@ const doc = async (path) => {
 }
 
 const products = await doc('products?select=part,images,doc_pdf')
-const brands = await doc('brands?select=slug,logo')
+const brands = await doc('brands?select=slug,logo,banner')
 
 const can = new Set()
 for (const p of products) {
   for (const img of p.images ?? []) can.add(img)
   if (p.doc_pdf) can.add(p.doc_pdf)
 }
-for (const b of brands) if (b.logo) can.add(b.logo)
+for (const b of brands) {
+  if (b.logo) can.add(b.logo)
+  if (b.banner) can.add(b.banner)
+}
 
 console.log(`\nCơ sở dữ liệu đang trỏ tới ${can.size} file.\n`)
 

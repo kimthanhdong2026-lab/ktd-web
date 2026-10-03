@@ -63,7 +63,7 @@ export function OfficeMap({
             <div className="mb-2.5 text-[32px]" aria-hidden="true">📍</div>
             <p className="font-display text-lg font-semibold text-ink-900">{office.name}</p>
             <p className="mt-2 max-w-[280px] px-4 text-sm text-ink-500">{office.addr}</p>
-            <p className="mt-2 font-mono text-xs text-ink-500">{t.contact.mapPlaceholder}</p>
+            <p className="mt-2 font-mono text-[13px] text-ink-500">{t.contact.mapPlaceholder}</p>
           </div>
         </div>
       </div>

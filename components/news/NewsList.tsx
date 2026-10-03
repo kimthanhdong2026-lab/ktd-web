@@ -49,7 +49,7 @@ export function NewsList() {
                 className="block h-full overflow-hidden rounded-xl border border-hairline transition duration-200 hover:shadow-md"
               >
                 <span className="placeholder-hatch relative flex aspect-video items-center justify-center bg-ink-100">
-                  <span className="relative font-mono text-[11px] text-[#9aa3ad]">{t.news.imagePlaceholder}</span>
+                  <span className="relative font-mono text-[13px] text-[#9aa3ad]">{t.news.imagePlaceholder}</span>
                 </span>
                 <span className="block p-5 md:p-6">
                   <span className="label-caps mb-2.5 block text-ktd-600">{n.cat}</span>

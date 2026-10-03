@@ -64,7 +64,7 @@ export function ProductGallery({ part, images }: { part: string; images?: string
             <span className="inline-block rounded-md border border-ink-300 bg-white px-3.5 py-1.5 text-[13px] text-ink-500">
               {t.product.updatingImage}
             </span>
-            <span className="mt-3 block font-mono text-[11px] text-[#9aa3ad]">
+            <span className="mt-3 block font-mono text-[13px] text-[#9aa3ad]">
               {t.news.galleryViews[active]}
             </span>
           </div>

@@ -84,7 +84,7 @@ export function ProductTabs({
               <caption className="sr-only">Thông số kỹ thuật {product.name}</caption>
               <tbody>
                 {product.specs.map(([k, v], i) => (
-                  <tr key={k} className={i % 2 ? 'bg-ktd-50' : 'bg-white'}>
+                  <tr key={k} className={i % 2 ? 'bg-surface' : 'bg-white'}>
                     <th
                       scope="row"
                       className="w-[280px] border-b border-hairline px-5 py-3.5 text-left text-sm font-semibold text-ink-500"

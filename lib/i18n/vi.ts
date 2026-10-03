@@ -58,6 +58,22 @@ export const vi = {
     heading: 'Danh mục sản phẩm',
   },
 
+  brandPage: {
+    navLabel: 'THƯƠNG HIỆU',
+    listHeading: '19 thương hiệu quốc tế chúng tôi đang phân phối',
+    listSub: 'Mỗi thương hiệu đảm nhiệm một thế mạnh chuyên biệt. Chọn một hãng để xem đầy đủ dòng sản phẩm KTĐ cung cấp.',
+    from: (xu: string) => `Thương hiệu đến từ ${xu}`,
+    dongSp: 'Dòng sản phẩm KTĐ cung cấp',
+    noiBat: 'Điểm nổi bật',
+    ungDung: 'Ứng dụng tiêu biểu',
+    productsHeading: (ten: string) => `Sản phẩm ${ten}`,
+    filterLabel: 'Nhóm sản phẩm',
+    filterAll: 'Tất cả',
+    empty: 'Hãng này chưa có sản phẩm trên website. Liên hệ KTĐ để được tư vấn.',
+    viewAll: (ten: string) => `Xem tất cả sản phẩm ${ten}`,
+    count: (n: number) => `${n} sản phẩm`,
+  },
+
   sectors: {
     heading: 'Lĩnh vực phục vụ',
     cards: [
@@ -129,6 +145,12 @@ export const vi = {
     searchPlaceholder: 'Tìm mã hàng, tên sản phẩm, thương hiệu…',
     searchLabel: 'Tìm trong danh mục sản phẩm',
     filters: 'BỘ LỌC',
+    pagination: 'Phân trang',
+    prevPage: 'Trang trước',
+    nextPage: 'Trang sau',
+    goToPage: (n: number) => `Tới trang ${n}`,
+    pageOf: (t: number, s: number, tong: number) => `Trang ${t} / ${s} — ${tong} sản phẩm`,
+    empty: 'Không tìm thấy sản phẩm nào phù hợp. Thử bỏ bớt bộ lọc hoặc đổi từ khóa.',
     clearFilters: 'Xóa bộ lọc',
     brand: 'Thương hiệu',
     category: 'Danh mục',
@@ -278,12 +300,12 @@ export const vi = {
     ],
     timelineHeading: 'Chặng đường phát triển',
     timeline: [
-      { year: '2011', title: 'Khởi đầu hành trình', text: 'Thành lập Kim Thành Đông tại Vũng Tàu.' },
+      { year: '2011', title: 'KHỞI ĐẦU', text: 'Thành lập Kim Thành Đông tại Vũng Tàu.' },
       { year: '2018', title: 'HARTNER · TECNA', text: 'Bắt đầu phân phối HARTNER và TECNA.' },
       {
         year: '2019',
-        title: 'BUCHEM · MORRISFLEX · ATA TOOLS · SLOKY',
-        text: 'Thêm 4 thương hiệu công nghiệp quốc tế.',
+        title: 'BUCHEM · MORRISFLEX · ATA · SLOKY · GARRYSON',
+        text: 'Thêm 5 thương hiệu công nghiệp quốc tế.',
       },
       {
         year: '2021',

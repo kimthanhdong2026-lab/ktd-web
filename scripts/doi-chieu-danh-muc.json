@@ -1,0 +1,191 @@
+{
+ "_doc": [
+  "Bang doi chieu: moi ma hang gan vao MOT nhom nho cua cau truc hai cap.",
+  "Khi Ban Giam doc gui ban xac nhan ve, chi can sua gia tri 'nho' cua nhung",
+  "ma duoc danh dau 'cho_xac_nhan', roi chay lai:",
+  "    node scripts/gen-gan-san-pham-sql.mjs",
+  "Khong sua tay file SQL sinh ra."
+ ],
+ "san_pham": {
+  "AT-5012": {
+   "ten": "Máy chà nhám khí nén",
+   "hang": "ATA Air Tools",
+   "nho": "Máy mài & máy chà nhám khí nén"
+  },
+  "AT-7033": {
+   "ten": "Máy mài khí nén",
+   "hang": "ATA Air Tools",
+   "nho": "Máy mài & máy chà nhám khí nén"
+  },
+  "BT-R2": {
+   "ten": "Máy vát mép Bevel",
+   "hang": "Bevel Tools",
+   "nho": "Máy vát mép & bo cạnh cầm tay",
+   "cho_xac_nhan": "tên sản phẩm không cho biết là máy cầm tay hay máy để bàn"
+  },
+  "BX-88": {
+   "ten": "Hóa chất vệ sinh khuôn Buchem",
+   "hang": "Buchem",
+   "nho": "Hóa chất bảo dưỡng, vệ sinh khuôn & trục vít"
+  },
+  "CH-C4": {
+   "ten": "Dao CNC composite",
+   "hang": "Corehog",
+   "nho": "Dụng cụ gia công composite & honeycomb"
+  },
+  "DF-BSG": {
+   "ten": "Máy đánh bóng khuôn Diprofil BSG",
+   "hang": "Diprofil",
+   "nho": "Máy giũa & máy đánh bóng khuôn",
+   "ghi_chu": "Đổi nhóm chính: từ \"Mài, đánh bóng\" sang \"Khuôn mẫu & bảo trì khuôn\""
+  },
+  "FIAM-15C": {
+   "ten": "Tua vít điện Fiam 15C",
+   "hang": "Fiam",
+   "nho": "Tô vít công nghiệp cầm tay"
+  },
+  "HEV-40250": {
+   "ten": "Dao phay ngón HEV 4 me",
+   "hang": "HELICAL SOLUTIONS",
+   "nho": "Dao phay"
+  },
+  "HFV-30187": {
+   "ten": "Dao phay ngón HFV 3 me",
+   "hang": "HELICAL SOLUTIONS",
+   "nho": "Dao phay"
+  },
+  "HT-HSS8": {
+   "ten": "Mũi khoan HSS-E Hartner 8mm",
+   "hang": "Hartner",
+   "nho": "Mũi khoan"
+  },
+  "KN-HSSDMOND": {
+   "ten": "Lưỡi khoét hợp kim Karnasch",
+   "hang": "Karnasch",
+   "nho": "Mũi khoét & mũi cưa lỗ"
+  },
+  "LK-125": {
+   "ten": "Bộ kẹp khuôn Lenzkes",
+   "hang": "Lenzkes",
+   "nho": "Khung kẹp S-Series",
+   "cho_xac_nhan": "Lenzkes có 4 dòng kẹp, tên \"Bộ kẹp khuôn\" không chỉ rõ dòng nào"
+  },
+  "10130610": {
+   "ten": "SECUPRO MAXISAFE",
+   "hang": "Martor",
+   "nho": "Dao an toàn"
+  },
+  "1031.50": {
+   "ten": "Lưỡi dao SCALPEL 1031",
+   "hang": "Martor",
+   "nho": "Lưỡi dao & phụ kiện"
+  },
+  "110000.02": {
+   "ten": "SECUNORM SMARTCUT",
+   "hang": "Martor",
+   "nho": "Dao an toàn"
+  },
+  "110700.02": {
+   "ten": "SECUNORM SMARTCUT MDP",
+   "hang": "Martor",
+   "nho": "Dao an toàn"
+  },
+  "116001.02": {
+   "ten": "SECUPRO MEGASAFE",
+   "hang": "Martor",
+   "nho": "Dao an toàn"
+  },
+  "11900771.02": {
+   "ten": "SECUNORM PROFI40",
+   "hang": "Martor",
+   "nho": "Dao an toàn"
+  },
+  "12.50": {
+   "ten": "Lưỡi dao SCALPEL 12",
+   "hang": "Martor",
+   "nho": "Lưỡi dao & phụ kiện"
+  },
+  "120701.02": {
+   "ten": "SECUNORM PROFI25 MDP",
+   "hang": "Martor",
+   "nho": "Dao an toàn"
+  },
+  "121001.02": {
+   "ten": "SECUMAX EASYSAFE",
+   "hang": "Martor",
+   "nho": "Dao an toàn"
+  },
+  "122001.02": {
+   "ten": "SECUPRO MARTEGO",
+   "hang": "Martor",
+   "nho": "Dao an toàn"
+  },
+  "124001": {
+   "ten": "SECUPRO MERAK",
+   "hang": "Martor",
+   "nho": "Dao an toàn"
+  },
+  "125002.02": {
+   "ten": "SECUNORM MIZAR",
+   "hang": "Martor",
+   "nho": "Dao an toàn"
+  },
+  "145001.12": {
+   "ten": "SECUMAX 145",
+   "hang": "Martor",
+   "nho": "Dao an toàn"
+  },
+  "148001.12": {
+   "ten": "SECUMAX 148",
+   "hang": "Martor",
+   "nho": "Dao an toàn"
+  },
+  "150001.12": {
+   "ten": "SECUMAX 150",
+   "hang": "Martor",
+   "nho": "Dao an toàn"
+  },
+  "MF-INOXCUT": {
+   "ten": "Mũi mài INOX CUT",
+   "hang": "Morrisflex",
+   "nho": "Mũi mài hợp kim"
+  },
+  "SPM80R": {
+   "ten": "Mũi mài hợp kim",
+   "hang": "Morrisflex",
+   "nho": "Mũi mài hợp kim"
+  },
+  "RK-500": {
+   "ten": "Máy phủ cứng Rocklinizer",
+   "hang": "ROCKLIN",
+   "nho": "Thiết bị Rocklinizer"
+  },
+  "RTC-40": {
+   "ten": "Khớp nối truyền động đàn hồi",
+   "hang": "RTC",
+   "nho": "Khớp nối nhanh đơn",
+   "cho_xac_nhan": "tên là \"khớp nối truyền động đàn hồi\", không khớp nhóm nhỏ nào của RTC. Có thể tên sản phẩm đang sai."
+  },
+  "SLOKY-TS15": {
+   "ten": "Tua vít lực Sloky TS-15",
+   "hang": "Sloky",
+   "nho": "Tô vít lực, bộ dụng cụ & phụ kiện"
+  },
+  "TS-3D": {
+   "ten": "Đầu dò 3D TSChorn",
+   "hang": "TSChorn",
+   "nho": "Đầu dò 3D & đầu dò tiếp xúc"
+  },
+  "MP-350": {
+   "ten": "Máy khắc dấu Technomark",
+   "hang": "Technomark",
+   "nho": "Máy khắc chấm"
+  },
+  "9502AX": {
+   "ten": "Pa lăng cân bằng Tecna",
+   "hang": "Tecna",
+   "nho": "Pa lăng cân bằng",
+   "ghi_chu": "Đổi nhóm chính: từ \"Thiết bị nâng hạ\" sang \"Siết lực & lắp ráp\""
+  }
+ }
+}

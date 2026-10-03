@@ -45,3 +45,16 @@ handoff-extracted/
 # Kết quả trung gian của script nhập liệu Martor — sinh lại được
 scripts/martor-manifest.json
 scripts/martor-products.ts.txt
+
+# Ảnh trích từ các file .docx yêu cầu — dựng lại được từ bản gốc trong Hop-thu-den
+.nam/
+.sw4/
+
+# Hòm thư nhận file từ KTĐ và Ban Giám đốc: tài liệu nội bộ, bản .docx/.xlsx
+# nặng và thay đổi liên tục. Repo chỉ giữ KẾT QUẢ đã làm theo các file đó.
+Hop-thu-den/
+
+# Bước trung gian của scripts/trong-hoa-nen-logo.mjs: bản logo trước khi bóc nền
+# và bản vừa bóc xong. Bản dùng thật nằm thẳng trong public/assets/brands/.
+public/assets/brands/goc-nen-trang/
+public/assets/brands/trong-suot/

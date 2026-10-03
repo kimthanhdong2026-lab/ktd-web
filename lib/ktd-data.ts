@@ -18,6 +18,26 @@ export interface Brand {
   logo?: string
 }
 
+/**
+ * Thương hiệu kèm toàn bộ nội dung của trang riêng.
+ *
+ * Tách khỏi Brand vì dải logo ở trang chủ và bộ lọc trang Sản phẩm chỉ cần
+ * mấy trường cơ bản — kéo cả ba danh sách gạch đầu dòng về cho mỗi lần đó là
+ * lãng phí.
+ */
+export interface BrandPage extends Brand {
+  /** Ảnh banner 1200x900 ở đầu trang. */
+  banner?: string
+  /** Đoạn giới thiệu dài, một đoạn văn. */
+  intro: string
+  /** Dòng sản phẩm KTĐ cung cấp. */
+  dongSp: string[]
+  /** Điểm nổi bật. */
+  noiBat: string[]
+  /** Ứng dụng tiêu biểu. */
+  ungDung: string[]
+}
+
 export interface Category {
   slug: string
   name: string
@@ -25,6 +45,11 @@ export interface Category {
   sub: string
   /** Có nằm trong bộ lọc rút gọn và cột Danh mục ở chân trang không. */
   featured?: boolean
+  /**
+   * Nhóm chính chứa nhóm này. null hoặc thiếu nghĩa là chính nó đã là nhóm
+   * chính. Danh mục chỉ sâu đúng hai cấp — cơ sở dữ liệu có trigger chặn.
+   */
+  parent?: string | null
 }
 
 export interface Product {

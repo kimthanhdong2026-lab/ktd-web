@@ -57,7 +57,7 @@ export default function ContactPage({ params }: { params: { lang: string } }) {
       <div className="mb-10" />
 
       <OfficeMap lang={lang}>
-        <div className="rounded-xl bg-ktd-50 p-6">
+        <div className="rounded-xl bg-surface p-6">
           <ul className="flex flex-col gap-2.5 text-[15px] text-ink-700">
             <li>
               ☎ {t.contact.phone}:{' '}

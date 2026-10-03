@@ -21,10 +21,11 @@ const tileWidth = (soHang: number) =>
     : 'xl:w-[calc((100%-3rem)/5)] min-[1400px]:w-[calc((100%-4rem)/5)]'
 
 /**
- * Khối "thương hiệu phân phối" theo yêu cầu tài liệu L3: giữ đủ 18 logo trên
- * lưới, cứ mỗi vài giây có một ô tự nổi to lên và thông tin hãng đó hiện ở
- * cột bên phải. Rê chuột (hoặc tab tới) một logo thì ô đó được chọn ngay và
- * vòng quay tạm dừng cho tới khi rời chuột.
+ * Khối "thương hiệu phân phối": giữ đủ 19 logo trên lưới, cứ mỗi vài giây có
+ * một ô tự nổi to lên. Rê chuột (hoặc tab tới) một logo thì ô đó được chọn ngay
+ * và vòng quay tạm dừng cho tới khi rời chuột.
+ *
+ * Bấm vào logo đi thẳng tới trang riêng của hãng.
  */
 export function BrandShowcase({ brands }: { brands: Brand[]; lang?: Locale }) {
   const { t, path } = useLang()
@@ -51,8 +52,6 @@ export function BrandShowcase({ brands }: { brands: Brand[]; lang?: Locale }) {
     return () => window.clearInterval(id)
   }, [paused, visible])
 
-  const brand = brands[active]
-
   return (
     <section
       id="thuong-hieu"
@@ -74,7 +73,13 @@ export function BrandShowcase({ brands }: { brands: Brand[]; lang?: Locale }) {
           không bị trống và tiêu đề mới đủ chỗ nằm một dòng. */}
       <div className="relative mx-auto w-full max-w-[1600px] px-5 sm:px-6 md:px-8 lg:px-10">
         <div className="mb-11 text-center md:mb-16">
-          <p className="label-caps mb-3 text-[#7FB3D5]">{t.brands.eyebrow}</p>
+          {/* "Phân phối chính hãng" to lên 3–4 cỡ so với label-caps 12px — yêu
+              cầu ở đoạn 6 của "Sửa web 4". Giữ nguyên kiểu in hoa giãn chữ, chỉ
+              đổi cỡ và độ đậm. Màu chữ nâng từ #7FB3D5 lên ktd-100 cho rõ hơn
+              trên nền xanh đậm, đúng ý "màu chữ rõ hơn 1 chút" ở đoạn 5. */}
+          <p className="mb-3 font-display text-[19px] font-bold uppercase tracking-[0.1em] text-ktd-100 md:text-[21px]">
+            {t.brands.eyebrow}
+          </p>
           <h2 className="mb-5 font-display text-h2 text-white [text-wrap:balance]">
             {t.brands.heading(brands.length)}
           </h2>
@@ -85,8 +90,11 @@ export function BrandShowcase({ brands }: { brands: Brand[]; lang?: Locale }) {
 
         {/* Số cột logo đổi theo khổ màn: 6 cột (18 hãng = đúng 3 hàng) chỉ đủ
             chỗ từ 1400px trở lên, hẹp hơn thì 4 rồi 3 — nếu không ô logo bị bóp
-            nhỏ tới mức không đọc được. */}
-        <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_300px] lg:items-center lg:gap-10 min-[1400px]:grid-cols-[minmax(0,1fr)_340px] min-[1400px]:gap-12">
+            nhỏ tới mức không đọc được.
+
+            Lưới hai cột của bản cũ dành 300px bên phải cho panel chi tiết hãng.
+            Panel đã bỏ nên logo dùng trọn bề ngang. */}
+        <div>
           {/* --- Lưới logo --- */}
           <ul
             className="flex flex-wrap justify-center gap-2.5 sm:gap-3 min-[1400px]:gap-4"
@@ -103,8 +111,11 @@ export function BrandShowcase({ brands }: { brands: Brand[]; lang?: Locale }) {
                     setPaused(true)
                   }}
                 >
+                  {/* Trỏ thẳng tới trang riêng của hãng. Trước đây trỏ vào bộ lọc
+                      trang Sản phẩm vì chưa có trang thương hiệu; nay có rồi thì
+                      đó mới là đích đúng. */}
                   <Link
-                    href={path(`/san-pham?brand=${b.slug}`)}
+                    href={path(`/thuong-hieu/${b.slug}`)}
                     title={t.brands.productsOf(b.name)}
                     onFocus={() => setActive(i)}
                     className={`relative flex aspect-[5/2] items-center justify-center overflow-hidden rounded-xl bg-white p-2 transition-all duration-300 ease-entrance sm:p-2.5 min-[1400px]:p-3.5 ${
@@ -125,7 +136,7 @@ export function BrandShowcase({ brands }: { brands: Brand[]; lang?: Locale }) {
                     ) : (
                       // Chưa có file logo thì hiện tên hãng, nếu không ô sẽ trống
                       // và khách không biết đó là thương hiệu nào.
-                      <span className="px-0.5 text-center font-display text-[11px] font-bold leading-tight text-ktd-800 sm:text-[12px] min-[1400px]:text-[15px]">
+                      <span className="px-0.5 text-center font-display text-[13px] font-bold leading-tight text-ktd-800 sm:text-[13px] min-[1400px]:text-[15px]">
                         {b.name}
                       </span>
                     )}
@@ -135,23 +146,9 @@ export function BrandShowcase({ brands }: { brands: Brand[]; lang?: Locale }) {
             })}
           </ul>
 
-          {/* --- Thông tin hãng đang được chọn --- */}
-          <div className="min-h-[228px] rounded-lg border border-[rgba(199,223,239,.22)] bg-[rgba(0,38,63,.35)] p-6 md:p-8 lg:min-h-[268px]">
-            {/* key = slug để mỗi lần đổi hãng nội dung chạy lại hiệu ứng trượt lên */}
-            <div key={brand.slug} className="animate-fadeup">
-              <p className="label-caps mb-2.5 text-[#7FB3D5]">{brand.origin}</p>
-              <h3 className="mb-3.5 font-display text-[26px] font-bold leading-tight text-white md:text-[30px]">
-                {brand.name}
-              </h3>
-              <p className="mb-6 text-[15px] leading-relaxed text-ktd-100">{brand.desc}</p>
-              <Link
-                href={path(`/san-pham?brand=${brand.slug}`)}
-                className="inline-flex min-h-[44px] items-center text-sm font-semibold text-white underline-offset-4 hover:underline"
-              >
-                {t.brands.viewProducts(brand.name)}
-              </Link>
-            </div>
-          </div>
+          {/* Panel chi tiết hãng đã bỏ theo đoạn 14 của "Sửa web 4".
+              Nội dung đó nay nằm ở trang riêng của từng hãng
+              (/thuong-hieu/{slug}), nên để lại đây là nói hai lần. */}
         </div>
 
         <div className="mt-10 text-center md:mt-12">

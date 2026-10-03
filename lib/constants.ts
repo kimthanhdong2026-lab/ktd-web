@@ -145,9 +145,9 @@ export const ABOUT_VALUES = [
 
 /** Mốc hợp tác phân phối theo từng năm. `brands` dùng để sau này thay tên bằng logo. */
 export const ABOUT_TIMELINE = [
-  { year: '2011', title: 'Khởi đầu hành trình', text: 'Thành lập Kim Thành Đông tại Vũng Tàu.' },
+  { year: '2011', title: 'KHỞI ĐẦU', text: 'Thành lập Kim Thành Đông tại Vũng Tàu.' },
   { year: '2018', title: 'HARTNER · TECNA', text: 'Bắt đầu phân phối HARTNER và TECNA.' },
-  { year: '2019', title: 'BUCHEM · MORRISFLEX · ATA TOOLS · SLOKY', text: 'Thêm 4 thương hiệu công nghiệp quốc tế.' },
+  { year: '2019', title: 'BUCHEM · MORRISFLEX · ATA · SLOKY · GARRYSON', text: 'Thêm 5 thương hiệu công nghiệp quốc tế.' },
   { year: '2021', title: 'TECHNOMARK · DIPROFIL', text: 'Giải pháp đánh dấu & hoàn thiện bề mặt.' },
   { year: '2022', title: 'MARTOR · TSCHORN · FIAM · LENZKES · ROCKLIN', text: 'Mở rộng mạnh mạng lưới thương hiệu.' },
   { year: '2023', title: 'KARNASCH', text: 'Bổ sung dụng cụ cắt gọt chuyên nghiệp.' },
@@ -155,3 +155,33 @@ export const ABOUT_TIMELINE = [
   { year: '2025', title: 'BEVELTOOLS', text: 'Vát mép và xử lý cạnh kim loại.' },
   { year: '2026', title: 'HELICAL · COREHOG', text: 'Gia công chính xác và vật liệu composite.' },
 ]
+
+/**
+ * Liên kết mạng xã hội ở chân trang.
+ *
+ * Ba đường dẫn này hiện trỏ về TRANG CHỦ của từng mạng, chưa phải trang của
+ * KTĐ. Ban Giám đốc biết điều đó và chọn để nguyên (trả lời ngày 03/10/2026:
+ * "cứ để vậy, thay sau"), sẽ cấp đường dẫn thật sau.
+ *
+ * LinkedIn thêm vào theo đoạn 39 của "Sửa web 4": thêm biểu tượng trước, gắn
+ * link sau.
+ *
+ * Khi có đường dẫn thật thì sửa đúng ở đây, không phải lục trong giao diện.
+ */
+export const MANG_XA_HOI = [
+  { ten: 'Facebook', icon: 'f', href: 'https://www.facebook.com' },
+  { ten: 'YouTube', icon: '▶', href: 'https://www.youtube.com' },
+  { ten: 'LinkedIn', icon: 'in', href: 'https://www.linkedin.com' },
+] as const
+
+/**
+ * Gian hàng Shopee của KTĐ, thay cho logo KTĐ ở chân trang (đoạn 24 của
+ * "Sửa web 4": thay logo KTD bằng logo Shopee, gắn link Shopee vào).
+ *
+ * Đường dẫn hiện trỏ về trang chủ Shopee vì Ban Giám đốc chưa cấp địa chỉ gian
+ * hàng. Có địa chỉ thật thì sửa đúng dòng này.
+ */
+export const SHOPEE = {
+  href: 'https://shopee.vn',
+  logo: '/assets/shopee-logo.webp',
+}

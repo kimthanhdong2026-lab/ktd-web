@@ -16,6 +16,14 @@ export interface BrowserProps {
   sort: string
   total: number
   countByBrand: Record<string, number>
+  /**
+   * Số sản phẩm mỗi nhóm TRONG phạm vi các hãng đang chọn.
+   *
+   * Chưa chọn hãng nào thì là số đếm của cả kho. Dùng để thu danh sách nhóm lại
+   * khi khách chọn một hãng — Mr Nam yêu cầu rõ: bộ lọc hãng ở trang Sản phẩm
+   * vẫn giữ, nhưng chọn xong một hãng thì lọc theo cách của trang thương hiệu.
+   */
+  countByCategory: Record<string, number>
   /** Kết quả do máy chủ dựng sẵn, truyền vào chỗ hiển thị. */
   children: React.ReactNode
 }
@@ -36,6 +44,7 @@ export function ProductBrowser({
   query,
   sort,
   total,
+  countByCategory,
   children,
 }: BrowserProps) {
   const router = useRouter()
@@ -52,11 +61,41 @@ export function ProductBrowser({
 
   const [q, setQ] = useState(query)
   const [sheetOpen, setSheetOpen] = useState(false)
+  /** Những nhóm chính khách đã bấm mũi xổ để mở ra. */
+  const [moNhom, setMoNhom] = useState<string[]>([])
   const [pending, setPending] = useState(false)
 
   const brandsAZ = [...brands].sort((a, b) => a.name.localeCompare(b.name, 'vi'))
-  const filterCategories = categories.filter((c) => c.featured)
   const activeCount = selectedBrands.length + selectedCategories.length
+
+  /**
+   * Cây danh mục hai cấp cho cột lọc.
+   *
+   * Khi chưa nhóm nào có cha — tức dữ liệu còn phẳng như trước — mọi nhóm đều
+   * thành nhóm gốc không con, và cột lọc hiện ra y hệt bản cũ. Nhờ vậy giao
+   * diện này chạy đúng cả trước lẫn sau khi chuyển đổi dữ liệu.
+   *
+   * Hiện ĐỦ CẢ 12 nhóm chính, không lọc theo cờ featured nữa. Cờ đó dựng cho
+   * bản bộ lọc một cấp cũ, lúc 15 nhóm phẳng bày hết ra thì quá dài nên chỉ lấy
+   * 4 nhóm tiêu biểu. Nay nhóm nhỏ nằm thu gọn bên trong nhóm chính, cột lọc
+   * vừa đủ ngắn — mà giấu 8/12 nhóm thì khách không tìm ra hàng.
+   *
+   * Cờ featured vẫn dùng cho cột Danh mục ở chân trang.
+   */
+  const soCua = (slug: string) => countByCategory[slug] ?? 0
+  const coHang = selectedBrands.length > 0
+
+  const cayDanhMuc = categories
+    .filter((c) => !c.parent)
+    .map((cha) => {
+      const con = categories.filter((c) => c.parent === cha.slug)
+      const tong = soCua(cha.slug) + con.reduce((n, c) => n + soCua(c.slug), 0)
+      return { cha, con: con.filter((c) => !coHang || soCua(c.slug) > 0), tong }
+    })
+    // Chọn hãng rồi thì bỏ hẳn những nhóm hãng đó không có hàng. Chưa chọn hãng
+    // thì giữ đủ 12 nhóm, kể cả nhóm chưa có sản phẩm, để khách thấy toàn cảnh
+    // danh mục KTĐ phân phối.
+    .filter((x) => !coHang || x.tong > 0)
 
   /** Dựng địa chỉ mới từ địa chỉ hiện tại; giá trị rỗng thì bỏ hẳn tham số. */
   const go = useCallback(
@@ -67,8 +106,9 @@ export function ProductBrowser({
         if (Array.isArray(v)) v.forEach((x) => sp.append(k, x))
         else if (v) sp.set(k, v)
       }
-      // Đổi bộ lọc thì quay về trang đầu, nếu không sẽ thấy khoảng trống
-      if (!('show' in patch)) sp.delete('show')
+      // Đổi bộ lọc thì quay về trang 1, nếu không khách đang ở trang 5 của kết
+      // quả cũ sẽ rơi vào một trang không tồn tại của kết quả mới.
+      if (!('trang' in patch)) sp.delete('trang')
       const qs = sp.toString()
       setPending(true)
       router.push(path(qs ? `/san-pham?${qs}` : '/san-pham'), { scroll: false })
@@ -122,6 +162,64 @@ export function ProductBrowser({
         </button>
       </div>
 
+      {/* Nhóm sản phẩm đặt TRÊN thương hiệu — đoạn 28: "Nhóm sản phẩm lớn có
+          mũi lọc bên cạnh (click vào mũi lọc sẽ xổ ra các nhóm con để chọn);
+          bên dưới là lọc thêm theo thương hiệu". */}
+      <FilterGroup title={t.products.category}>
+        <div className="max-h-[460px] overflow-y-auto pr-1">
+          {cayDanhMuc.map(({ cha, con, tong }) => {
+            const dangMo =
+              moNhom.includes(cha.slug) ||
+              con.some((x) => selectedCategories.includes(x.slug))
+            return (
+              <div key={cha.slug} className={con.length ? 'mb-1' : undefined}>
+                <div className="flex items-center gap-1">
+                  <FilterRow
+                    label={cha.name}
+                    checked={selectedCategories.includes(cha.slug)}
+                    onChange={() => toggle('category', cha.slug)}
+                    dam={con.length > 0}
+                    so={tong}
+                  />
+                  {/* Mũi xổ tách riêng khỏi ô tích: bấm mũi để XEM các nhóm con,
+                      bấm ô tích để LỌC cả nhóm lớn. Gộp hai việc vào một chỗ thì
+                      khách muốn xem nhóm con buộc phải lọc theo cả nhóm. */}
+                  {con.length > 0 && (
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setMoNhom((v) =>
+                          v.includes(cha.slug) ? v.filter((x) => x !== cha.slug) : [...v, cha.slug]
+                        )
+                      }
+                      aria-expanded={dangMo}
+                      aria-label={`${dangMo ? '▾' : '▸'} ${cha.name}`}
+                      className="flex h-7 w-7 flex-none items-center justify-center rounded text-[13px] text-ink-500 hover:bg-ink-100 hover:text-ktd-600"
+                    >
+                      <span aria-hidden="true">{dangMo ? '▾' : '▸'}</span>
+                    </button>
+                  )}
+                </div>
+
+                {con.length > 0 && dangMo && (
+                  <div className="ml-6 border-l border-hairline pl-2">
+                    {con.map((c) => (
+                      <FilterRow
+                        key={c.slug}
+                        label={c.name}
+                        checked={selectedCategories.includes(c.slug)}
+                        onChange={() => toggle('category', c.slug)}
+                        so={soCua(c.slug)}
+                      />
+                    ))}
+                  </div>
+                )}
+              </div>
+            )
+          })}
+        </div>
+      </FilterGroup>
+
       <FilterGroup title={t.products.brand}>
         <div className="max-h-[340px] overflow-y-auto pr-1">
           {brandsAZ.map((b) => (
@@ -130,19 +228,6 @@ export function ProductBrowser({
               label={b.name}
               checked={selectedBrands.includes(b.slug)}
               onChange={() => toggle('brand', b.slug)}
-            />
-          ))}
-        </div>
-      </FilterGroup>
-
-      <FilterGroup title={t.products.category}>
-        <div className="max-h-[260px] overflow-y-auto pr-1">
-          {filterCategories.map((c) => (
-            <FilterRow
-              key={c.slug}
-              label={c.name}
-              checked={selectedCategories.includes(c.slug)}
-              onChange={() => toggle('category', c.slug)}
             />
           ))}
         </div>
@@ -282,16 +367,23 @@ function FilterRow({
   label,
   checked,
   onChange,
+  dam = false,
+  so,
 }: {
   label: string
   checked: boolean
   onChange: () => void
+  /** Nhóm chính in đậm để tách khỏi các nhóm nhỏ thụt vào bên dưới. */
+  dam?: boolean
+  /** Số sản phẩm; bỏ trống thì không hiện. */
+  so?: number
 }) {
   return (
     <label
       className={cx(
         'flex cursor-pointer items-center gap-2.5 rounded-md px-1 py-1.5 text-sm hover:bg-ink-100',
-        checked ? 'text-ktd-600' : 'text-ink-700'
+        checked ? 'text-ktd-600' : 'text-ink-700',
+        dam && 'font-semibold'
       )}
     >
       <input
@@ -301,6 +393,9 @@ function FilterRow({
         className="h-4 w-4 cursor-pointer accent-ktd-600"
       />
       <span className="flex-1">{label}</span>
+      {so !== undefined && (
+        <span className="font-mono text-[13px] text-ink-500">{so}</span>
+      )}
     </label>
   )
 }

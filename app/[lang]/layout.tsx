@@ -4,6 +4,7 @@ import '../globals.css'
 
 import { StoreProvider } from '@/components/StoreProvider'
 import { Header } from '@/components/Header'
+import { getBrands } from '@/lib/db'
 import { Footer } from '@/components/Footer'
 import { FloatingCTA } from '@/components/FloatingCTA'
 import { Toast } from '@/components/Toast'
@@ -102,7 +103,7 @@ const organizationSchema = {
   ],
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
   params,
 }: {
@@ -110,6 +111,9 @@ export default function RootLayout({
   params: { lang: string }
 }) {
   const lang: Locale = isLocale(params.lang) ? params.lang : DEFAULT_LOCALE
+  // Danh sách hãng cho menu xổ ở thanh điều hướng (đoạn 3 của "Sửa web 4").
+  // Lấy ở layout để mọi trang đều có, không phải truyền qua từng trang.
+  const brands = await getBrands(lang)
 
   return (
     <html lang={lang} className={`${display.variable} ${body.variable} ${mono.variable}`}>
@@ -120,7 +124,7 @@ export default function RootLayout({
         />
         <LangProvider lang={lang}>
           <StoreProvider>
-            <Header />
+            <Header brands={brands} />
             <main id="main">{children}</main>
             <Footer lang={lang} />
             <FloatingCTA />

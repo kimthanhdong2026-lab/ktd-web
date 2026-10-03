@@ -1,8 +1,9 @@
 'use client'
 
+import Image from 'next/image'
 import { useEffect, useState } from 'react'
 import { useStore } from './StoreProvider'
-import { IconArrowUp, IconChat, IconPhone, IconQuote, IconSearch } from './Icons'
+import { IconArrowUp, IconPhone, IconQuote, IconSearch } from './Icons'
 import { COMPANY_HOTLINE_TEL, ZALO_URL } from '@/lib/constants'
 import { cx } from '@/lib/utils'
 import { useLang } from './LangProvider'
@@ -24,10 +25,22 @@ import { useLang } from './LangProvider'
  * hiện tooltip khi rê chuột.
  */
 
+/**
+ * Không khung bao quanh, chỉ biểu tượng — đoạn 23 của "Sửa web 4".
+ *
+ * Bản cũ là ô vuông trắng bo góc kèm viền và đổ bóng. Bỏ hết, chỉ còn biểu
+ * tượng, và phóng to lên cho bù phần khung đã mất.
+ *
+ * Giữ lại một bóng đổ nhẹ ĐẶT TRÊN CHÍNH BIỂU TƯỢNG (drop-shadow chứ không phải
+ * box-shadow): nút nổi trôi trên nội dung trang, gặp đúng chỗ ảnh sáng thì
+ * không còn khung trắng đỡ nữa, biểu tượng sẽ chìm.
+ *
+ * Vùng bấm vẫn giữ 44x44 theo chuẩn cảm ứng, chỉ là không vẽ gì ra.
+ */
 const TILE =
-  'flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-2xl border border-black/5 bg-white shadow-md transition-transform duration-200 group-hover:scale-105 md:h-[52px] md:w-[52px]'
+  'flex h-11 w-11 flex-shrink-0 items-center justify-center transition-transform duration-200 [filter:drop-shadow(0_1px_2px_rgba(0,0,0,.35))] group-hover:scale-110 md:h-12 md:w-12'
 
-const ICON = 'h-[22px] w-[22px]'
+const ICON = 'h-[30px] w-[30px] md:h-8 md:w-8'
 
 function Item({ className, children }: { className?: string; children: React.ReactNode }) {
   return <div className={cx('group flex items-center justify-end', className)}>{children}</div>
@@ -58,7 +71,7 @@ export function FloatingCTA() {
         >
           <IconQuote className={ICON} />
           {cartCount > 0 && (
-            <span className="absolute -right-1.5 -top-1.5 flex h-[22px] min-w-[22px] items-center justify-center rounded-full border-2 border-white bg-quote px-1 text-xs font-bold text-white">
+            <span className="absolute -right-1.5 -top-1.5 flex h-[22px] min-w-[22px] items-center justify-center rounded-full border-2 border-white bg-quote px-1 text-[13px] font-bold text-white">
               {cartCount}
             </span>
           )}
@@ -66,15 +79,23 @@ export function FloatingCTA() {
       </Item>
 
       <Item>
+        {/* Logo Zalo thật, lấy từ chính ảnh trong "Sửa web 4" — bản cũ dùng
+            một bong bóng chat chung chung, khách không nhận ra là Zalo. */}
         <a
           href={ZALO_URL}
           target="_blank"
           rel="noopener noreferrer"
           aria-label={t.cta.chatZalo}
           title={t.cta.chatZalo}
-          className={cx(TILE, 'text-zalo')}
+          className={TILE}
         >
-          <IconChat className={ICON} />
+          <Image
+            src="/assets/zalo-logo.png"
+            alt=""
+            width={125}
+            height={128}
+            className="h-[34px] w-auto md:h-9"
+          />
         </a>
       </Item>
 
@@ -108,7 +129,7 @@ export function FloatingCTA() {
           onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
           aria-label="Về đầu trang"
           title="Về đầu trang"
-          className="mr-1.5 mt-0.5 flex h-9 w-9 animate-fadeup items-center justify-center rounded-xl border border-black/5 bg-white/85 text-ink-500 shadow-sm backdrop-blur transition-colors duration-200 hover:text-ktd-600"
+          className="mr-1 mt-0.5 flex h-9 w-9 animate-fadeup items-center justify-center text-ink-500 [filter:drop-shadow(0_1px_2px_rgba(0,0,0,.3))] transition-colors duration-200 hover:text-ktd-600"
         >
           <IconArrowUp className="h-4 w-4" strokeWidth={2} />
         </button>

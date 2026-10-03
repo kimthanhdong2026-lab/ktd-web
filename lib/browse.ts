@@ -10,5 +10,3 @@
 /** Số sản phẩm mỗi lần tải. */
 export const PAGE_SIZE = 24
 
-/** Quá mức này thì nên lọc chứ không nên tải thêm. */
-export const MAX_SHOW = 240

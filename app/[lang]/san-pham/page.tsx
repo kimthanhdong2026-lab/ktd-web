@@ -1,8 +1,8 @@
 import type { Metadata } from 'next'
 import { ProductBrowser } from '@/components/products/ProductBrowser'
-import { MAX_SHOW, PAGE_SIZE } from '@/lib/browse'
-import { ProductGroups } from '@/components/products/ProductGroups'
-import { browseProducts, countProducts, getBrands, getCategories } from '@/lib/db'
+import { PAGE_SIZE } from '@/lib/browse'
+import { ProductList } from '@/components/products/ProductList'
+import { browseProducts, countProducts, getBrands, getCategories, getCategoryCounts } from '@/lib/db'
 import { DEFAULT_LOCALE, dict, href, isLocale, type Locale } from '@/lib/i18n'
 
 export async function generateMetadata({
@@ -44,32 +44,39 @@ export default async function ProductsPage({ params, searchParams }: PageProps) 
   const selectedCategories = many(searchParams.category)
   const sort = one(searchParams.sort) || 'default'
 
-  const show = Math.min(
-    MAX_SHOW,
-    Math.max(PAGE_SIZE, Number.parseInt(one(searchParams.show), 10) || PAGE_SIZE)
-  )
+  // Phân trang theo số trang (đoạn 28), thay cho nút "xem thêm" của bản cũ.
+  const trang = Math.max(1, Number.parseInt(one(searchParams.trang), 10) || 1)
 
-  const [brands, categories, result] = await Promise.all([
+  const [brands, categories, demNhom, result] = await Promise.all([
     getBrands(lang),
     getCategories(lang),
+    // Số sản phẩm mỗi nhóm trong phạm vi các hãng đang chọn — để bộ lọc thu
+    // danh sách nhóm lại theo hãng, đúng yêu cầu của Mr Nam.
+    getCategoryCounts(selectedBrands),
     browseProducts({
       q: query,
       brands: selectedBrands,
       categories: selectedCategories,
       sort,
-      limit: show,
+      limit: PAGE_SIZE,
+      offset: (trang - 1) * PAGE_SIZE,
       lang,
     }),
   ])
 
-  const nextShow = Math.min(show + PAGE_SIZE, MAX_SHOW)
-  const sp = new URLSearchParams()
-  if (query) sp.set('q', query)
-  selectedBrands.forEach((b) => sp.append('brand', b))
-  selectedCategories.forEach((c) => sp.append('category', c))
-  if (sort !== 'default') sp.set('sort', sort)
-  sp.set('show', String(nextShow))
-  const nextHref = result.total > show && show < MAX_SHOW ? href(`/san-pham?${sp}`, lang) : null
+  const soTrang = Math.max(1, Math.ceil(result.total / PAGE_SIZE))
+
+  /** Địa chỉ của một trang bất kỳ, giữ nguyên mọi bộ lọc đang bật. */
+  const diaChiTrang = (n: number) => {
+    const sp = new URLSearchParams()
+    if (query) sp.set('q', query)
+    selectedBrands.forEach((b) => sp.append('brand', b))
+    selectedCategories.forEach((c) => sp.append('category', c))
+    if (sort !== 'default') sp.set('sort', sort)
+    if (n > 1) sp.set('trang', String(n))
+    const q = sp.toString()
+    return href(q ? `/san-pham?${q}` : '/san-pham', lang)
+  }
 
   // Spec D4 — ItemList + BreadcrumbList. Chỉ liệt kê những gì đang hiện, vì
   // đây là mô tả của chính trang này chứ không phải của cả kho hàng.
@@ -116,17 +123,15 @@ export default async function ProductsPage({ params, searchParams }: PageProps) 
         sort={sort}
         total={result.total}
         countByBrand={result.byBrand}
+        countByCategory={demNhom}
       >
-        <ProductGroups
+        <ProductList
           lang={lang}
           items={result.items}
-          brands={brands}
-          categories={categories}
-          countByBrand={result.byBrand}
-          singleBrand={selectedBrands.length === 1}
           total={result.total}
-          show={show}
-          nextHref={nextHref}
+          trang={trang}
+          soTrang={soTrang}
+          diaChiTrang={diaChiTrang}
         />
       </ProductBrowser>
     </>

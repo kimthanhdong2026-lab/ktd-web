@@ -13,6 +13,21 @@ export function generateMetadata({ params }: { params: { lang: string } }): Meta
   }
 }
 
+// Bảng cỡ chữ của trang — BGĐ đã chốt phương án 2 ngày 03/10/2026:
+// to hơn phương án 1 khoảng 5% và tăng một bậc độ đậm.
+//
+// Gom vào một chỗ để khi nhân ra các trang còn lại thì sửa đúng một nơi.
+const CHU = {
+  than: 'text-[18px] font-medium', // đoạn văn dài
+  vua: 'text-[16px]', // chú thích ảnh — không in đậm
+  vuaThan: 'text-[16px] font-medium', // nội dung thẻ, mô tả mốc trên điện thoại
+  nho: 'text-[14px]', // mô tả nhỏ nhất, timeline trên máy tính
+  tieuDeThe: 'text-[18px] font-bold', // tên giá trị
+  tieuDeNho: 'text-[16px] font-bold', // tên mốc trên điện thoại
+  namTimeline: 'text-[16px]', // ô năm
+  tenMoc: 'text-[15px] font-bold', // tên mốc trên máy tính
+} as const
+
 // Bố cục một hàng timeline: tổng chiều cao, vị trí trục, độ dài nét đứt.
 const TRACK_HEIGHT = 440
 const AXIS_TOP = 220
@@ -54,13 +69,20 @@ function TimelineTrack({ items }: { items: Dictionary['about']['timeline'] }) {
                     : { top: AXIS_TOP + CONNECTOR }
                 }
               >
-                <span className="mb-2 inline-block rounded-full border border-ktd-600/30 bg-white px-3.5 py-1 font-display text-[15px] font-bold text-ktd-600">
+                <span
+                  className={`mb-2 inline-block rounded-full border border-ktd-600/30 bg-white px-3.5 py-1 font-display font-bold text-ktd-600 ${CHU.namTimeline}`}
+                >
                   {t.year}
                 </span>
-                <span className="mb-1 block font-display text-[13px] font-semibold leading-snug text-ktd-600">
+                {/* text-wrap:balance để các dòng tên thương hiệu dài gần bằng
+                    nhau — đoạn 22 của "Sửa web 4". Để trình duyệt tự cân thay vì
+                    xếp lại tay: thêm bớt một hãng là không phải sửa lại. */}
+                <span
+                  className={`mb-1 block font-display leading-snug text-ktd-600 [text-wrap:balance] ${CHU.tenMoc}`}
+                >
                   {t.title}
                 </span>
-                <span className="block text-xs leading-relaxed text-ink-500">{t.text}</span>
+                <span className={`block leading-relaxed text-ink-600 ${CHU.nho}`}>{t.text}</span>
               </div>
             </li>
           )
@@ -83,62 +105,75 @@ export default function AboutPage({ params }: { params: { lang: string } }) {
         </div>
       </section>
 
-      <section className="mx-auto max-w-[900px] px-5 pb-12 md:pb-16">
-        {/* Cả phần này dùng đúng một cỡ chữ và một màu chữ; trước đây đoạn đầu
-            to và đậm hơn nên nhìn như hai khối khác nhau. */}
-        {t.about.story.map((para, i) => (
-          <p key={i} className="mb-5 text-[17px] leading-[1.75] text-ink-700">
-            {para}
-          </p>
-        ))}
+      {/* Bề rộng bài giới thiệu bằng đúng ba ô ảnh bên dưới — đoạn 18 của
+          "Sửa web 4". Dùng container-ktd giống khối ảnh thay vì max-w-[900px].
+
+          Đổi lại là mỗi dòng dài hơn, khoảng 110 ký tự thay vì 75. Nếu đọc thấy
+          mỏi mắt thì quay về max-w-[1100px] là vừa phải. */}
+      <section className="bg-white pb-14 md:pb-20">
+        <div className="container-ktd">
+          {/* Cả phần này dùng đúng một cỡ chữ và một màu chữ; trước đây đoạn đầu
+              to và đậm hơn nên nhìn như hai khối khác nhau. */}
+          {t.about.story.map((para, i) => (
+            <p key={i} className={`mb-5 leading-[1.75] text-ink-700 ${CHU.than}`}>
+              {para}
+            </p>
+          ))}
+        </div>
       </section>
 
       {/* Chờ Marketing cấp ảnh nhà xưởng, văn phòng và triển lãm (spec E4 mục 11). */}
-      <section className="container-ktd pb-16 md:pb-20">
-        <ul className="grid gap-4 sm:grid-cols-3">
-          {t.about.photos.map((caption) => (
-            <li
-              key={caption}
-              className="placeholder-hatch relative flex aspect-[4/3] flex-col items-center justify-center gap-2 overflow-hidden rounded-lg bg-ink-100"
-            >
-              <span className="relative font-mono text-[11px] text-[#9aa3ad]">{t.about.photoPlaceholder}</span>
-              <span className="relative text-sm text-ink-500">{caption}</span>
-            </li>
-          ))}
-        </ul>
+      <section className="bg-surface py-14 md:py-20">
+        <div className="container-ktd">
+          <ul className="grid gap-4 sm:grid-cols-3">
+            {t.about.photos.map((caption) => (
+              <li
+                key={caption}
+                className="placeholder-hatch relative flex aspect-[4/3] flex-col items-center justify-center gap-2 overflow-hidden rounded-lg bg-ink-100"
+              >
+                <span className={`relative font-mono text-[#8b949e] ${CHU.nho}`}>{t.about.photoPlaceholder}</span>
+                <span className={`relative text-ink-600 ${CHU.vua}`}>{caption}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
       </section>
 
-      <section className="container-ktd pb-16 md:pb-20">
-        <div className="grid gap-6 md:grid-cols-2">
-          <div className="rounded-lg bg-ktd-50 p-8 md:p-10">
-            <h2 className="mb-4 text-center font-display text-h2 text-ktd-600">{t.about.visionHeading}</h2>
-            <p className="text-base leading-relaxed text-ink-700">{t.about.vision}</p>
-          </div>
-          <div className="rounded-lg bg-ktd-50 p-8 md:p-10">
-            <h2 className="mb-4 text-center font-display text-h2 text-ktd-600">{t.about.missionHeading}</h2>
-            <p className="text-base leading-relaxed text-ink-700">{t.about.mission}</p>
+      <section className="bg-surface py-14 md:py-20">
+        <div className="container-ktd">
+          <div className="grid gap-6 md:grid-cols-2">
+            <div className="rounded-lg bg-white p-8 md:p-10">
+              <h2 className="mb-4 text-center font-display text-h2 text-ktd-600">{t.about.visionHeading}</h2>
+              <p className={`leading-[1.7] text-ink-700 ${CHU.than}`}>{t.about.vision}</p>
+            </div>
+            <div className="rounded-lg bg-white p-8 md:p-10">
+              <h2 className="mb-4 text-center font-display text-h2 text-ktd-600">{t.about.missionHeading}</h2>
+              <p className={`leading-[1.7] text-ink-700 ${CHU.than}`}>{t.about.mission}</p>
+            </div>
           </div>
         </div>
       </section>
 
-      <section className="container-ktd pb-16 md:pb-20">
-        <h2 className="mb-8 text-center font-display text-h2 text-ktd-600">
-          {t.about.valuesHeading}
-        </h2>
-        <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {t.about.values.map((v, i) => (
-            <li key={v.title} className="rounded-xl bg-ktd-50 p-5 md:p-6">
-              <span className="mb-3 block text-center font-display text-[28px] font-bold text-ktd-600/30">
-                {String(i + 1).padStart(2, '0')}
-              </span>
-              <h3 className="mb-2 text-center font-display text-[17px] font-semibold text-ink-900">{v.title}</h3>
-              <p className="text-sm leading-relaxed text-ink-500">{v.body}</p>
-            </li>
-          ))}
-        </ul>
+      <section className="bg-surface py-14 md:py-20">
+        <div className="container-ktd">
+          <h2 className="mb-8 text-center font-display text-h2 text-ktd-600">
+            {t.about.valuesHeading}
+          </h2>
+          {/* Bốn ô giá trị dùng nền xanh đậm lấy đúng bộ màu của chân trang
+              (bg-ktd-800 + chữ ktd-100) để cả trang chỉ có một tông xanh.
+              Số thứ tự 01–04 đã bỏ theo đoạn 19 của "Sửa web 4". */}
+          <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {t.about.values.map((v) => (
+              <li key={v.title} className="rounded-[26px] bg-ktd-800 p-6 md:p-7">
+                <h3 className={`mb-2.5 text-center font-display text-white ${CHU.tieuDeThe}`}>{v.title}</h3>
+                <p className={`leading-relaxed text-ktd-100 ${CHU.vuaThan}`}>{v.body}</p>
+              </li>
+            ))}
+          </ul>
+        </div>
       </section>
 
-      <section className="container-ktd pb-16 md:pb-24">
+      <section className="container-ktd py-14 md:py-20">
         <h2 className="mb-8 text-center font-display text-h2 text-ktd-600">
           {t.about.timelineHeading}
         </h2>
@@ -156,13 +191,13 @@ export default function AboutPage({ params }: { params: { lang: string } }) {
                 className="absolute left-0 top-1.5 h-3 w-3 rounded-full border-[3px] border-white bg-ktd-600"
                 aria-hidden="true"
               />
-              <span className="inline-block rounded-full border border-ktd-600/30 px-3 py-0.5 font-display text-sm font-bold text-ktd-600">
+              <span className={`inline-block rounded-full border border-ktd-600/40 px-3 py-0.5 font-display font-bold text-ktd-600 ${CHU.namTimeline}`}>
                 {t.year}
               </span>
-              <span className="mt-1.5 block font-display text-sm font-semibold text-ktd-600">
+              <span className={`mt-1.5 block font-display text-ktd-600 ${CHU.tieuDeNho}`}>
                 {t.title}
               </span>
-              <span className="mt-0.5 block text-sm leading-relaxed text-ink-500">{t.text}</span>
+              <span className={`mt-0.5 block leading-relaxed text-ink-600 ${CHU.vuaThan}`}>{t.text}</span>
             </li>
           ))}
         </ol>

@@ -53,11 +53,41 @@ async function dem(bang) {
 console.log(`\nCơ sở dữ liệu: ${URL_}\n`)
 
 console.log('Bảng và số bản ghi')
-const mong = { brands: 19, categories: 15, products: 35 }
+// brands có 20 dòng nhưng MoldMender đang ẩn, nên chỉ 19 hãng hiện ra.
+// categories có 56 dòng: 12 nhóm chính + 41 nhóm nhỏ của cấu trúc mới, cộng
+// 3 nhóm cũ đã nghỉ hưu nhưng giữ lại bản ghi (composite, nang-ha,
+// siet-luc-cam-tay — xem 0012_nghi_huu_nhom_cu.sql).
+const mong = { brands: 20, categories: 56, products: 35 }
 for (const [bang, n] of Object.entries(mong)) {
   const r = await dem(bang)
   if (r.loi) dat(bang, false, r.loi)
   else dat(bang, r.n === n, `có ${r.n}, chờ ${n}`)
+}
+
+console.log('\nDanh mục hai cấp')
+for (const [nhan, duong, n] of [
+  ['nhóm chính đang hiện', 'categories?select=slug&parent_slug=is.null&visible=is.true', 12],
+  ['nhóm nhỏ đang hiện', 'categories?select=slug&parent_slug=not.is.null&visible=is.true', 41],
+  ['thương hiệu đang hiện', 'brands?select=slug&visible=is.true', 19],
+  ['sản phẩm thực sự hiện', 'products_hien_thi?select=part', 35],
+]) {
+  const r = await api(duong)
+  const rows = r.ok ? await r.json() : []
+  dat(nhan, r.ok && rows.length === n, r.ok ? `có ${rows.length}, chờ ${n}` : `HTTP ${r.status}`)
+}
+
+{
+  // Điều kiện này bị vi phạm hôm trang Sản phẩm sập: sản phẩm đang hiện mà
+  // nhóm của nó đang ẩn thì biến mất khỏi website mà không ai được báo.
+  const r = await api(
+    'products?select=part,categories!inner(slug,visible)&visible=is.true&categories.visible=is.false'
+  )
+  const rows = r.ok ? await r.json() : []
+  dat(
+    'không sản phẩm nào lạc vào nhóm ẩn',
+    r.ok && rows.length === 0,
+    rows.length ? `LẠC: ${rows.map((x) => x.part).join(', ')}` : 'sạch'
+  )
 }
 
 console.log('\nCột tìm kiếm do Postgres tự tính')
@@ -83,7 +113,7 @@ console.log('\nTìm theo tên hãng và tên nhóm')
 for (const [q, mongDoi] of [
   ['morrisflex', true], // tên hãng, đúng chính tả
   ['air tools', true], // một phần tên hiển thị của ATA
-  ['dung cu an toan', true], // tên nhóm
+  ['dung cu cat an toan', true], // tên nhóm — đổi tên ở đợt 4, không còn là "Dụng cụ an toàn"
 ]) {
   const r = await api(`products?select=part&search_vi=like.*${encodeURIComponent(q)}*&limit=3`)
   const rows = r.ok ? await r.json() : []

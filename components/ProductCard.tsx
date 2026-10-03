@@ -37,7 +37,7 @@ export function ProductCard({ product, variant = 'full' }: ProductCardProps) {
         ) : (
           /* Ảnh tạm không in mã hàng nữa — mã đã nằm trong ô xám ngay bên dưới. */
           <span className="placeholder-hatch absolute inset-0 flex items-center justify-center bg-ink-100">
-            <span className="rounded-sm border border-ink-300 bg-white px-2.5 py-1 text-[11px] text-ink-500">
+            <span className="rounded-sm border border-ink-300 bg-white px-2.5 py-1 text-[13px] text-ink-500">
               {t.product.updatingImage}
             </span>
           </span>
@@ -46,7 +46,7 @@ export function ProductCard({ product, variant = 'full' }: ProductCardProps) {
 
       <div className="flex flex-1 flex-col p-4 md:p-[18px]">
         {/* Chỉ tên hãng — bỏ nhóm sản phẩm cho đỡ chữ; nhóm đã có ở bộ lọc. */}
-        <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.08em] text-ink-500">
+        <p className="mb-2 text-[13px] font-semibold uppercase tracking-[0.08em] text-ink-500">
           {product.brandLabel}
         </p>
 

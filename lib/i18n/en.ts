@@ -67,6 +67,22 @@ export const en: Dictionary = {
     heading: 'Product categories',
   },
 
+  brandPage: {
+    navLabel: 'BRANDS',
+    listHeading: '19 international brands we distribute',
+    listSub: 'Each brand covers a distinct specialism. Pick one to see the full range KTD supplies.',
+    from: (xu: string) => `A brand from ${xu}`,
+    dongSp: 'Product lines KTD supplies',
+    noiBat: 'Key strengths',
+    ungDung: 'Typical applications',
+    productsHeading: (ten: string) => `${ten} products`,
+    filterLabel: 'Product group',
+    filterAll: 'All',
+    empty: 'No products from this brand on the site yet. Contact KTD for advice.',
+    viewAll: (ten: string) => `View all ${ten} products`,
+    count: (n: number) => `${n} products`,
+  },
+
   sectors: {
     heading: 'Industries we serve',
     cards: [
@@ -141,6 +157,12 @@ export const en: Dictionary = {
     searchPlaceholder: 'Search part number, product name, brand…',
     searchLabel: 'Search within the product range',
     filters: 'FILTERS',
+    pagination: 'Pagination',
+    prevPage: 'Previous page',
+    nextPage: 'Next page',
+    goToPage: (n: number) => `Go to page ${n}`,
+    pageOf: (t: number, s: number, tong: number) => `Page ${t} of ${s} — ${tong} products`,
+    empty: 'No matching products. Try removing a filter or changing your search.',
     clearFilters: 'Clear filters',
     brand: 'Brand',
     category: 'Category',
@@ -293,12 +315,12 @@ export const en: Dictionary = {
     ],
     timelineHeading: 'How we grew',
     timeline: [
-      { year: '2011', title: 'The journey begins', text: 'Kim Thanh Dong founded in Vung Tau.' },
+      { year: '2011', title: 'THE BEGINNING', text: 'Kim Thanh Dong founded in Vung Tau.' },
       { year: '2018', title: 'HARTNER · TECNA', text: 'Distribution of HARTNER and TECNA begins.' },
       {
         year: '2019',
-        title: 'BUCHEM · MORRISFLEX · ATA TOOLS · SLOKY',
-        text: 'Four more international industrial brands added.',
+        title: 'BUCHEM · MORRISFLEX · ATA · SLOKY · GARRYSON',
+        text: 'Five more international industrial brands added.',
       },
       {
         year: '2021',

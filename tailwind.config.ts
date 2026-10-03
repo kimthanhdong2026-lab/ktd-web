@@ -5,6 +5,17 @@ const config: Config = {
   content: ['./app/**/*.{js,ts,jsx,tsx,mdx}', './components/**/*.{js,ts,jsx,tsx,mdx}'],
   theme: {
     extend: {
+      screens: {
+        // Mốc riêng cho thanh điều hướng chính.
+        //
+        // Từ khi thêm mục THƯƠNG HIỆU, thanh có 6 mục và không còn vừa ở mốc
+        // lg (1024px) — đo thật thì cần khoảng 1104px. Đặt 1140px cho có biên,
+        // dưới mức đó dùng nút ba gạch.
+        nav: '1140px',
+        // Số điện thoại trên header chỉ hiện khi còn thừa chỗ thật sự. Ở 1280px
+        // nó bị bẻ thành ba dòng và đẩy cao cả thanh.
+        tel: '1400px',
+      },
       colors: {
         ktd: {
           50: '#EEF6FC',
@@ -16,6 +27,13 @@ const config: Config = {
           800: '#003F6C', // dark section / utility bar
           900: '#00263F', // hero + footer ground
         },
+        // Màu nền của mọi dải nội dung, thay cho nền xanh nhạt cũ (#EEF6FC).
+        //
+        // "Sử dụng 2 màu nền trên của web này, không dùng màu nền xanh nhạt
+        // nữa: amphenol.com" — Sửa web 4, đoạn 4. Đã dựng thử cả hai sắc xám
+        // của amphenol rồi trình BGĐ; BGĐ chốt ngày 03/10/2026 dùng ĐÚNG MỘT
+        // màu nền là sắc nhạt, điểm nhấn để dành cho màu xanh logo.
+        surface: '#F8F8F8',
         // Red is reserved for the quote CTA and "Mới" badges only (spec B1).
         quote: {
           DEFAULT: '#E30613',
@@ -24,6 +42,9 @@ const config: Config = {
         ink: {
           900: '#111418',
           700: '#3D444D',
+          // "màu chữ rõ hơn 1 chút nữa" — Sửa web 4, đoạn 5. ink-600 đậm hơn
+          // ink-500 một bậc, dùng cho chữ nhỏ ở những chỗ trước đây khó đọc.
+          600: '#58626D',
           500: '#6B747E',
           300: '#D4D9DE',
           100: '#F3F5F7',

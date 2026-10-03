@@ -76,7 +76,7 @@ export default async function ArticlePage({ params }: PageProps) {
       <p className="mb-8 text-sm text-[#9aa3ad]">{article.date}</p>
 
       <div className="placeholder-hatch relative mb-8 flex aspect-video items-center justify-center overflow-hidden rounded-lg bg-ink-100">
-        <span className="relative font-mono text-xs text-[#9aa3ad]">{t.news.imagePlaceholder}</span>
+        <span className="relative font-mono text-[13px] text-[#9aa3ad]">{t.news.imagePlaceholder}</span>
       </div>
 
       <p className="mb-5 text-lg leading-[1.8] text-ink-700">{article.excerpt}</p>
@@ -97,7 +97,7 @@ export default async function ArticlePage({ params }: PageProps) {
                   {p.name}
                 </span>
                 <span className="part-no block text-[13px] text-ink-500">{p.part}</span>
-                <span className="mt-1 block text-xs text-ink-500">{p.brandLabel}</span>
+                <span className="mt-1 block text-[13px] text-ink-500">{p.brandLabel}</span>
               </Link>
             </li>
           ))}

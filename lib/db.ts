@@ -11,7 +11,7 @@
  * Hàm ở đây trả về đúng kiểu Product / Brand / Category mà các component đang
  * dùng, nên phần lớn giao diện không phải sửa gì.
  */
-import type { Brand, Category, Product } from './ktd-data'
+import type { Brand, BrandPage, Category, Product } from './ktd-data'
 import { DEFAULT_LOCALE, type Locale } from './i18n/config'
 
 const URL_ = process.env.NEXT_PUBLIC_SUPABASE_URL ?? ''
@@ -148,7 +148,10 @@ export async function getBrands(lang: Locale = DEFAULT_LOCALE): Promise<Brand[]>
       desc_en: string | null
       logo: string | null
     }[]
-  >('brands?select=slug,name,origin_vi,origin_en,desc_vi,desc_en,logo&order=sort_order')
+  >(
+    'brands?select=slug,name,origin_vi,origin_en,desc_vi,desc_en,logo' +
+      '&visible=eq.true&order=sort_order'
+  )
   return rows.map((b) => ({
     slug: b.slug,
     name: b.name,
@@ -158,24 +161,135 @@ export async function getBrands(lang: Locale = DEFAULT_LOCALE): Promise<Brand[]>
   }))
 }
 
-export async function getCategories(lang: Locale = DEFAULT_LOCALE): Promise<Category[]> {
-  const rows = await rest<
-    {
-      slug: string
-      name_vi: string
-      name_en: string | null
-      sub_vi: string
-      sub_en: string | null
-      featured: boolean
-    }[]
-  >(
-    'categories?select=slug,name_vi,name_en,sub_vi,sub_en,featured&order=sort_order'
+/** Các cột dựng nên một trang thương hiệu. */
+const BRAND_PAGE_COLS =
+  'slug,name,origin_vi,origin_en,desc_vi,desc_en,logo,banner,' +
+  'intro_vi,intro_en,dong_sp_vi,dong_sp_en,noi_bat_vi,noi_bat_en,ung_dung_vi,ung_dung_en'
+
+interface BrandPageRow {
+  slug: string
+  name: string
+  origin_vi: string
+  origin_en: string | null
+  desc_vi: string
+  desc_en: string | null
+  logo: string | null
+  banner: string | null
+  intro_vi: string | null
+  intro_en: string | null
+  dong_sp_vi: string[]
+  dong_sp_en: string[] | null
+  noi_bat_vi: string[]
+  noi_bat_en: string[] | null
+  ung_dung_vi: string[]
+  ung_dung_en: string[] | null
+}
+
+const toBrandPage = (b: BrandPageRow, lang: Locale): BrandPage => ({
+  slug: b.slug,
+  name: b.name,
+  origin: pick(b.origin_en, b.origin_vi, lang),
+  desc: pick(b.desc_en, b.desc_vi, lang),
+  logo: fileUrl(b.logo),
+  banner: fileUrl(b.banner),
+  intro: pick(b.intro_en, b.intro_vi ?? '', lang),
+  dongSp: pick(b.dong_sp_en, b.dong_sp_vi, lang),
+  noiBat: pick(b.noi_bat_en, b.noi_bat_vi, lang),
+  ungDung: pick(b.ung_dung_en, b.ung_dung_vi, lang),
+})
+
+export async function getBrandPage(
+  slug: string,
+  lang: Locale = DEFAULT_LOCALE
+): Promise<BrandPage | undefined> {
+  const rows = await rest<BrandPageRow[]>(
+    `brands?select=${BRAND_PAGE_COLS}&slug=eq.${encodeURIComponent(slug)}` +
+      '&visible=eq.true&limit=1'
   )
+  return rows[0] ? toBrandPage(rows[0], lang) : undefined
+}
+
+export async function getBrandPages(lang: Locale = DEFAULT_LOCALE): Promise<BrandPage[]> {
+  const rows = await rest<BrandPageRow[]>(
+    `brands?select=${BRAND_PAGE_COLS}&visible=eq.true&order=sort_order`
+  )
+  return rows.map((b) => toBrandPage(b, lang))
+}
+
+/**
+ * Các nhóm nhỏ mà một hãng thực sự có hàng, kèm số lượng.
+ *
+ * Đây là yêu cầu Mr Nam nêu rõ: trang Karnasch chỉ liệt kê 6 nhóm Karnasch có,
+ * không bày cả 41 nhóm. Quan hệ hãng ↔ nhóm không ai khai báo — nó rơi ra từ
+ * việc gắn sản phẩm, nên tính ngay tại đây.
+ */
+/**
+ * Số sản phẩm theo từng nhóm, giới hạn trong một tập thương hiệu.
+ *
+ * Dùng cho bộ lọc trang Sản phẩm: Mr Nam yêu cầu khi khách chọn một hãng thì
+ * danh sách nhóm thu lại còn đúng những nhóm hãng đó có hàng, chứ không bày cả
+ * 41 nhóm trong đó 39 nhóm bấm vào ra trang rỗng.
+ *
+ * Cố ý KHÔNG lọc theo nhóm đang chọn: nếu lọc thì mọi nhóm khác về 0 và biến
+ * mất khỏi bộ lọc, khách không đổi được lựa chọn nữa.
+ *
+ * Mảng rỗng = không lọc hãng, trả về số đếm của toàn bộ kho.
+ */
+export async function getCategoryCounts(
+  brandSlugs: string[] = []
+): Promise<Record<string, number>> {
+  const loc = brandSlugs.length
+    ? `&brand_slug=in.(${brandSlugs.map(encodeURIComponent).join(',')})`
+    : ''
+  const rows = await rest<{ category_slug: string }[]>(
+    `products_hien_thi?select=category_slug${loc}`
+  )
+  const dem: Record<string, number> = {}
+  for (const r of rows) dem[r.category_slug] = (dem[r.category_slug] ?? 0) + 1
+  return dem
+}
+
+export async function getBrandCategories(
+  brandSlug: string,
+  lang: Locale = DEFAULT_LOCALE
+): Promise<{ slug: string; name: string; parent: string | null; count: number }[]> {
+  const rows = await rest<{ category_slug: string }[]>(
+    `products_hien_thi?select=category_slug&brand_slug=eq.${encodeURIComponent(brandSlug)}`
+  )
+  const dem = new Map<string, number>()
+  for (const r of rows) dem.set(r.category_slug, (dem.get(r.category_slug) ?? 0) + 1)
+  if (!dem.size) return []
+
+  const cats = await getCategories(lang)
+  return cats
+    .filter((c) => dem.has(c.slug))
+    .map((c) => ({ slug: c.slug, name: c.name, parent: c.parent ?? null, count: dem.get(c.slug)! }))
+}
+
+export async function getCategories(lang: Locale = DEFAULT_LOCALE): Promise<Category[]> {
+  type Hang = {
+    slug: string
+    name_vi: string
+    name_en: string | null
+    sub_vi: string
+    sub_en: string | null
+    featured: boolean
+    parent_slug?: string | null
+  }[]
+
+  // Chỉ lấy danh mục đang hiện: nhóm bị ẩn thì không được xuất hiện ở bộ lọc,
+  // ở ô danh mục trang chủ, hay ở cột Danh mục chân trang.
+  const rows = await rest<Hang>(
+    'categories?select=slug,name_vi,name_en,sub_vi,sub_en,featured,parent_slug' +
+      '&visible=eq.true&order=sort_order'
+  )
+
   return rows.map((c) => ({
     slug: c.slug,
     name: pick(c.name_en, c.name_vi, lang),
     sub: pick(c.sub_en, c.sub_vi, lang),
     featured: c.featured,
+    parent: c.parent_slug ?? null,
   }))
 }
 

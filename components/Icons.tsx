@@ -89,3 +89,43 @@ export function IconMail(props: IconProps) {
   )
 }
 
+
+/** Chồng lớp — dùng cho khối "Dòng sản phẩm KTĐ cung cấp" trên trang thương hiệu. */
+export function IconLayers(props: IconProps) {
+  return (
+    <Svg {...props}>
+      <path d="m12 2 9 5-9 5-9-5 9-5Z" />
+      <path d="m3 12 9 5 9-5" />
+      <path d="m3 17 9 5 9-5" />
+    </Svg>
+  )
+}
+
+/** Khiên — dùng cho khối "Điểm nổi bật". */
+export function IconShield(props: IconProps) {
+  return (
+    <Svg {...props}>
+      <path d="M12 2 4 5v6c0 5 3.4 9.4 8 11 4.6-1.6 8-6 8-11V5l-8-3Z" />
+      <path d="m9 12 2 2 4-4" />
+    </Svg>
+  )
+}
+
+/** Bánh răng — dùng cho khối "Ứng dụng tiêu biểu". */
+export function IconGear(props: IconProps) {
+  return (
+    <Svg {...props}>
+      <circle cx="12" cy="12" r="3.2" />
+      <path d="M19.4 14a1.6 1.6 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.6 1.6 0 0 0-1.8-.3 1.6 1.6 0 0 0-1 1.5V20a2 2 0 1 1-4 0v-.1A1.6 1.6 0 0 0 9 18.4a1.6 1.6 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.6 1.6 0 0 0 .3-1.8 1.6 1.6 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1A1.6 1.6 0 0 0 4.6 9a1.6 1.6 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.6 1.6 0 0 0 1.8.3H9a1.6 1.6 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.6 1.6 0 0 0 1 1.5 1.6 1.6 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.6 1.6 0 0 0-.3 1.8V9a1.6 1.6 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.6 1.6 0 0 0-1.5 1Z" />
+    </Svg>
+  )
+}
+
+/** Dấu tích — dùng cho các gạch đầu dòng trên trang thương hiệu. */
+export function IconCheck(props: IconProps) {
+  return (
+    <Svg {...props}>
+      <path d="m4.5 12.5 5 5 10-11" />
+    </Svg>
+  )
+}

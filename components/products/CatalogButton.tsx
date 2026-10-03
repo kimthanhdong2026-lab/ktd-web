@@ -29,7 +29,7 @@ export function CatalogButton({
       <span className="text-xl" aria-hidden="true">⬇</span>
       <span className="flex flex-col leading-snug">
         <span className="text-[15px]">{title}</span>
-        {sub && <span className="font-mono text-xs font-normal text-ink-500">{sub}</span>}
+        {sub && <span className="font-mono text-[13px] font-normal text-ink-500">{sub}</span>}
       </span>
     </>
   )

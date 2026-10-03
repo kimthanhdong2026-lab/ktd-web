@@ -1,0 +1,246 @@
+-- =============================================================================
+-- Nội dung 19 trang thương hiệu
+--
+-- SINH TỰ ĐỘNG bởi scripts/gen-thuong-hieu-sql.mjs — đừng sửa tay file này,
+-- sửa scripts/thuong-hieu.json rồi chạy lại script.
+--
+-- Phải chạy 0007_danh_muc_hai_cap.sql trước, vì file này ghi vào các cột do
+-- 0007 tạo ra (intro_vi, dong_sp_vi, noi_bat_vi, ung_dung_vi, visible).
+--
+-- Ba thay đổi đáng chú ý, cả ba đều do Ban Giám đốc chốt ngày 03/10/2026:
+--   - RTC: xuất xứ từ "Đức" đổi thành "Thổ Nhĩ Kỳ".
+--   - GARRYSON: thêm mới, chưa có sản phẩm nào.
+--   - MoldMender: ẩn khỏi website (không xoá) vì là thương hiệu con của ROCKLIN.
+--
+-- Nội dung tiếng Anh để trống, điền ở bước dịch sau; en_status đánh dấu "trống"
+-- nên trang tiếng Anh tạm hiện tiếng Việt chứ không hiện ô rỗng.
+-- =============================================================================
+
+-- MARTOR
+update brands set
+    origin_vi   = 'Đức',
+    origin_en   = 'Germany',
+    intro_vi    = 'MARTOR là nhà sản xuất dụng cụ cắt an toàn của Đức, có trụ sở tại Solingen và hơn 80 năm kinh nghiệm trong lĩnh vực dụng cụ cắt chuyên nghiệp. Hãng tập trung phát triển dao an toàn, kéo an toàn, lưỡi dao và phụ kiện cho môi trường công nghiệp, kho vận và đóng gói. Các giải pháp MARTOR được thiết kế để giảm nguy cơ đứt tay, đồng thời hạn chế làm hư hỏng hàng hóa bên trong bao bì. KTD lựa chọn các dòng sản phẩm cốt lõi của MARTOR để đáp ứng nhu cầu cắt thường xuyên trong sản xuất, kho hàng và logistics.',
+    dong_sp_vi  = array['Dao an toàn: lưỡi che kín, tự rút hoặc thu lưỡi bằng tay', 'Kéo an toàn cho thao tác cắt thường xuyên', 'Lưỡi dao thay thế và phụ kiện tương ứng với từng dòng dao']::text[],
+    noi_bat_vi  = array['Các cơ cấu bảo vệ phù hợp nhiều mức độ rủi ro khi cắt', 'Thiết kế chú trọng cầm nắm, bảo vệ người dùng và hàng hóa', 'Có dòng cho thực phẩm, dược phẩm và loại dò được bằng kim loại']::text[],
+    ung_dung_vi = array['Cắt thùng carton, băng keo và bao bì đóng gói', 'Cắt màng nhựa, màng co, dây đai và vật liệu mềm', 'Dùng trong sản xuất, kho vận và đóng gói']::text[],
+    sort_order  = 1
+where slug = 'martor';
+
+-- KARNASCH
+update brands set
+    origin_vi   = 'Đức',
+    origin_en   = 'Germany',
+    intro_vi    = 'Karnasch Professional Tools là thương hiệu dụng cụ cắt gọt của Đức với hơn 60 năm kinh nghiệm trong gia công kim loại. Danh mục của hãng bao phủ nhiều công đoạn từ khoan, phay, tạo ren, doa đến khoét lỗ, đồng thời có các dụng cụ chuyên dụng cho vật liệu composite. KTD tập trung vào các dòng dụng cụ cắt chính phục vụ gia công CNC, chế tạo khuôn, kết cấu kim loại và các ứng dụng sản xuất cần độ chính xác cao. Karnasch được định vị ở phân khúc dụng cụ hiệu suất cao, với nhiều lựa chọn về vật liệu dao, hình học cắt và lớp phủ theo từng ứng dụng.',
+    dong_sp_vi  = array['Mũi khoan và dao phay cho gia công kim loại', 'Ta rô, dụng cụ tạo ren và dao doa chính xác', 'Mũi khoét, cưa lỗ và dụng cụ gia công composite, lõi tổ ong']::text[],
+    noi_bat_vi  = array['Danh mục bao phủ nhiều công đoạn gia công cắt gọt', 'Nhiều hình học cắt, vật liệu dao và lớp phủ theo ứng dụng', 'Có dụng cụ chuyên cho khoét lỗ và vật liệu composite']::text[],
+    ung_dung_vi = array['Khoan, phay, tạo ren, doa trên máy CNC', 'Khoét lỗ kết cấu thép, tấm và chi tiết kim loại', 'Gia công khuôn, chi tiết chính xác và vật liệu composite']::text[],
+    sort_order  = 2
+where slug = 'karnasch';
+
+-- HARTNER
+update brands set
+    origin_vi   = 'Đức',
+    origin_en   = 'Germany',
+    intro_vi    = 'Hartner là nhà sản xuất dụng cụ cắt chính xác của Đức, thành lập năm 1879 và có gần một thế kỷ rưỡi kinh nghiệm trong lĩnh vực gia công kim loại. Hãng phát triển dụng cụ cho các công đoạn khoan, phay, doa và tạo ren, từ dụng cụ thép gió đến dụng cụ hợp kim nguyên khối và các giải pháp hiệu suất cao. KTD tập trung vào bốn nhóm sản phẩm chính của Hartner gồm mũi khoan, dao phay, dụng cụ tạo ren và dao doa. Đây là các dòng phù hợp cho gia công CNC và nhiều yêu cầu sản xuất cần độ chính xác, độ ổn định và khả năng lựa chọn theo vật liệu.',
+    dong_sp_vi  = array['Mũi khoan thép gió, hợp kim và mũi khoan lỗ sâu', 'Dao phay cho các công đoạn gia công CNC', 'Ta rô, dụng cụ tạo ren và dao doa hoàn thiện lỗ']::text[],
+    noi_bat_vi  = array['Danh mục dụng cụ cắt chính xác có chiều sâu', 'Nhiều lựa chọn cho khoan lỗ nhỏ, lỗ sâu và lỗ chính xác', 'Có dụng cụ tiêu chuẩn và giải pháp theo yêu cầu gia công']::text[],
+    ung_dung_vi = array['Khoan, phay, tạo ren và doa trên máy CNC', 'Hoàn thiện lỗ theo kích thước và chất lượng bề mặt yêu cầu', 'Gia công thép, inox, gang, nhôm và vật liệu kỹ thuật']::text[],
+    sort_order  = 3
+where slug = 'hartner';
+
+-- HELICAL SOLUTIONS
+update brands set
+    origin_vi   = 'Hoa Kỳ',
+    origin_en   = 'USA',
+    intro_vi    = 'Helical Solutions là thương hiệu dụng cụ cắt hiệu suất cao của Mỹ thuộc Harvey Performance Company, chuyên sâu về dao phay ngón hợp kim cho gia công CNC. Các dòng dao được phát triển theo vật liệu và chiến lược gia công, với nhiều cấu hình số me, góc xoắn, bước răng biến thiên, biên dạng đầu dao và chiều dài cổ dao. KTD tập trung vào dao phay Helical để phục vụ các nhu cầu phay thô, phay tinh, gia công hiệu suất cao và các biên dạng chuyên dụng. Danh mục đặc biệt phù hợp khi cần lựa chọn dao theo vật liệu phôi và yêu cầu năng suất cụ thể.',
+    dong_sp_vi  = array['Dao phay ngón hợp kim cho phay thô và phay tinh', 'Dao phay theo vật liệu: nhôm, thép, inox và hợp kim khó cắt', 'Dao phay biên dạng, rãnh, hốc sâu và bề mặt 3D']::text[],
+    noi_bat_vi  = array['Chuyên sâu về dao phay ngón hiệu suất cao', 'Nhiều lựa chọn số me, góc xoắn và bước răng biến thiên', 'Có dữ liệu thông số cắt hỗ trợ chọn dao và lập trình']::text[],
+    ung_dung_vi = array['Phay thô, phay tinh và gia công tốc độ cao', 'Gia công rãnh, hốc, biên dạng và bề mặt 3D', 'Gia công chi tiết hàng không, ô tô, y tế và cơ khí chính xác']::text[],
+    sort_order  = 4
+where slug = 'helical';
+
+-- COREHOG
+update brands set
+    origin_vi   = 'Hoa Kỳ',
+    origin_en   = 'USA',
+    intro_vi    = 'CoreHog là thương hiệu dụng cụ cắt của Mỹ chuyên cho vật liệu composite và lõi tổ ong, thuộc Harvey Performance Company. Hãng tập trung thiết kế dụng cụ cho những vật liệu khó gia công bằng dao cắt thông thường, đặc biệt trong các kết cấu nhẹ và vật liệu nhiều lớp. KTD lựa chọn dòng dụng cụ gia công composite và lõi tổ ong của CoreHog cho các công đoạn phay thô, tạo hình, cắt tinh và hoàn thiện thành vật liệu. Sản phẩm hướng tới khả năng gia công ổn định, chính xác và giảm hư hại bề mặt trên các vật liệu có cấu trúc đặc thù.',
+    dong_sp_vi  = array['Dụng cụ phay thô và tạo hình lõi tổ ong', 'Dụng cụ cắt tinh, xén cạnh và hoàn thiện thành lõi', 'Dụng cụ gia công tấm composite và vật liệu nhiều lớp']::text[],
+    noi_bat_vi  = array['Chuyên dụng cho composite và kết cấu lõi tổ ong', 'Hình học dao phù hợp từng vật liệu và công đoạn', 'Giúp kiểm soát biên dạng và hạn chế hư hại bề mặt']::text[],
+    ung_dung_vi = array['Phay thô, tạo hình và hoàn thiện lõi tổ ong', 'Xén cạnh tấm sandwich và vật liệu composite', 'Gia công kết cấu nhẹ trong hàng không và công nghiệp']::text[],
+    sort_order  = 5
+where slug = 'corehog';
+
+-- ATA AIR TOOLS
+update brands set
+    origin_vi   = 'Ireland',
+    origin_en   = 'Ireland',
+    intro_vi    = 'ATA là thương hiệu dụng cụ khí nén công nghiệp của Ireland với hơn 50 năm kinh nghiệm trong các ứng dụng mài và hoàn thiện bề mặt. Hãng cung cấp nhiều dòng máy mài và máy chà nhám phục vụ môi trường sản xuất chuyên nghiệp. KTD tập trung vào ATA Air Tools gồm máy mài bút, máy mài thẳng, máy mài góc và máy chà nhám khí nén. Các thiết bị được phát triển cho những công việc cần khả năng bóc vật liệu, xử lý bề mặt và hoàn thiện ổn định, đồng thời chú trọng tỷ lệ công suất/trọng lượng, độ bền và sự thuận tiện cho người vận hành.',
+    dong_sp_vi  = array['Máy mài khí nén: máy mài bút, máy mài thẳng và máy mài góc', 'Máy chà nhám khí nén cho xử lý và hoàn thiện bề mặt']::text[],
+    noi_bat_vi  = array['Nhiều kiểu máy cho vị trí mài và mức bóc vật liệu khác nhau', 'Chú trọng công suất, trọng lượng và cảm giác vận hành', 'Kết hợp với mũi mài, đá mài, đĩa nhám phù hợp']::text[],
+    ung_dung_vi = array['Phá ba via, mài chi tiết sau gia công hoặc đúc', 'Làm sạch mối hàn, chà nhám và hoàn thiện bề mặt', 'Sử dụng trong cơ khí, ô tô, hàng không và đóng tàu']::text[],
+    sort_order  = 6
+where slug = 'ata';
+
+-- MORRISFLEX
+update brands set
+    origin_vi   = 'Ireland',
+    origin_en   = 'Ireland',
+    intro_vi    = 'Morrisflex là thương hiệu mũi mài hợp kim có nguồn gốc từ Ireland và hiện thuộc ATA Group. Hãng chuyên về mũi mài hợp kim vonfram dùng cho bóc vật liệu, phá ba via và hoàn thiện chi tiết sau gia công. Danh mục Morrisflex có nhiều hình dạng đầu mài, kiểu răng cắt, kích thước cán và phiên bản chuyên cho từng loại vật liệu. KTD tập trung vào dòng mũi mài hợp kim Morrisflex để phục vụ gia công thép, inox, kim loại màu, vật đúc và các chi tiết có biên dạng phức tạp mà dụng cụ mài thông thường khó tiếp cận.',
+    dong_sp_vi  = array['Mũi mài hợp kim với nhiều hình dạng đầu và kiểu răng', 'Mũi mài cán dài và kích thước nhỏ cho vị trí khó tiếp cận', 'Mũi mài theo vật liệu và yêu cầu bóc vật liệu']::text[],
+    noi_bat_vi  = array['Nhiều hình dạng, kích thước cán và cấu hình răng cắt', 'Có lựa chọn cho bóc vật liệu nhanh hoặc hoàn thiện tinh', 'Kết hợp với máy mài đúng tốc độ và cỡ cán']::text[],
+    ung_dung_vi = array['Phá ba via, sửa biên dạng và làm sạch mối hàn', 'Gia công thép, inox, gang, nhôm và kim loại màu', 'Hoàn thiện vật đúc, khuôn và chi tiết cơ khí']::text[],
+    sort_order  = 7
+where slug = 'morrisflex';
+
+-- GARRYSON — hãng MỚI, chưa từng có trong cơ sở dữ liệu.
+-- Logo đã có sẵn file nguồn nhưng chưa chuẩn hoá và chưa đẩy lên kho ảnh;
+-- tới lúc đó trang vẫn chạy, chỉ hiện tên chữ thay cho logo.
+insert into brands (slug, name, origin_vi, origin_en, desc_vi, logo, sort_order, visible)
+values ('garryson', 'Garryson', 'Anh', 'United Kingdom',
+        'Garryson là thương hiệu của Anh thuộc ATA Group, chuyên về vật tư mài, nhám và các sản phẩm hợp kim cho bóc vật liệu và hoàn thiện bề mặt. KTD tập trung vào mũi mài hợp kim cùng các dòng nhám thông dụng như đĩa nhám xếp, đĩa thay nhanh, bánh nhám và vật tư hoàn thiện. Sản phẩm Garryson được phát triển cho nhiều công việc từ mài thô, xử lý mối hàn đến làm sạch, pha bề mặt và hoàn thiện. Danh mục  phù hợp cho các nhà máy và xưởng cơ khí cần hệ vật tư mài đa dạng cho nhiều vật liệu và mức độ hoàn thiện khác nhau.', 'brands/garryson.webp', 8, true)
+on conflict (slug) do nothing;
+
+update brands set
+    origin_vi   = 'Anh',
+    origin_en   = 'United Kingdom',
+    intro_vi    = 'Garryson là thương hiệu của Anh thuộc ATA Group, chuyên về vật tư mài, nhám và các sản phẩm hợp kim cho bóc vật liệu và hoàn thiện bề mặt. KTD tập trung vào mũi mài hợp kim cùng các dòng nhám thông dụng như đĩa nhám xếp, đĩa thay nhanh, bánh nhám và vật tư hoàn thiện. Sản phẩm Garryson được phát triển cho nhiều công việc từ mài thô, xử lý mối hàn đến làm sạch, pha bề mặt và hoàn thiện. Danh mục  phù hợp cho các nhà máy và xưởng cơ khí cần hệ vật tư mài đa dạng cho nhiều vật liệu và mức độ hoàn thiện khác nhau.',
+    dong_sp_vi  = array['Đĩa nhám xếp, đĩa thay nhanh và bánh nhám', 'Vật tư nhám, phụ kiện xử lý và hoàn thiện bề mặt']::text[],
+    noi_bat_vi  = array['Có lựa chọn cho mài thô, pha bề mặt và hoàn thiện', 'Dòng FlexiDisc phù hợp bề mặt cong và biên dạng']::text[],
+    ung_dung_vi = array['Mài mối hàn, mài cạnh và phá ba via', 'Làm sạch gỉ, sơn, lớp phủ cũ và chuẩn bị bề mặt', 'Hoàn thiện chi tiết trong cơ khí, ô tô và đóng tàu']::text[],
+    sort_order  = 8
+where slug = 'garryson';
+
+-- BEVELTOOLS
+update brands set
+    origin_vi   = 'Hà Lan',
+    origin_en   = 'Netherlands',
+    intro_vi    = 'Beveltools là nhà sản xuất máy vát mép và bo cạnh kim loại có trụ sở tại Hà Lan. Hãng phát triển các hệ máy cầm tay và để bàn kết hợp với đầu dao vát mép, bo tròn cạnh được thiết kế riêng cho từng mức công việc. KTD tập trung vào ba nhóm chính: máy vát mép và bo cạnh cầm tay, máy để bàn, cùng dao cắt và phụ kiện. Giải pháp Beveltools hướng tới việc tạo mép hàn, bo bán kính và phá ba via nhanh, ổn định trên thép, inox, nhôm và nhiều dạng chi tiết như tấm, ống, lỗ và kết cấu kim loại.',
+    dong_sp_vi  = array['Máy vát mép và bo cạnh cầm tay', 'Máy vát mép để bàn cho chi tiết đưa tới vị trí cắt', 'Đầu dao vát mép, dao bo cạnh và phụ kiện thay thế']::text[],
+    noi_bat_vi  = array['Nhiều nền tảng máy cho công việc nhẹ đến vát mép nặng', 'Thay đầu dao theo góc vát hoặc bán kính bo cạnh', 'Có giải pháp cho tấm, ống, lỗ và kết cấu kim loại']::text[],
+    ung_dung_vi = array['Chuẩn bị mép hàn trên thép, inox và nhôm', 'Bo tròn cạnh, phá ba via sau cắt laser hoặc plasma', 'Vát mép tấm, ống, lỗ và chi tiết kết cấu']::text[],
+    sort_order  = 9
+where slug = 'bevel-tools';
+
+-- DIPROFIL
+update brands set
+    origin_vi   = 'Thụy Điển',
+    origin_en   = 'Sweden',
+    intro_vi    = 'DIPROFIL là nhà sản xuất Thụy Điển chuyên máy và dụng cụ giũa, mài và đánh bóng chính xác, với lịch sử từ năm 1950. Hãng nổi tiếng trong lĩnh vực chế tạo khuôn nhờ hệ máy giũa/đánh bóng qua lại, dụng cụ kim cương và CBN, giũa chính xác và đá đánh bóng. KTD tập trung vào các dòng phục vụ trực tiếp cho hoàn thiện và sửa nguội khuôn, nơi người vận hành cần kiểm soát bề mặt và biên dạng ở mức tinh. Sản phẩm phù hợp cho khuôn ép nhựa, khuôn đúc, dụng cụ tạo hình và nhiều công việc cơ khí chính xác.',
+    dong_sp_vi  = array['Máy giũa và máy đánh bóng khuôn dạng qua lại', 'Giũa chính xác, đá đánh bóng và dụng cụ rà tinh', 'Dụng cụ kim cương và CBN cho mài, hoàn thiện']::text[],
+    noi_bat_vi  = array['Chuyên sâu cho hoàn thiện tinh khuôn và chi tiết chính xác', 'Hệ máy và dụng cụ hỗ trợ thao tác trên biên dạng phức tạp', 'Nhiều lựa chọn vật liệu mài theo công đoạn hoàn thiện']::text[],
+    ung_dung_vi = array['Giũa, rà và đánh bóng khuôn ép nhựa, khuôn đúc', 'Mài tinh, phá ba via và sửa chi tiết chính xác', 'Hoàn thiện mẫu và bề mặt có biên dạng khó tiếp cận']::text[],
+    sort_order  = 10
+where slug = 'diprofil';
+
+-- BUCHEM
+update brands set
+    origin_vi   = 'Đức',
+    origin_en   = 'Germany',
+    intro_vi    = 'Buchem là nhà sản xuất hóa chất kỹ thuật của Đức với hơn 40 năm kinh nghiệm cho ngành ép nhựa, chế tạo khuôn và bảo trì dụng cụ. KTD tập trung vào các sản phẩm phục vụ vệ sinh, bảo dưỡng khuôn và cụm trục vít của máy ép nhựa, bao gồm chất làm sạch cặn nhựa, chất tẩy dầu/mỡ, chống gỉ, bôi trơn và dung dịch hỗ trợ làm sạch bộ phận hóa dẻo. Các sản phẩm Buchem được phát triển và sản xuất tại Đức, hướng tới duy trì độ sạch của khuôn, hạn chế ăn mòn, giảm cặn bám và hỗ trợ quá trình đổi vật liệu hoặc màu trong sản xuất nhựa.',
+    dong_sp_vi  = array['Chất làm sạch khuôn, cặn nhựa và bộ phận hóa dẻo', 'Chất tẩy dầu mỡ, chống gỉ và bảo quản khuôn', 'Chất bôi trơn chốt đẩy, thanh trượt và cơ cấu khuôn']::text[],
+    noi_bat_vi  = array['Danh mục chuyên cho vệ sinh và bảo trì ngành ép nhựa', 'Có giải pháp xử lý cặn, dầu mỡ và vật liệu còn dư', 'Các dòng Interkor hỗ trợ làm sạch trục vít, xy lanh']::text[],
+    ung_dung_vi = array['Vệ sinh lòng khuôn và thiết bị khi bảo trì', 'Làm sạch khi đổi vật liệu hoặc màu trên máy ép nhựa']::text[],
+    sort_order  = 11
+where slug = 'buchem';
+
+-- ROCKLIN
+update brands set
+    origin_vi   = 'Hoa Kỳ',
+    origin_en   = 'USA',
+    intro_vi    = 'Rocklin Manufacturing là nhà sản xuất thiết bị công nghiệp của Hoa Kỳ. Trong phạm vi KTD cung cấp, Rocklin có hai dòng sản phẩm chính: Rocklinizer dùng để xử lý bề mặt kim loại và MoldMender dùng để sửa chữa khuôn thép. Rocklinizer đưa vật liệu từ điện cực lên vùng cần xử lý nhằm tăng khả năng chống mài mòn, tạo độ bám hoặc phục hồi kích thước chi tiết. MoldMender sử dụng công nghệ hàn vi mô nhiệt thấp để bổ sung vật liệu tại các vị trí khuôn bị hư hỏng. Hai dòng thiết bị phục vụ công việc bảo trì, sửa chữa cục bộ dụng cụ và khuôn ngay tại xưởng.',
+    dong_sp_vi  = array['Thiết bị xử lý bề mặt Rocklinizer', 'Thiết bị hàn vi mô sửa chữa khuôn MoldMender', 'Điện cực, vật liệu bổ sung và phụ kiện phù hợp.']::text[],
+    noi_bat_vi  = array['Rocklinizer xử lý cục bộ bề mặt bằng quá trình lắng đọng tia lửa điện', 'Có thể chọn vật liệu điện cực theo mục tiêu chống mòn, tạo độ bám hoặc phục hồi kích thước', 'MoldMender hàn vi mô với lượng nhiệt thấp, giúp kiểm soát vùng sửa chữa khuôn']::text[],
+    ung_dung_vi = array['Tăng khả năng chống mài mòn cho dụng cụ, chày và khuôn', 'Tạo độ bám cho bề mặt kẹp hoặc phục hồi vùng chi tiết bị mòn', 'Sửa đường phân khuôn, cạnh, góc, lỗ kim và vết xước trên khuôn thép']::text[],
+    sort_order  = 12
+where slug = 'rocklinizer';
+
+-- TSCHORN
+update brands set
+    origin_vi   = 'Đức',
+    origin_en   = 'Germany',
+    intro_vi    = 'Tschorn là nhà sản xuất Đức chuyên công nghệ đo và dò cho ngành gia công cắt gọt từ năm 1986. Trong phạm vi KTD cung cấp, sản phẩm tập trung vào đầu dò 3D, đầu dò tiếp xúc, dụng cụ dò cạnh và thiết bị xác định điểm 0 trên máy gia công. Các dụng cụ này hỗ trợ người vận hành xác lập vị trí chi tiết, cạnh phôi, tâm lỗ và mốc chiều cao trước hoặc trong quá trình gia công. Tschorn phát triển và sản xuất tại Đức, hướng tới độ chính xác, khả năng thao tác trực quan và độ bền trong môi trường xưởng cơ khí.',
+    dong_sp_vi  = array['Đầu dò 3D và đầu dò tiếp xúc trên máy gia công', 'Dụng cụ dò cạnh, căn tâm và kiểm tra vị trí phôi', 'Thiết bị xác định điểm 0 và mốc theo trục Z']::text[],
+    noi_bat_vi  = array['Dụng cụ chuyên cho thiết lập phôi và xác định tọa độ', 'Đầu dò 3D hỗ trợ dò theo cả ba trục X, Y, Z', 'Có nguyên lý dò cơ khí, quang học và tiếp xúc']::text[],
+    ung_dung_vi = array['Xác định điểm 0, dò cạnh và căn tâm lỗ', 'Căn chỉnh vị trí chi tiết trước khi gia công CNC', 'Kiểm tra mốc chiều cao và rút ngắn thao tác gá đặt']::text[],
+    sort_order  = 13
+where slug = 'tschorn';
+
+-- LENZKES
+update brands set
+    origin_vi   = 'Đức',
+    origin_en   = 'Germany',
+    intro_vi    = 'Lenzkes Spanntechnik là nhà sản xuất công nghệ gá kẹp của Đức, chuyên các hệ kẹp nhanh cho khuôn, đồ gá và chi tiết gia công. KTD tập trung vào bốn dòng chính gồm kẹp nhanh Multi-Quick, khung kẹp S- Series, kẹp cạnh và kẹp xích. Các giải pháp Lenzkes được thiết kế để tạo lực kẹp lớn với thao tác cơ khí gọn, đồng thời cho phép điều chỉnh linh hoạt theo chiều ngang và chiều cao ở nhiều dòng sản phẩm. Phạm vi ứng dụng trải từ ép nhựa, dập, đúc đến khoan, phay CNC và nhiều công việc gá kẹp trong xưởng cơ khí.',
+    dong_sp_vi  = array['Kẹp nhanh Multi-Quick và khung kẹp S-Series', 'Kẹp cạnh cho chi tiết cần thoáng bề mặt gia công', 'Kẹp xích cho chi tiết có hình dạng đặc thù']::text[],
+    noi_bat_vi  = array['Hệ kẹp cơ khí cho khuôn, đồ gá và phôi gia công', 'Có khả năng điều chỉnh vị trí ở các dòng kẹp chính', 'Thiết kế tạo lực kẹp lớn với thao tác gọn']::text[],
+    ung_dung_vi = array['Kẹp khuôn ép nhựa, khuôn cao su và khuôn dập', 'Gá phôi khi khoan, phay CNC hoặc mài', 'Giữ chi tiết có bề mặt hoặc biên dạng khó gá kẹp']::text[],
+    sort_order  = 14
+where slug = 'lenzkes';
+
+-- FIAM
+update brands set
+    origin_vi   = 'Ý',
+    origin_en   = 'Italy',
+    intro_vi    = 'Fiam là nhà sản xuất thiết bị siết và giải pháp lắp ráp công nghiệp của Ý, với lịch sử phát triển từ năm 1949. KTD tập trung vào các dòng tô vít công nghiệp cầm tay, tô vít cầm tay có cấp vít tự động và hệ thống siết tự động. Danh mục Fiam bao gồm giải pháp khí nén, điện và điện tử, từ thao tác bằng tay đến các mô- đun tích hợp trong dây chuyền. Các sản phẩm được phát triển để tăng tính lặp lại của quá trình siết, giảm thao tác lấy và đặt vít, đồng thời hỗ trợ năng suất và công thái học tại các trạm lắp ráp.',
+    dong_sp_vi  = array['Tô vít công nghiệp cầm tay khí nén, điện và điện tử', 'Tô vít cầm tay tích hợp hệ thống cấp vít tự động', 'Mô-đun và hệ thống siết tự động cho dây chuyền']::text[],
+    noi_bat_vi  = array['Nhiều công nghệ siết cho thao tác tay và tích hợp máy', 'Cấp vít tự động giảm thao tác lấy và đặt vít', 'Chú trọng lực siết, tính lặp lại và công thái học']::text[],
+    ung_dung_vi = array['Siết vít lặp lại tại trạm lắp ráp', 'Lắp ráp điện tử, gia dụng, ô tô và cụm cơ khí', 'Tích hợp cấp vít, siết vít vào máy và dây chuyền']::text[],
+    sort_order  = 15
+where slug = 'fiam';
+
+-- SLOKY
+update brands set
+    origin_vi   = 'Đài Loan',
+    origin_en   = 'Taiwan',
+    intro_vi    = 'Sloky là thương hiệu dụng cụ kiểm soát lực siết của Đài Loan, được phát triển từ nền tảng gia công chính xác của Chienfu-Tec. Dòng tô vít lực Sloky được thiết kế đặc biệt cho các ứng dụng gia công CNC, tiện và phay, nơi vít kẹp dao cần được siết lặp lại ở mô-men xác định. KTD cung cấp tô vít lực, bộ dụng cụ và phụ kiện như tay cầm, bộ chuyển đổi lực siết và đầu vít. Thiết kế mô-đun giúp đổi đầu vít nhanh, kiểm soát lực siết bằng bộ chuyển đổi định mức và hạn chế tình trạng siết quá lực gây hỏng vít hoặc dụng cụ.',
+    dong_sp_vi  = array['Tô vít lực và bộ dụng cụ siết lực cầm tay', 'Bộ chuyển đổi mô-men với nhiều mức lực siết', 'Tay cầm, đầu vít và phụ kiện thay thế theo ứng dụng']::text[],
+    noi_bat_vi  = array['Kiểm soát mô-men khi siết vít dụng cụ cắt', 'Bộ chuyển đổi được mã hóa màu để dễ nhận biết', 'Thiết kế mô-đun và cơ chế báo đạt mô-men']::text[],
+    ung_dung_vi = array['Siết vít mảnh dao trên dao tiện và dao phay CNC', 'Thay dao với lực siết lặp lại theo yêu cầu', 'Hạn chế hỏng vít và dụng cụ do siết quá lực']::text[],
+    sort_order  = 16
+where slug = 'sloky';
+
+-- TECHNOMARK
+update brands set
+    origin_vi   = 'Pháp',
+    origin_en   = 'France',
+    intro_vi    = 'Technomark là nhà sản xuất Pháp chuyên giải pháp đánh dấu và truy xuất công nghiệp, thành lập năm 2000. Hãng phát triển hai công nghệ chính là khắc chấm và khắc laser, với thiết bị dạng cầm tay, để bàn và tích hợp vào dây chuyền. KTD tập trung vào máy khắc chấm và máy khắc laser dùng để đánh dấu trực tiếp lên chi tiết công nghiệp. Hệ thống Technomark có thể tạo chữ, số, số sê-ri, logo, mốc thời gian, mã DataMatrix và mã QR trên nhiều vật liệu, giúp doanh nghiệp nhận diện chi tiết và xây dựng dữ liệu truy xuất trong quá trình sản xuất.',
+    dong_sp_vi  = array['Máy khắc chấm cầm tay, để bàn và tích hợp dây chuyền', 'Máy khắc laser dạng trạm và tích hợp sản xuất']::text[],
+    noi_bat_vi  = array['Hai công nghệ đánh dấu chính: khắc chấm và laser', 'Có cấu hình dùng tại xưởng hoặc tích hợp sản xuất', 'Hỗ trợ ký tự, logo và mã phục vụ truy xuất']::text[],
+    ung_dung_vi = array['Khắc số sê-ri, số lô, thông số và logo', 'Đánh dấu mã QR, DataMatrix để truy xuất', 'Đánh dấu chi tiết kim loại, nhựa tại xưởng hoặc dây chuyền']::text[],
+    sort_order  = 17
+where slug = 'technomark';
+
+-- TECNA
+update brands set
+    origin_vi   = 'Ý',
+    origin_en   = 'Italy',
+    intro_vi    = 'TECNA là nhà sản xuất Ý hoạt động từ năm 1972, nổi tiếng trong lĩnh vực hàn điện trở và pa lăng cân bằng công nghiệp. Trong phạm vi KTD cung cấp, sản phẩm TECNA tập trung vào hai mảng: pa lăng cân bằng cho dụng cụ/tải treo và thiết bị đo kiểm các thông số của quá trình hàn điện trở. Các máy đo của hãng có thể làm việc với nhiều đầu đo để kiểm tra dòng hàn, lực điện cực và các đại lượng liên quan; trong khi pa lăng cân bằng giúp treo và cân bằng dụng cụ, ống hoặc cáp tại trạm làm việc nhằm hỗ trợ an toàn và công thái học.',
+    dong_sp_vi  = array['Pa lăng cân bằng cho dụng cụ và tải treo', 'Thiết bị đo thông số quá trình hàn điện trở', 'Đầu đo và phụ kiện đo dòng hàn, lực điện cực']::text[],
+    noi_bat_vi  = array['Hai mảng phục vụ công thái học và kiểm soát hàn', 'Pa lăng hỗ trợ treo, cân bằng dụng cụ tại trạm', 'Thiết bị đo dùng cùng đầu đo theo đại lượng cần kiểm tra']::text[],
+    ung_dung_vi = array['Treo dụng cụ, ống và cáp trên dây chuyền lắp ráp', 'Đo dòng hàn, lực điện cực của hệ hàn điện trở', 'Kiểm tra, bảo trì và theo dõi chất lượng quá trình hàn']::text[],
+    sort_order  = 18
+where slug = 'tecna';
+
+-- RTC
+update brands set
+    origin_vi   = 'Thổ Nhĩ Kỳ',
+    origin_en   = 'Turkey',
+    intro_vi    = 'RTC là thương hiệu khớp nối nhanh của RTC Tec Bağlantı Elemanları Sanayi ve Ticaret A.Ş., có trụ sở tại Istanbul, Thổ Nhĩ Kỳ. Thành lập năm 2013, hãng phát triển và sản xuất khớp nối nhanh đơn, khớp nối đa đường cùng các giải pháp ống dẫn, bộ chia dòng và điều chỉnh lưu lượng. KTD tập trung vào các dòng sản phẩm cho khí nén, nước và thủy lực, đặc biệt ở những ứng dụng cần tháo lắp nhanh và quản lý nhiều đường môi chất. Sản phẩm RTC được dùng trong khuôn, máy móc và dây chuyền sản xuất để kết nối các đường môi chất, hỗ trợ rút ngắn thời gian thiết lập và kiểm soát lưu lượng.',
+    dong_sp_vi  = array['Khớp nối nhanh đơn cho nước, khí nén và thủy lực', 'Khớp nối đa đường cho nhiều đường môi chất', 'Bộ chia dòng, ống dẫn, bộ điều khiển lưu lượng và phụ kiện']::text[],
+    noi_bat_vi  = array['Danh mục kết nối nhanh cho nhiều môi chất công nghiệp', 'Khớp nối đa đường giúp giảm thời gian tháo lắp', 'Có hệ ống, bộ chia và bộ điều khiển đi kèm']::text[],
+    ung_dung_vi = array['Kết nối nước làm mát và điều nhiệt khuôn', 'Kết nối khí nén, thủy lực trên máy và đồ gá', 'Gom nhiều đường và kiểm soát lưu lượng trên dây chuyền']::text[],
+    sort_order  = 19
+where slug = 'rtc';
+
+-- -----------------------------------------------------------------------------
+-- MoldMender: thương hiệu con của ROCKLIN, không còn đứng riêng.
+--
+-- Ẩn chứ không xoá. Hãng này hiện không có sản phẩm nào nên ẩn đi là an toàn
+-- tuyệt đối; nếu sau này cần dựng lại thì chỉ việc bật visible lên.
+-- -----------------------------------------------------------------------------
+update brands set visible = false where slug = 'moldmender';
+
+-- Kiểm nhanh sau khi chạy:
+--   select count(*) from brands where visible;                  -- phải ra 19
+--   select origin_vi from brands where slug = 'rtc';            -- phải ra Thổ Nhĩ Kỳ
+--   select count(*) from brands where intro_vi is not null;     -- phải ra 19

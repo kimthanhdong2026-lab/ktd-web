@@ -127,7 +127,7 @@ export function SearchOverlay() {
           <button
             type="button"
             onClick={closeSearch}
-            className="flex-shrink-0 rounded-md bg-ink-100 px-3 py-2 text-xs font-semibold text-ink-500 hover:bg-ink-300"
+            className="flex-shrink-0 rounded-md bg-ink-100 px-3 py-2 text-[13px] font-semibold text-ink-500 hover:bg-ink-300"
           >
             Esc ✕
           </button>
