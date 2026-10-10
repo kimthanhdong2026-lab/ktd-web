@@ -2,10 +2,10 @@
 
 import Link from 'next/link'
 import Image from 'next/image'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { useStore } from './StoreProvider'
-import { COMPANY_HOTLINE, COMPANY_HOTLINE_TEL } from '@/lib/constants'
+import { PHONES } from '@/lib/constants'
 import { useLang } from './LangProvider'
 import { LOCALES, href as localeHref, stripLocale } from '@/lib/i18n'
 import { cx } from '@/lib/utils'
@@ -35,6 +35,21 @@ export function Header({ brands }: { brands: Brand[] }) {
   // đang đọc thay vì quăng họ về trang chủ.
   const other = LOCALES.find((l) => l !== lang)!
   const otherHref = localeHref(stripLocale(pathname), other)
+  const router = useRouter()
+  /**
+   * Giữ cả bộ lọc và từ khoá khi đổi ngôn ngữ — mục TC02 của "Sửa web 5".
+   *
+   * Đọc phần ?... của địa chỉ ngay lúc bấm chứ không dùng useSearchParams:
+   * Header nằm trong layout, gọi hook đó ở đây sẽ buộc MỌI trang bỏ dựng sẵn
+   * trên máy chủ. Liên kết vẫn mang href thật nên mở thẻ mới hay tắt
+   * JavaScript vẫn sang đúng trang, chỉ thiếu bộ lọc.
+   */
+  const giuBoLoc = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    const qs = window.location.search
+    if (!qs || e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return
+    e.preventDefault()
+    router.push(otherHref + qs)
+  }
   const { openSearch, openRfq, cartCount, showToast } = useStore()
   const [scrolled, setScrolled] = useState(false)
   const [mobileNavOpen, setMobileNavOpen] = useState(false)
@@ -133,17 +148,18 @@ export function Header({ brands }: { brands: Brand[] }) {
         <div className="ml-auto flex items-center gap-2 md:gap-3">
           {/* Hotline: chỉ hiện khi còn đủ chỗ, để thanh không bị chật */}
           <a
-            href={`tel:${COMPANY_HOTLINE_TEL}`}
+            href={`tel:${PHONES.hotline.tel}`}
             className="hidden items-center gap-1.5 whitespace-nowrap text-sm font-semibold text-ink-700 hover:text-ktd-600 tel:flex"
           >
             <span aria-hidden="true">☎</span>
-            {COMPANY_HOTLINE}
+            {PHONES.hotline[lang]}
           </a>
 
           {/* Chuyển sang trang tương ứng ở ngôn ngữ kia, không quăng về trang chủ */}
           <Link
             href={otherHref}
             hrefLang={other}
+            onClick={giuBoLoc}
             aria-label={t.header.switchTo}
             className="hidden rounded-sm border border-ink-300 px-2 py-1 text-[13px] font-semibold tracking-[0.05em] hover:border-ktd-600 md:inline-block"
           >
@@ -269,13 +285,14 @@ export function Header({ brands }: { brands: Brand[] }) {
             )}
 
             <div className="flex items-center justify-between border-t border-hairline py-3">
-              <a href={`tel:${COMPANY_HOTLINE_TEL}`} className="text-sm font-semibold text-ink-700">
-                ☎ {COMPANY_HOTLINE}
+              <a href={`tel:${PHONES.hotline.tel}`} className="text-sm font-semibold text-ink-700">
+                ☎ {PHONES.hotline[lang]}
               </a>
               <div className="flex items-center gap-4">
                 <Link
                   href={otherHref}
                   hrefLang={other}
+                  onClick={giuBoLoc}
                   aria-label={t.header.switchTo}
                   className="rounded-sm border border-ink-300 px-2 py-1 text-[13px] font-semibold tracking-[0.05em]"
                 >

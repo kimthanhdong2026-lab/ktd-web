@@ -1,7 +1,7 @@
 [
  {
   "stt": 1,
-  "name": "Dụng cụ cắt an toàn",
+  "name": "Dụng cụ an toàn lao động",
   "sub": "Dao an toàn, kéo an toàn, lưỡi dao & phụ kiện",
   "children": [
    "Dao an toàn",
@@ -34,7 +34,7 @@
  {
   "stt": 3,
   "name": "Mài, nhám & hoàn thiện bề mặt",
-  "sub": "Máy mài khí nén, mũi mài carbide, đĩa nhám, bánh nhám & vật tư mài",
+  "sub": "Máy mài khí nén, mũi mài hợp kim, đĩa nhám, bánh nhám & vật tư mài",
   "children": [
    "Máy mài & máy chà nhám khí nén",
    "Mũi mài hợp kim",
@@ -61,8 +61,8 @@
  },
  {
   "stt": 5,
-  "name": "Khuôn mẫu & bảo trì khuôn",
-  "sub": "Máy giũa, dụng cụ đánh bóng khuôn, hóa chất bảo trì & thiết bị sửa chữa khuôn",
+  "name": "Dụng cụ sửa chữa & bảo trì khuôn",
+  "sub": "Máy giũa, dụng cụ đánh bóng, hóa chất vệ sinh bảo dưỡng & thiết bị sửa chữa khuôn",
   "children": [
    "Máy giũa & máy đánh bóng khuôn",
    "Giũa, đá đánh bóng, dụng cụ kim cương & CBN",
@@ -77,8 +77,8 @@
  },
  {
   "stt": 6,
-  "name": "Đo kiểm & xác định điểm 0",
-  "sub": "Đầu dò 3D, dò cạnh, đầu dò máy & thiết bị xác định điểm 0",
+  "name": "Thiết bị đo & định vị gia công",
+  "sub": "Đầu dò 3D, dụng cụ dò cạnh, thiết bị xác định điểm 0 & đo trên máy gia công",
   "children": [
    "Đầu dò 3D & đầu dò tiếp xúc",
    "Dụng cụ dò cạnh",
@@ -90,8 +90,8 @@
  },
  {
   "stt": 7,
-  "name": "Gá kẹp & định vị gia công",
-  "sub": "Kẹp nhanh, khung kẹp, kẹp cạnh, hệ thống zero-point & phụ kiện gá kẹp",
+  "name": "Hệ thống gá kẹp công nghiệp",
+  "sub": "Kẹp nhanh, khung kẹp, kẹp cạnh & kẹp xích cho khuôn, phôi và chi tiết gia công",
   "children": [
    "Kẹp nhanh Multi-Quick",
    "Khung kẹp S-Series",
@@ -104,8 +104,8 @@
  },
  {
   "stt": 8,
-  "name": "Siết lực & lắp ráp công nghiệp",
-  "sub": "Tô vít công nghiệp, cấp vít tự động, hệ thống siết & dụng cụ kiểm soát lực",
+  "name": "Thiết bị siết & lắp ráp công nghiệp",
+  "sub": "Tô vít công nghiệp, hệ thống siết tự động, dụng cụ siết lực & pa lăng cân bằng",
   "children": [
    "Tô vít công nghiệp cầm tay",
    "Tô vít cầm tay cấp vít tự động",
@@ -121,8 +121,8 @@
  },
  {
   "stt": 9,
-  "name": "Đánh dấu & truy xuất công nghiệp",
-  "sub": "Khắc chấm, khắc laser, máy di động, để bàn & tích hợp dây chuyền",
+  "name": "Thiết bị đánh dấu & truy xuất công nghiệp",
+  "sub": "Máy khắc số, mã, logo, mã QR, DataMatrix trên kim loại, nhựa và chi tiết công nghiệp",
   "children": [
    "Máy khắc chấm",
    "Máy khắc laser"
@@ -133,8 +133,8 @@
  },
  {
   "stt": 10,
-  "name": "Hàn điện trở & cân bằng tải",
-  "sub": "Máy/thiết bị đo kiểm hàn điện trở, bộ cân bằng tải & phụ kiện",
+  "name": "Thiết bị đo & kiểm tra hàn điện trở",
+  "sub": "Thiết bị đo các thông số của máy hàn điểm, hàn lồi và các hệ thống hàn điện trở",
   "children": [
    "Thiết bị đo thông số hàn",
    "Phụ kiện đo"
@@ -145,8 +145,8 @@
  },
  {
   "stt": 11,
-  "name": "Phủ carbide & chống mài mòn",
-  "sub": "Thiết bị phủ carbide, điện cực & vật tư tăng độ bám, chống mài mòn kim loại",
+  "name": "Thiết bị xử lý & phục hồi bề mặt kim loại",
+  "sub": "Thiết bị phủ vật liệu cứng, chống mài mòn, tạo độ nhám & phục hồi kích thước bề mặt",
   "children": [
    "Thiết bị Rocklinizer",
    "Điện cực & phụ kiện Rocklinizer"
@@ -158,7 +158,7 @@
  {
   "stt": 12,
   "name": "Khớp nối nhanh & phụ kiện môi chất",
-  "sub": "Khớp nối đơn/đa, manifold, ống, điều khiển dòng & phụ kiện kết nối",
+  "sub": "Khớp nối khí, nước, thủy lực; bộ chia dòng, ống dẫn & phụ kiện môi chất",
   "children": [
    "Khớp nối nhanh đơn",
    "Khớp nối nhanh đa đường",

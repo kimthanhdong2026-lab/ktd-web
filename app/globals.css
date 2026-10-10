@@ -24,6 +24,15 @@
 }
 
 @layer components {
+  /* Cột chữ ở đầu trang thương hiệu: chừa chỗ cho ảnh banner bám mép phải màn
+     hình (rộng 40vw, tối đa 640px). Phần ảnh lấn vào khung nội dung bằng bề
+     rộng ảnh trừ lề phải của khung; cộng thêm 3rem khoảng thở. */
+  @media (min-width: 1140px) {
+    .ktd-brand-intro {
+      max-width: calc(100% - (min(40vw, 640px) - max((100vw - 1360px) / 2, 2.5rem)) - 3rem);
+    }
+  }
+
   .container-ktd {
     @apply mx-auto w-full max-w-container px-5 sm:px-6 md:px-8 lg:px-10;
   }

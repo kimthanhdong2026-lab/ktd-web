@@ -1,8 +1,7 @@
 'use client'
 
-import Link from 'next/link'
-import { usePathname, useSearchParams } from 'next/navigation'
-import { cx } from '@/lib/utils'
+import { useEffect, useState } from 'react'
+import { usePathname, useRouter } from 'next/navigation'
 
 export interface Nhom {
   slug: string
@@ -12,62 +11,124 @@ export interface Nhom {
 }
 
 /**
- * Bộ lọc nhóm sản phẩm trên trang thương hiệu.
+ * Thanh tìm và lọc sản phẩm trên trang riêng của một thương hiệu.
  *
- * Chỉ liệt kê những nhóm mà CHÍNH HÃNG NÀY có hàng — trang Karnasch hiện 6
- * nhóm, không bày cả 41 nhóm của toàn site. Đây là yêu cầu Mr Nam nêu rõ.
+ * Mục TH08 của "Sửa web 5" thay dải nút nhóm của bản trước bằng đúng bố cục
+ * này: ô tìm theo tên hoặc mã, ô chọn nhóm sản phẩm, nút Tìm kiếm; bên dưới là
+ * số sản phẩm đang hiện và lối xoá tìm kiếm.
  *
- * Chưa chọn gì thì "Tất cả" đang bật và trang hiện toàn bộ sản phẩm của hãng.
+ * Ô chọn chỉ liệt kê những NHÓM NHỎ mà chính hãng này có hàng — trang Karnasch
+ * hiện 6 nhóm, không bày cả 41 nhóm của toàn site.
  *
- * Dùng Link chứ không dùng nút bấm kèm JavaScript: mỗi lựa chọn là một địa chỉ
- * thật, nên khách gửi link cho đồng nghiệp vẫn ra đúng cái họ đang xem, và máy
- * tìm kiếm đọc được.
+ * Mỗi lựa chọn vẫn là một địa chỉ thật (?q=...&nhom=...), nên khách gửi link
+ * cho đồng nghiệp vẫn ra đúng cái họ đang xem.
  */
 export function BrandGroupFilter({
   nhoms,
   dangChon,
+  tuKhoa,
   nhan,
-  nhanTatCa,
 }: {
   nhoms: Nhom[]
   dangChon?: string
-  nhan: string
-  nhanTatCa: string
+  tuKhoa: string
+  nhan: {
+    placeholder: string
+    nhom: string
+    tatCa: string
+    tim: string
+    hienThi: string
+    xoa: string
+  }
 }) {
   const pathname = usePathname()
-  const params = useSearchParams()
+  const router = useRouter()
+  const [q, setQ] = useState(tuKhoa)
+  const [nhom, setNhom] = useState(dangChon ?? '')
 
-  const diaChi = (slug?: string) => {
-    const sp = new URLSearchParams(params.toString())
-    if (slug) sp.set('nhom', slug)
-    else sp.delete('nhom')
-    const q = sp.toString()
-    return q ? `${pathname}?${q}` : pathname
+  // Bấm Back/Forward thì ô nhập phải theo địa chỉ trang.
+  useEffect(() => {
+    setQ(tuKhoa)
+    setNhom(dangChon ?? '')
+  }, [tuKhoa, dangChon])
+
+  const di = (tu: string, nh: string) => {
+    const sp = new URLSearchParams()
+    if (tu.trim()) sp.set('q', tu.trim())
+    if (nh) sp.set('nhom', nh)
+    const qs = sp.toString()
+    router.push(qs ? `${pathname}?${qs}` : pathname, { scroll: false })
   }
 
-  const o = (dang: boolean) =>
-    cx(
-      'inline-flex items-center gap-2 rounded-full border px-4 py-2 text-[15px] transition-colors',
-      dang
-        ? 'border-ktd-600 bg-ktd-600 font-semibold text-white'
-        : 'border-hairline bg-white font-medium text-ink-700 hover:border-ktd-600 hover:text-ktd-600'
-    )
+  const dangLoc = !!tuKhoa || !!dangChon
 
   return (
     <div className="mb-7">
-      <p className="label-caps mb-3 text-ink-900">▸ {nhan}</p>
-      <div className="flex flex-wrap gap-2">
-        <Link href={diaChi()} scroll={false} className={o(!dangChon)}>
-          {nhanTatCa}
-        </Link>
-        {nhoms.map((n) => (
-          <Link key={n.slug} href={diaChi(n.slug)} scroll={false} className={o(dangChon === n.slug)}>
-            {n.name}
-            <span className={cx('font-mono text-[13px]', dangChon === n.slug ? 'text-white/70' : 'text-ink-500')}>
-              {n.count}
-            </span>
-          </Link>
-        ))}
+      <form
+        role="search"
+        onSubmit={(e) => {
+          e.preventDefault()
+          di(q, nhom)
+        }}
+        className="flex flex-col gap-3 md:flex-row"
+      >
+        <label className="flex min-h-[48px] flex-1 items-center gap-3 rounded-md border border-ink-300 bg-white px-4 focus-within:border-ktd-600">
+          <span aria-hidden="true" className="text-ink-500">
+            🔍
+          </span>
+          <span className="sr-only">{nhan.placeholder}</span>
+          <input
+            type="search"
+            value={q}
+            onChange={(e) => setQ(e.target.value)}
+            placeholder={nhan.placeholder}
+            className="min-w-0 flex-1 border-none bg-transparent text-[15px] text-ink-900 outline-none placeholder:text-ink-500"
+          />
+        </label>
+
+        {/* Hãng chỉ có một nhóm thì ô chọn không có gì để chọn — bỏ đi. */}
+        {nhoms.length > 1 && (
+          <select
+            value={nhom}
+            aria-label={nhan.nhom}
+            // Đổi nhóm là lọc ngay, không bắt khách bấm thêm nút Tìm kiếm.
+            onChange={(e) => {
+              setNhom(e.target.value)
+              di(q, e.target.value)
+            }}
+            className="min-h-[48px] cursor-pointer rounded-md border border-ink-300 bg-white px-3.5 text-[15px] text-ink-900 outline-none focus:border-ktd-600 md:w-[300px]"
+          >
+            <option value="">{nhan.tatCa}</option>
+            {nhoms.map((n) => (
+              <option key={n.slug} value={n.slug}>
+                {n.name}
+              </option>
+            ))}
+          </select>
+        )}
+
+        <button type="submit" className="btn-primary min-h-[48px] md:w-[150px]">
+          {nhan.tim}
+        </button>
+      </form>
+
+      <div className="mt-3 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 text-[15px]">
+        <p className="text-ink-600" aria-live="polite">
+          {nhan.hienThi}
+        </p>
+        {dangLoc && (
+          <button
+            type="button"
+            onClick={() => {
+              setQ('')
+              setNhom('')
+              di('', '')
+            }}
+            className="text-ink-700 underline hover:text-ktd-600"
+          >
+            {nhan.xoa}
+          </button>
+        )}
       </div>
     </div>
   )

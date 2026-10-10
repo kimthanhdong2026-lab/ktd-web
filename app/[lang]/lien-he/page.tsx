@@ -3,14 +3,11 @@ import { DEFAULT_LOCALE, dict, isLocale, type Locale } from '@/lib/i18n'
 import { OfficeMap } from '@/components/contact/OfficeMap'
 import {
   COMPANY_EMAIL,
-  COMPANY_HOTLINE,
-  COMPANY_HOTLINE_2,
-  COMPANY_HOTLINE_TEL,
+  PHONES,
   COMPANY_NAME,
   COMPANY_NAME_UPPER,
   COMPANY_PHONE,
-  COMPANY_PHONE_TEL,
-  COMPANY_WEBSITE,
+  COMPANY_WEBSITES,
   OFFICES,
   WORKING_HOURS,
 } from '@/lib/constants'
@@ -61,18 +58,21 @@ export default function ContactPage({ params }: { params: { lang: string } }) {
           <ul className="flex flex-col gap-2.5 text-[15px] text-ink-700">
             <li>
               ☎ {t.contact.phone}:{' '}
-              <a href={`tel:${COMPANY_PHONE_TEL}`} className="font-bold">
-                {COMPANY_PHONE}
+              <a href={`tel:${PHONES.phone.tel}`} className="font-bold">
+                {PHONES.phone[lang]}
               </a>
             </li>
             <li>
               💬 {t.contact.hotline1}:{' '}
-              <a href={`tel:${COMPANY_HOTLINE_TEL}`} className="font-bold">
-                {COMPANY_HOTLINE}
+              <a href={`tel:${PHONES.hotline.tel}`} className="font-bold">
+                {PHONES.hotline[lang]}
               </a>
             </li>
             <li>
-              💬 {t.contact.hotline2}: <b>{COMPANY_HOTLINE_2}</b>
+              💬 {t.contact.hotline2}:{' '}
+              <a href={`tel:${PHONES.hotline2.tel}`} className="font-bold">
+                {PHONES.hotline2[lang]}
+              </a>
             </li>
             <li>
               ✉ {t.contact.email}:{' '}
@@ -81,7 +81,7 @@ export default function ContactPage({ params }: { params: { lang: string } }) {
               </a>
             </li>
             <li>
-              🌐 {t.contact.website}: <b>{COMPANY_WEBSITE}</b>
+              🌐 {t.contact.website}: <b>{COMPANY_WEBSITES.join(' · ')}</b>
             </li>
             <li className="pt-1 text-ink-500">
               {t.contact.hours}

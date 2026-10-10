@@ -26,8 +26,8 @@ export const vi = {
   },
 
   hero: {
-    badge: 'GIẢI PHÁP TỐI ƯU · THƯƠNG HIỆU UY TÍN · ĐỒNG HÀNH DÀI HẠN',
-    badgeShort: 'TỐI ƯU · UY TÍN · DÀI HẠN',
+    badge: 'GIẢI PHÁP PHÙ HỢP – THƯƠNG HIỆU UY TÍN – ĐỒNG HÀNH DÀI HẠN',
+    badgeShort: 'PHÙ HỢP – UY TÍN – DÀI HẠN',
     title: 'Phân phối dụng cụ & thiết bị công nghiệp',
     subtitle:
       'Hợp tác trực tiếp với hãng sản xuất · Tư vấn sản phẩm phù hợp · Hỗ trợ nhanh chóng',
@@ -49,27 +49,32 @@ export const vi = {
     heading: (n: number) => `${n} thương hiệu quốc tế chúng tôi đang phân phối`,
     intro:
       'Mỗi thương hiệu Kim Thành Đông phân phối đảm nhiệm một thế mạnh chuyên biệt. Khi kết hợp lại, các thương hiệu này tạo thành một hệ sản phẩm bổ trợ xuyên suốt nhiều công đoạn của quá trình sản xuất công nghiệp.',
-    cta: 'Xem tất cả sản phẩm theo thương hiệu →',
+    cta: 'Xem tất cả sản phẩm →',
     viewProducts: (name: string) => `Xem sản phẩm ${name} →`,
     productsOf: (name: string) => `Sản phẩm ${name}`,
   },
 
   categories: {
-    heading: 'Danh mục sản phẩm',
+    heading: 'Bạn đang cần loại thiết bị nào?',
   },
 
   brandPage: {
     navLabel: 'THƯƠNG HIỆU',
     listHeading: '19 thương hiệu quốc tế chúng tôi đang phân phối',
-    listSub: 'Mỗi thương hiệu đảm nhiệm một thế mạnh chuyên biệt. Chọn một hãng để xem đầy đủ dòng sản phẩm KTĐ cung cấp.',
+    listSub: 'Mỗi thương hiệu đảm nhiệm một thế mạnh chuyên biệt. Chọn một hãng để xem đầy đủ dòng sản phẩm KTD cung cấp.',
     from: (xu: string) => `Thương hiệu đến từ ${xu}`,
-    dongSp: 'Dòng sản phẩm KTĐ cung cấp',
+    dongSp: 'Dòng sản phẩm KTD cung cấp',
     noiBat: 'Điểm nổi bật',
     ungDung: 'Ứng dụng tiêu biểu',
     productsHeading: (ten: string) => `Sản phẩm ${ten}`,
     filterLabel: 'Nhóm sản phẩm',
-    filterAll: 'Tất cả',
-    empty: 'Hãng này chưa có sản phẩm trên website. Liên hệ KTĐ để được tư vấn.',
+    filterAll: 'Tất cả nhóm sản phẩm',
+    searchPlaceholder: (ten: string) => `Nhập tên hoặc mã sản phẩm ${ten}…`,
+    searchButton: 'Tìm kiếm',
+    showing: (n: number) => `Hiển thị ${n} sản phẩm`,
+    clear: 'Xóa tìm kiếm và bộ lọc',
+    noMatch: 'Không có sản phẩm nào khớp. Thử từ khóa khác hoặc chọn nhóm khác.',
+    empty: 'Hãng này chưa có sản phẩm trên website. Liên hệ KTD để được tư vấn.',
     viewAll: (ten: string) => `Xem tất cả sản phẩm ${ten}`,
     count: (n: number) => `${n} sản phẩm`,
   },
@@ -104,7 +109,7 @@ export const vi = {
   },
 
   why: {
-    heading: 'Vì sao chọn Kim Thành Đông',
+    heading: 'Vì sao chọn Kim Thành Đông?',
     items: [
       {
         title: 'Thương hiệu uy tín',
@@ -171,9 +176,11 @@ export const vi = {
       `Đang hiện ${shown} trong ${total} sản phẩm. Dùng bộ lọc để thu hẹp kết quả.`,
     apply: (n: number) => `Áp dụng (${n} sản phẩm)`,
     viewAllOf: (name: string) => `Xem tất cả sản phẩm ${name} →`,
-    emptyTitle: 'Không tìm thấy sản phẩm phù hợp',
-    emptyBody: 'Thử bỏ bớt bộ lọc, hoặc để kỹ sư của chúng tôi tìm giúp bạn.',
-    emptyCta: 'Nhờ kỹ sư tìm giúp',
+    emptyTitle: 'Chưa tìm thấy sản phẩm phù hợp',
+    emptyBody:
+      'Bạn hãy thử từ khóa khác hoặc bỏ bớt bộ lọc. Nếu chưa tìm được sản phẩm cần mua, hãy gửi thông tin chi tiết sản phẩm bạn cần để KTD kiểm tra khả năng cung cấp.',
+    emptyCta: 'Gửi yêu cầu tìm hàng',
+    emptyHint: 'Bạn có thể gửi yêu cầu ngay cả khi sản phẩm chưa có trên website.',
     emptyNote: 'Nhờ kỹ sư tư vấn sản phẩm phù hợp với nhu cầu của tôi.',
     metaTitle: 'Sản phẩm — Thiết bị công nghiệp chính hãng',
     metaDesc: (brands: number, items: number) =>
@@ -248,8 +255,44 @@ export const vi = {
     remove: (part: string) => `Xóa ${part}`,
     added: (name: string) => `Đã thêm ${name} vào yêu cầu báo giá`,
     errName: 'Vui lòng nhập họ tên.',
+    errCompany: 'Vui lòng nhập tên công ty.',
     errPhone: 'Vui lòng nhập số điện thoại.',
     errEmail: 'Email chưa đúng định dạng.',
+    errEmailRequired: 'Vui lòng nhập email.',
+    subtitle: 'Chúng tôi sẽ phản hồi sớm nhất.',
+    findTitle: 'Gửi yêu cầu tìm hàng',
+    findSubtitle:
+      'Mô tả sản phẩm bạn cần: mã hàng, tên hãng, thông số hoặc hình ảnh. KTD sẽ kiểm tra khả năng cung cấp và phản hồi.',
+    findNote: 'Sản phẩm cần tìm',
+    findNotePlaceholder: 'Mã hàng, tên hãng, thông số, số lượng dự kiến…',
+    findSubmit: 'Gửi yêu cầu tìm hàng',
+    errNote: 'Vui lòng mô tả sản phẩm bạn cần tìm, hoặc đính kèm tệp.',
+    notePlaceholder: 'Yêu cầu riêng, thời hạn giao, thông số cần tư vấn…',
+    emptyCart: 'Chưa có sản phẩm. Thêm sản phẩm từ trang danh mục, hoặc mô tả nhu cầu ở ô ghi chú bên dưới.',
+    addMore: '+ Thêm sản phẩm khác',
+    attach: 'Đính kèm tệp',
+    attachHint: (n: number, mb: number) => `Tối đa ${n} tệp, mỗi tệp ${mb} MB. Nhận Word, Excel, PDF và hình ảnh.`,
+    attachTooMany: (n: number) => `Chỉ đính kèm được tối đa ${n} tệp.`,
+    attachTooBig: (ten: string, mb: number) => `"${ten}" lớn hơn ${mb} MB nên chưa thêm được.`,
+    attachBadType: (ten: string) => `"${ten}" không phải Word, Excel, PDF hoặc hình ảnh.`,
+    removeFile: (ten: string) => `Bỏ tệp ${ten}`,
+    qty: (part: string) => `Số lượng ${part}`,
+    required: 'bắt buộc',
+    sentHeading: 'Đã gửi yêu cầu thành công!',
+    sentThanks: 'Chúng tôi sẽ liên hệ quý khách hàng trong thời gian sớm nhất. Trân trọng cảm ơn.',
+    codeLabel: 'Mã yêu cầu:',
+    summaryItems: (sp: number, dv: number) => `${sp} sản phẩm · ${dv} đơn vị`,
+    summaryGeneral: 'Yêu cầu tư vấn chung',
+    summaryFind: 'Yêu cầu tìm hàng',
+    summaryFiles: (n: number) => `${n} tệp đính kèm`,
+    continueBrowsing: 'Tiếp tục xem sản phẩm',
+    close: 'Đóng',
+    failTitle: 'Chưa gửi được yêu cầu',
+    failBody: (phone: string, email: string) =>
+      `Yêu cầu của bạn CHƯA được gửi đi. Vui lòng bấm gửi lại, hoặc liên hệ trực tiếp ${phone} · ${email}.`,
+    failUpload: 'Chưa tải được tệp đính kèm. Vui lòng thử lại, hoặc bỏ bớt tệp rồi gửi.',
+    failInvalid: 'Thông tin chưa hợp lệ. Vui lòng kiểm tra lại các ô có dấu *.',
+    retry: 'Gửi lại',
   },
 
   footer: {
@@ -349,8 +392,9 @@ export const vi = {
     email: 'Email',
     website: 'Website',
     hours: 'Giờ làm việc:',
-    workingHours: ['7h30 – 17h00, Thứ 2 đến Thứ 6', '7h30 – 11h30, Thứ 7'],
-    mapPlaceholder: '[ BẢN ĐỒ NHÚNG — SEAVIEW 4 ]',
+    workingHours: ['7:30–11:30 & 13:00–17:00, Thứ 2 đến Thứ 6', '7:30–11:30, Thứ 7'],
+    mapTitle: 'Bản đồ',
+    openMap: 'Mở trong Google Maps',
   },
 
   cta: {

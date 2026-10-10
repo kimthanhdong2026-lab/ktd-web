@@ -13,14 +13,48 @@ export const COMPANY_HOTLINE_2 = '0974 516 416'
 export const COMPANY_HOTLINE_2_TEL = '0974516416'
 export const COMPANY_EMAIL = 'sales@kimthanhdong.com'
 export const COMPANY_WEBSITE = 'kimthanhdong.vn'
+/**
+ * Hai tên miền hiện ở trang Liên hệ — mục LH03 của "Sửa web 5". Website này
+ * sau khi xây xong sẽ trỏ về kimthanhdong.com (KTD xác nhận ngày 10/10/2026).
+ */
+export const COMPANY_WEBSITES = ['kimthanhdong.vn', 'kimthanhdong.com']
+
+/**
+ * Số điện thoại theo ngôn ngữ — mục LH02 của "Sửa web 5".
+ *
+ * Bản tiếng Anh hiện dạng quốc tế +84 để hãng và khách nước ngoài gọi được;
+ * bản tiếng Việt giữ số 0 đầu như khách trong nước vẫn quen. Đường dẫn tel:
+ * luôn dùng dạng +84 vì dạng đó gọi được từ cả trong lẫn ngoài nước.
+ */
+export const PHONES = {
+  phone: { vi: '02543 627760', en: '+84 254 3627 760', tel: '+842543627760' },
+  hotline: { vi: '0914 897 227', en: '+84 914 897 227', tel: '+84914897227' },
+  hotline2: { vi: '0974 516 416', en: '+84 974 516 416', tel: '+84974516416' },
+} as const
+
+/**
+ * Điểm ghim bản đồ cho bốn địa chỉ ở trang Liên hệ, cùng thứ tự với
+ * [REGISTERED_OFFICE, ...OFFICES] — mục LH05 của "Sửa web 5".
+ *
+ * Văn phòng làm việc dùng TOẠ ĐỘ do KTD gửi ngày 10/10/2026
+ * (https://maps.app.goo.gl/W4wLXncxLSnqsjA8A). Ba địa chỉ còn lại chưa có
+ * đường dẫn nên tìm theo chữ địa chỉ — ghim có thể lệch vài chục mét. Khi KTD
+ * gửi thêm đường dẫn thì thay chuỗi địa chỉ bằng "vĩ độ,kinh độ".
+ */
+export const MAP_QUERIES = [
+  '444A Bình Giã, Phường Tam Thắng, Thành phố Hồ Chí Minh',
+  '10.376681,107.113301',
+  '326 Võ Văn Hát, Phường Long Trường, Thành phố Hồ Chí Minh',
+  'Ruby City CT1, Phường Việt Hưng, Hà Nội',
+]
 export const ZALO_URL = 'https://zalo.me/0914897227'
 
 export const COMPANY_INTRO =
   'Kim Thành Đông trực tiếp hợp tác với các nhà sản xuất quốc tế để phân phối dụng cụ, thiết bị và sản phẩm công nghiệp tại thị trường Việt Nam.'
 
 export const WORKING_HOURS = [
-  '7h30 – 17h00, Thứ 2 đến Thứ 6',
-  '7h30 – 11h30, Thứ 7',
+  '7:30–11:30 & 13:00–17:00, Thứ 2 đến Thứ 6',
+  '7:30–11:30, Thứ 7',
 ]
 
 /** Trụ sở đăng ký kinh doanh — khác địa chỉ văn phòng làm việc bên dưới. */
@@ -53,9 +87,9 @@ export const NAV_ITEMS = [
  */
 export const FEATURED_CATEGORIES = ['mai-hoan-thien', 'cat-got-cnc', 'an-toan', 'kep-khuon-phoi']
 
-export const HERO_BADGE = 'GIẢI PHÁP TỐI ƯU · THƯƠNG HIỆU UY TÍN · ĐỒNG HÀNH DÀI HẠN'
+export const HERO_BADGE = 'GIẢI PHÁP PHÙ HỢP – THƯƠNG HIỆU UY TÍN – ĐỒNG HÀNH DÀI HẠN'
 /** Bản rút gọn cho điện thoại — câu đầy đủ 56 ký tự không thể nằm một dòng. */
-export const HERO_BADGE_SHORT = 'TỐI ƯU · UY TÍN · DÀI HẠN'
+export const HERO_BADGE_SHORT = 'PHÙ HỢP – UY TÍN – DÀI HẠN'
 
 export const HERO_TITLE = 'Phân phối dụng cụ & thiết bị công nghiệp'
 export const HERO_SUBTITLE =
@@ -69,14 +103,14 @@ export const HERO_CHIPS = [
   'Máy đánh dấu',
 ]
 
-export const CATEGORIES_HEADING = 'Danh mục sản phẩm'
+export const CATEGORIES_HEADING = 'Bạn đang cần loại thiết bị nào?'
 
 export const BRANDS_EYEBROW = 'Phân phối chính hãng'
 
 export const BRANDS_INTRO =
   'Mỗi thương hiệu Kim Thành Đông phân phối đảm nhiệm một thế mạnh chuyên biệt. Khi kết hợp lại, các thương hiệu này tạo thành một hệ sản phẩm bổ trợ xuyên suốt nhiều công đoạn của quá trình sản xuất công nghiệp.'
 
-export const BRANDS_CTA = 'Xem tất cả sản phẩm theo thương hiệu →'
+export const BRANDS_CTA = 'Xem tất cả sản phẩm →'
 
 export const WHY_ITEMS = [
   {
@@ -169,9 +203,9 @@ export const ABOUT_TIMELINE = [
  * Khi có đường dẫn thật thì sửa đúng ở đây, không phải lục trong giao diện.
  */
 export const MANG_XA_HOI = [
-  { ten: 'Facebook', icon: 'f', href: 'https://www.facebook.com' },
-  { ten: 'YouTube', icon: '▶', href: 'https://www.youtube.com' },
-  { ten: 'LinkedIn', icon: 'in', href: 'https://www.linkedin.com' },
+  { ten: 'Facebook', href: 'https://www.facebook.com' },
+  { ten: 'YouTube', href: 'https://www.youtube.com' },
+  { ten: 'LinkedIn', href: 'https://www.linkedin.com' },
 ] as const
 
 /**

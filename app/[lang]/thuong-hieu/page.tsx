@@ -22,6 +22,15 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   }
 }
 
+/**
+ * Logo nhiều tầng — có biểu tượng hoặc dòng chữ phụ xếp trên dưới tên hãng.
+ *
+ * Thẻ chia cỡ logo theo CHIỀU CAO (32px). Logo một dòng chữ thì vừa, nhưng
+ * logo nhiều tầng bị chia 32px đó cho hai ba dòng nên tên hãng còn bé xíu.
+ * Mục TH02 của "Sửa web 5" nêu bốn hãng này; cho chúng cao 60px.
+ */
+const LOGO_CAO = new Set(['hartner', 'tschorn', 'rocklinizer', 'lenzkes'])
+
 export default async function BrandListPage({ params }: PageProps) {
   const lang: Locale = isLocale(params.lang) ? params.lang : DEFAULT_LOCALE
   const t = dict(lang)
@@ -74,7 +83,9 @@ export default async function BrandListPage({ params }: PageProps) {
                         alt={b.name}
                         width={320}
                         height={128}
-                        className="mb-3 h-8 w-auto max-w-[170px] self-start object-contain object-left"
+                        className={`mb-3 w-auto self-start object-contain object-left ${
+                          LOGO_CAO.has(b.slug) ? 'h-[60px] max-w-[210px]' : 'h-8 max-w-[170px]'
+                        }`}
                       />
                     ) : (
                       <span className="mb-3 font-display text-[18px] font-bold text-ink-900">
@@ -99,11 +110,11 @@ export default async function BrandListPage({ params }: PageProps) {
 
                     {/* Cắt đoạn giới thiệu cho các thẻ cao bằng nhau. Bản đầy đủ
                         nằm ở trang riêng của hãng. */}
-                    <p className="line-clamp-3 flex-1 text-[16px] leading-relaxed text-ink-600">
+                    <p className="line-clamp-3 text-[16px] leading-relaxed text-ink-600">
                       {b.intro}
                     </p>
 
-                    <span className="mt-4 text-[16px] font-semibold text-ktd-600 group-hover:underline">
+                    <span className="mt-auto pt-4 text-[16px] font-semibold text-ktd-600 group-hover:underline">
                       {t.brandPage.viewAll(b.name)} →
                     </span>
                   </div>

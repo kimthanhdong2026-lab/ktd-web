@@ -28,7 +28,7 @@ import {
 
 interface PageProps {
   params: { slug: string; lang: string };
-  searchParams?: { nhom?: string };
+  searchParams?: { nhom?: string; q?: string };
 }
 
 export async function generateStaticParams() {
@@ -107,8 +107,12 @@ export default async function BrandPage({ params, searchParams }: PageProps) {
       ? searchParams.nhom
       : undefined;
 
+  // Từ khoá khách gõ ở ô tìm trong trang hãng — mục TH08 của "Sửa web 5".
+  const tuKhoa = (searchParams?.q ?? "").trim().slice(0, 100);
+
   // Chưa chọn nhóm nào thì hiện toàn bộ sản phẩm của hãng.
   const kq = await browseProducts({
+    q: tuKhoa,
     brands: [b.slug],
     categories: dangChon ? [dangChon] : [],
     limit: 200,
@@ -134,13 +138,22 @@ export default async function BrandPage({ params, searchParams }: PageProps) {
        * trống rồi mới tới viền bo — nhìn ra hai mảnh rời ghép lại, đúng cái Ban
        * Giám đốc chê. Ở đây ảnh phủ kín nửa phải, mép trái loang dần về nền.
        *
-       * Bề rộng: ảnh chiếm 52% MÀN HÌNH, cột chữ chiếm 44% KHUNG NỘI DUNG (tối
-       * đa 1360px). Khung hẹp hơn màn hình nên hai phần không bao giờ chồng lên
-       * nhau, kể cả ở màn 1920px.
+       * KÍCH THƯỚC — sửa theo mục TH03 của "Sửa web 5": banner cao quá và ảnh
+       * bị cắt mất nhiều. Bản trước cho ảnh rộng 52% màn hình trong khi chiều
+       * cao dải do đoạn chữ quyết định, nên ảnh 4:3 bị phóng to rồi cắt gần
+       * một phần ba trên dưới.
+       *
+       * Nay ảnh rộng 40% màn hình, tối đa 640px. Cột chữ rộng ra phần còn
+       * lại nên đoạn giới thiệu ngắn đi vài dòng và dải thấp xuống; chiều cao
+       * dải vừa xấp xỉ 3/4 bề rộng ảnh, tức gần đúng tỉ lệ 4:3 của ảnh gốc —
+       * ảnh hiện gần trọn, không còn bị cắt.
+       *
+       * Hai phần không chồng nhau ở mọi khổ màn: bề rộng cột chữ tính bằng
+       * calc từ đúng hai con số trên (xem style của cột chữ bên dưới).
        */}
       <section className="relative overflow-hidden bg-[#EEF4F9]">
         {b.banner && (
-          <div className="absolute inset-y-0 right-0 hidden w-[52%] nav:block">
+          <div className="absolute inset-y-0 right-0 hidden w-[40vw] max-w-[640px] nav:block">
             <Image
               src={b.banner}
               alt=""
@@ -153,14 +166,14 @@ export default async function BrandPage({ params, searchParams }: PageProps) {
                 gắt ngay cạnh đoạn chữ. */}
             <span
               aria-hidden="true"
-              className="absolute inset-y-0 left-0 w-44 bg-gradient-to-r from-[#EEF4F9] via-[#EEF4F9]/70 to-transparent"
+              className="absolute inset-y-0 left-0 w-28 bg-gradient-to-r from-[#EEF4F9] via-[#EEF4F9]/70 to-transparent"
             />
           </div>
         )}
 
         {/* pt nhỏ và nav sát xuống: logo được đẩy lên gần đầu dải, không còn
             lơ lửng giữa khoảng trống như bản trước. */}
-        <div className="container-ktd relative pb-10 pt-4 md:pb-14">
+        <div className="container-ktd relative pb-8 pt-4 md:pb-10">
           <nav className="mb-4 text-[14px] text-ink-600">
             <Link href={path("/thuong-hieu")} className="hover:text-ktd-600">
               {t.brandPage.navLabel}
@@ -169,7 +182,10 @@ export default async function BrandPage({ params, searchParams }: PageProps) {
             <span className="font-medium text-ink-900">{b.name}</span>
           </nav>
 
-          <div className="nav:max-w-[44%]">
+          {/* Cột chữ dừng cách mép trái ảnh 3rem. Ảnh bám mép phải MÀN HÌNH còn
+              cột chữ nằm trong khung 1360px, nên phải trừ phần ảnh lấn vào
+              khung: bề rộng ảnh trừ đi lề phải của khung. */}
+          <div className="ktd-brand-intro">
             {/* Dùng logo GỐC trong public/ chứ không dùng bản trên kho ảnh.
                 Bản trên kho đã đóng vào khung 320×128 cho dải logo trang chủ
                 đều nhau — ở đây nó thành hình nhỏ xíu giữa nhiều khoảng trắng.
@@ -193,7 +209,7 @@ export default async function BrandPage({ params, searchParams }: PageProps) {
               <NhanXuatXu xuatXu={b.origin} nhan={t.brandPage.from(b.origin)} />
             </div>
 
-            <p className="text-[17px] leading-[1.75] text-ink-700">{b.intro}</p>
+            <p className="text-[17px] leading-[1.7] text-ink-700">{b.intro}</p>
           </div>
         </div>
 
@@ -249,18 +265,21 @@ export default async function BrandPage({ params, searchParams }: PageProps) {
             aria-hidden="true"
             className="mb-5 block h-[3px] w-20 rounded bg-ktd-600"
           />
-          <p className="mb-7 text-[16px] text-ink-600">
-            {t.brandPage.count(kq.total)}
-          </p>
-
-          {nhoms.length > 1 && (
-            <BrandGroupFilter
-              nhoms={nhoms}
-              dangChon={dangChon}
-              nhanTatCa={t.brandPage.filterAll}
-              nhan={t.brandPage.filterLabel}
-            />
-          )}
+          {/* Ô tìm + ô chọn nhóm + nút Tìm kiếm thay cho dòng đếm và dải nút
+              nhóm của bản trước — mục TH08 của "Sửa web 5". */}
+          <BrandGroupFilter
+            nhoms={nhoms}
+            dangChon={dangChon}
+            tuKhoa={tuKhoa}
+            nhan={{
+              placeholder: t.brandPage.searchPlaceholder(b.name),
+              nhom: t.brandPage.filterLabel,
+              tatCa: t.brandPage.filterAll,
+              tim: t.brandPage.searchButton,
+              hienThi: t.brandPage.showing(kq.total),
+              xoa: t.brandPage.clear,
+            }}
+          />
 
           {kq.items.length ? (
             <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
@@ -270,7 +289,7 @@ export default async function BrandPage({ params, searchParams }: PageProps) {
             </div>
           ) : (
             <p className="rounded-2xl border border-hairline bg-white px-5 py-16 text-center text-[16px] text-ink-600">
-              {t.brandPage.empty}
+              {tuKhoa || dangChon ? t.brandPage.noMatch : t.brandPage.empty}
             </p>
           )}
         </section>

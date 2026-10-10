@@ -8,7 +8,7 @@ import { CatalogButton } from '@/components/products/CatalogButton'
 import { QuoteButton } from '@/components/QuoteButton'
 import { getAllProductSlugs, getProductBySlug, getRelatedProducts } from '@/lib/db'
 import { DEFAULT_LOCALE, LOCALES, dict, href, isLocale, type Locale } from '@/lib/i18n'
-import { COMPANY_HOTLINE, COMPANY_HOTLINE_TEL, ZALO_URL } from '@/lib/constants'
+import { PHONES, ZALO_URL } from '@/lib/constants'
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://kimthanhdong.vn'
 
@@ -147,8 +147,8 @@ export default async function ProductDetailPage({ params }: PageProps) {
             {t.product.adviceBody}
           </p>
           <div className="mt-1 flex flex-wrap gap-2.5">
-            <a href={`tel:${COMPANY_HOTLINE_TEL}`} className="btn bg-white text-ktd-600 hover:bg-ktd-50">
-              ☎ Hotline {COMPANY_HOTLINE}
+            <a href={`tel:${PHONES.hotline.tel}`} className="btn bg-white text-ktd-600 hover:bg-ktd-50">
+              ☎ Hotline {PHONES.hotline[lang]}
             </a>
             <a
               href={ZALO_URL}

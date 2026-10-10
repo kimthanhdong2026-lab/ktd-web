@@ -51,15 +51,19 @@ export async function CategoryTiles({ lang = DEFAULT_LOCALE }: { lang?: Locale }
                   />
                   {/* Dải chuyển mờ sang trắng ở đáy ảnh. Nền ảnh gốc là xám xanh
                       rất nhạt chứ không trắng hẳn, nên nếu để nguyên sẽ thấy một
-                      đường ranh giới ngang giữa ảnh và phần chữ. Đoạn 13 yêu cầu
-                      "đồng bộ màu nền của ảnh với nội dung bên dưới". */}
+                      đường ranh giới ngang giữa ảnh và phần chữ.
+
+                      Thu từ 64px xuống 28px theo mục TC11 của "Sửa web 5": dải
+                      cũ phủ trắng gần một phần năm ảnh, che mất phần dưới của
+                      sản phẩm. 28px vừa đủ xoá đường ranh giới. */}
                   <span
                     aria-hidden="true"
-                    className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-b from-transparent to-white"
+                    className="pointer-events-none absolute inset-x-0 bottom-0 h-7 bg-gradient-to-b from-transparent to-white"
                   />
                 </div>
 
-                <div className="flex flex-1 flex-col p-5 pt-3 md:p-6 md:pt-3">
+                {/* Chữ lùi xuống thêm (pt-3 -> pt-5) để tách hẳn khỏi ảnh — TC11. */}
+                <div className="flex flex-1 flex-col p-5 pt-5 md:p-6 md:pt-5">
                   <span className="mb-1.5 block font-display text-[17px] font-semibold leading-snug text-ink-900 md:text-[19px]">
                     {c.name}
                   </span>

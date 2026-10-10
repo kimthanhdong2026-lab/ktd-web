@@ -165,7 +165,7 @@ export const NEWS: Article[] = [
     title: 'Kim Thành Đông tại triển lãm MTA Vietnam 2025',
     titleEn: 'Kim Thanh Dong at MTA Vietnam 2025',
     excerpt:
-      'KTĐ giới thiệu danh mục dụng cụ an toàn Martor và pa lăng cân bằng Tecna tới khách hàng công nghiệp.',
+      'KTD giới thiệu danh mục dụng cụ an toàn Martor và pa lăng cân bằng Tecna tới khách hàng công nghiệp.',
     excerptEn:
       'KTD presented the Martor safety cutter range and Tecna load balancers to industrial customers.',
   },

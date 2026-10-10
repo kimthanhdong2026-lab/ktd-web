@@ -10,7 +10,7 @@ import {
   useState,
   type ReactNode,
 } from 'react'
-
+import { RFQ_MAX_QTY as MAX_QTY, type RfqKind } from '@/lib/rfq'
 
 export interface CartLine {
   part: string
@@ -26,7 +26,10 @@ interface Store {
   cart: CartLine[]
   cartCount: number
   addToCart: (part: string, name?: string, brand?: string) => void
+  /** Cộng hoặc trừ số lượng, dùng cho hai nút − và +. */
   setQty: (part: string, delta: number) => void
+  /** Đặt thẳng số lượng, dùng khi khách gõ tay vào ô. */
+  setQtyTo: (part: string, qty: number) => void
   removeFromCart: (part: string) => void
 
   toast: string | null
@@ -43,7 +46,9 @@ interface Store {
 
   rfqOpen: boolean
   rfqNote: string
-  openRfq: (note?: string) => void
+  /** 'quote' = yêu cầu báo giá; 'find' = nhờ tìm hàng chưa có trên website. */
+  rfqKind: RfqKind
+  openRfq: (note?: string, kind?: RfqKind) => void
   closeRfq: () => void
 }
 
@@ -61,6 +66,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const [recent, setRecent] = useState<string[]>(DEFAULT_RECENT)
   const [rfqOpen, setRfqOpen] = useState(false)
   const [rfqNote, setRfqNote] = useState('')
+  const [rfqKind, setRfqKind] = useState<RfqKind>('quote')
   const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   // Restore the basket so a half-built quote survives a page navigation or reload.
@@ -112,9 +118,22 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     [showToast]
   )
 
+  // Chỉ đổi qty, giữ nguyên tên và hãng. Bản trước dựng lại dòng bằng
+  // { part, qty } nên bấm + một lần là tên sản phẩm biến thành mã hàng.
   const setQty = useCallback((part: string, delta: number) => {
     setCart((prev) =>
-      prev.map((c) => (c.part === part ? { part, qty: Math.max(1, c.qty + delta) } : c))
+      prev.map((c) =>
+        c.part === part ? { ...c, qty: Math.min(MAX_QTY, Math.max(1, c.qty + delta)) } : c
+      )
+    )
+  }, [])
+
+  const setQtyTo = useCallback((part: string, qty: number) => {
+    if (!Number.isFinite(qty)) return
+    setCart((prev) =>
+      prev.map((c) =>
+        c.part === part ? { ...c, qty: Math.min(MAX_QTY, Math.max(1, Math.floor(qty))) } : c
+      )
     )
   }, [])
 
@@ -144,8 +163,9 @@ export function StoreProvider({ children }: { children: ReactNode }) {
 
   const closeSearch = useCallback(() => setSearchOpen(false), [])
 
-  const openRfq = useCallback((note?: string) => {
+  const openRfq = useCallback((note?: string, kind: RfqKind = 'quote') => {
     if (note !== undefined) setRfqNote(note)
+    setRfqKind(kind)
     setSearchOpen(false)
     setRfqOpen(true)
   }, [])
@@ -180,6 +200,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       cartCount,
       addToCart,
       setQty,
+      setQtyTo,
       removeFromCart,
       toast,
       showToast,
@@ -193,14 +214,15 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       pushRecent,
       rfqOpen,
       rfqNote,
+      rfqKind,
       openRfq,
       closeRfq,
     }),
     [
-      cart, cartCount, addToCart, setQty, removeFromCart,
+      cart, cartCount, addToCart, setQty, setQtyTo, removeFromCart,
       toast, showToast, dismissToast,
       searchOpen, searchQuery, openSearch, closeSearch, recent, pushRecent,
-      rfqOpen, rfqNote, openRfq, closeRfq,
+      rfqOpen, rfqNote, rfqKind, openRfq, closeRfq,
     ]
   )
 

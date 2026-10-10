@@ -73,7 +73,7 @@ export function ProductCard({ product, variant = 'full' }: ProductCardProps) {
             <div className="relative z-10 mt-auto flex gap-2">
               <button
                 type="button"
-                onClick={() => addToCart(product.part, product.name)}
+                onClick={() => addToCart(product.part, product.name, product.brandLabel)}
                 className="min-h-[44px] flex-1 rounded-[7px] bg-ktd-600 px-2 text-[13px] font-semibold text-white transition-colors hover:bg-ktd-700"
               >
                 {t.product.addToQuoteShort}

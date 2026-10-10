@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { OFFICES, REGISTERED_OFFICE } from '@/lib/constants'
+import { MAP_QUERIES, OFFICES, REGISTERED_OFFICE } from '@/lib/constants'
 import type { Locale } from '@/lib/i18n'
 import { cx } from '@/lib/utils'
 import { useLang } from '@/components/LangProvider'
@@ -20,7 +20,7 @@ export function OfficeMap({
   /** Nhận để trang cha truyền xuống được; chữ lấy từ ngữ cảnh. */
   lang?: Locale
 }) {
-  const { t } = useLang()
+  const { t, lang } = useLang()
   const [active, setActive] = useState(1)
   // Nhãn địa điểm dịch theo ngôn ngữ; địa chỉ giữ nguyên vì là địa chỉ vật lý.
   const ADDRESSES = ADDR.map((o, i) => ({
@@ -58,14 +58,37 @@ export function OfficeMap({
       </div>
 
       <div className="lg:sticky lg:top-[100px]">
-        <div className="placeholder-hatch relative flex aspect-[4/3] items-center justify-center overflow-hidden rounded-lg bg-ink-100">
-          <div className="relative text-center">
-            <div className="mb-2.5 text-[32px]" aria-hidden="true">📍</div>
-            <p className="font-display text-lg font-semibold text-ink-900">{office.name}</p>
-            <p className="mt-2 max-w-[280px] px-4 text-sm text-ink-500">{office.addr}</p>
-            <p className="mt-2 font-mono text-[13px] text-ink-500">{t.contact.mapPlaceholder}</p>
-          </div>
+        {/* Bản đồ Google thật, đổi theo địa chỉ đang chọn — mục LH05 của
+            "Sửa web 5". Dùng kiểu nhúng không cần khoá API: không tốn phí và
+            không có hạn mức để vượt.
+
+            key={active} buộc dựng lại iframe khi đổi địa chỉ; chỉ đổi src thì
+            mỗi lần bấm lại thêm một bước vào lịch sử trình duyệt, khách bấm
+            Back phải bấm mấy lần mới ra khỏi trang. */}
+        <div className="relative aspect-[4/3] overflow-hidden rounded-lg border border-hairline bg-ink-100">
+          <iframe
+            key={active}
+            title={`${t.contact.mapTitle}: ${office.name}`}
+            src={`https://www.google.com/maps?q=${encodeURIComponent(MAP_QUERIES[active])}&z=16&hl=${lang}&output=embed`}
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+            allowFullScreen
+            className="absolute inset-0 h-full w-full border-0"
+          />
         </div>
+        <p className="mt-3 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 text-sm">
+          <span className="text-ink-700">
+            <b className="font-display text-ink-900">{office.name}</b> — {office.addr}
+          </span>
+          <a
+            href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(MAP_QUERIES[active])}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-semibold text-ktd-600 hover:underline"
+          >
+            {t.contact.openMap} ↗
+          </a>
+        </p>
       </div>
     </div>
   )

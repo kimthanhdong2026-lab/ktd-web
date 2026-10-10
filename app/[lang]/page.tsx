@@ -4,6 +4,7 @@ import { HeroVideo } from '@/components/home/HeroVideo'
 import { BrandShowcase } from '@/components/home/BrandShowcase'
 import { CategoryTiles } from '@/components/home/CategoryTiles'
 import { SectorMarquee } from '@/components/home/SectorMarquee'
+import { WhyChoose } from '@/components/home/WhyChoose'
 import { QuoteButton } from '@/components/QuoteButton'
 import { newsFor } from '@/lib/ktd-data'
 import { getBrands } from '@/lib/db'
@@ -118,34 +119,8 @@ export default async function HomePage({ params }: { params: { lang: string } })
           và hàm getFeaturedProducts vẫn giữ — trang Tin tức đang dùng để gợi ý
           sản phẩm liên quan. */}
 
-      {/* ---------- 6. Why KTĐ ---------- */}
-      <section className="bg-surface py-14 md:py-24">
-        <div className="container-ktd">
-          {/* Tiêu đề khối dùng xanh logo như mọi khối khác — đoạn 17 của
-              "Sửa web 4": đồng nhất màu chữ của khu vực này với cả trang.
-              Trước đây khối này và khối Tin tức dùng đen ink-900, lệch với
-              "Danh mục sản phẩm" và "Lĩnh vực phục vụ" vốn đã là xanh. */}
-          <h2 className="mb-10 text-center font-display text-h2 text-ktd-600">
-            {t.why.heading}
-          </h2>
-          {/* Nền xanh đậm, chữ trắng, góc bo lớn — đoạn 19 của "Sửa web 4".
-              Dùng đúng bộ màu của chân trang (bg-ktd-800 + chữ ktd-100) và cùng
-              bán kính bo với ô danh mục, để trang chủ chỉ có một tông xanh và
-              một kiểu khung.
-
-              Số thứ tự 1·2·3·4 mà đoạn 19 nhắc đã bỏ từ lần sửa trước. */}
-          <ul className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-            {t.why.items.map((w) => (
-              <li key={w.title} className="rounded-[26px] bg-ktd-800 p-6 md:p-8">
-                <h3 className="mb-2.5 font-display text-[19px] font-bold text-white">
-                  {w.title}
-                </h3>
-                <p className="text-[15px] font-medium leading-relaxed text-ktd-100">{w.body}</p>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </section>
+      {/* ---------- 6. Why KTD ---------- */}
+      <WhyChoose lang={lang} />
 
       {/* ---------- 7. News ---------- */}
       <section className="bg-white py-14 md:py-24">

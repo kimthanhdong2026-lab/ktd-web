@@ -6,86 +6,72 @@
   "Thuật ngữ bám theo lib/i18n/glossary.ts.",
   "Sửa xong chạy: node scripts/gen-danh-muc-en-sql.mjs"
  ],
-
  "nhom_chinh": {
-  "Dụng cụ cắt an toàn": "Safety cutting tools",
+  "Dụng cụ an toàn lao động": "Workplace safety tools",
   "Dụng cụ cắt gọt CNC & composite": "CNC & composite cutting tools",
   "Mài, nhám & hoàn thiện bề mặt": "Grinding, abrasives & surface finishing",
   "Vát mép & bo cạnh kim loại": "Metal chamfering & edge breaking",
-  "Khuôn mẫu & bảo trì khuôn": "Mould making & maintenance",
-  "Đo kiểm & xác định điểm 0": "Measurement & zero-point setting",
-  "Gá kẹp & định vị gia công": "Workholding & machining fixtures",
-  "Siết lực & lắp ráp công nghiệp": "Torque control & industrial assembly",
-  "Đánh dấu & truy xuất công nghiệp": "Industrial marking & traceability",
-  "Hàn điện trở & cân bằng tải": "Resistance welding & load balancing",
-  "Phủ carbide & chống mài mòn": "Carbide coating & wear protection",
+  "Dụng cụ sửa chữa & bảo trì khuôn": "Mould repair & maintenance tools",
+  "Thiết bị đo & định vị gia công": "Measuring & machining positioning equipment",
+  "Hệ thống gá kẹp công nghiệp": "Industrial workholding systems",
+  "Thiết bị siết & lắp ráp công nghiệp": "Industrial tightening & assembly equipment",
+  "Thiết bị đánh dấu & truy xuất công nghiệp": "Industrial marking & traceability equipment",
+  "Thiết bị đo & kiểm tra hàn điện trở": "Resistance welding measurement & testing equipment",
+  "Thiết bị xử lý & phục hồi bề mặt kim loại": "Metal surface treatment & restoration equipment",
   "Khớp nối nhanh & phụ kiện môi chất": "Quick couplings & fluid accessories"
  },
-
  "chu_nho": {
   "Dao an toàn, kéo an toàn, lưỡi dao & phụ kiện": "Safety cutters, safety scissors, blades & accessories",
   "Mũi khoan, dao phay, ta rô, doa, mũi khoét & dụng cụ gia công composite": "Drill bits, end mills, taps, reamers, counterbores & composite tooling",
-  "Máy mài khí nén, mũi mài carbide, đĩa nhám, bánh nhám & vật tư mài": "Pneumatic grinders, carbide burrs, abrasive discs, flap wheels & consumables",
+  "Máy mài khí nén, mũi mài hợp kim, đĩa nhám, bánh nhám & vật tư mài": "Pneumatic grinders, carbide burrs, abrasive discs, flap wheels & consumables",
   "Máy vát mép, bo tròn cạnh, chuẩn bị mép hàn & dao cắt": "Chamfering, edge rounding, weld edge preparation & cutting inserts",
-  "Máy giũa, dụng cụ đánh bóng khuôn, hóa chất bảo trì & thiết bị sửa chữa khuôn": "Filing machines, mould polishing tools, maintenance chemicals & mould repair equipment",
-  "Đầu dò 3D, dò cạnh, đầu dò máy & thiết bị xác định điểm 0": "3D probes, edge finders, machine probes & zero-point setters",
-  "Kẹp nhanh, khung kẹp, kẹp cạnh, hệ thống zero-point & phụ kiện gá kẹp": "Quick clamps, clamping frames, edge clamps, zero-point systems & workholding accessories",
-  "Tô vít công nghiệp, cấp vít tự động, hệ thống siết & dụng cụ kiểm soát lực": "Industrial screwdrivers, automatic screw feeding, screwdriving systems & torque control tools",
-  "Khắc chấm, khắc laser, máy di động, để bàn & tích hợp dây chuyền": "Dot peen marking, laser marking, portable, benchtop & in-line integrated units",
-  "Máy/thiết bị đo kiểm hàn điện trở, bộ cân bằng tải & phụ kiện": "Resistance welding testers, load balancers & accessories",
-  "Thiết bị phủ carbide, điện cực & vật tư tăng độ bám, chống mài mòn kim loại": "Carbide coating units, electrodes & consumables for grip and wear protection on metal",
-  "Khớp nối đơn/đa, manifold, ống, điều khiển dòng & phụ kiện kết nối": "Single and multi-line couplings, manifolds, hoses, flow control & connection accessories"
+  "Máy giũa, dụng cụ đánh bóng, hóa chất vệ sinh bảo dưỡng & thiết bị sửa chữa khuôn": "Filing machines, polishing tools, cleaning & maintenance chemicals, mould repair equipment",
+  "Đầu dò 3D, dụng cụ dò cạnh, thiết bị xác định điểm 0 & đo trên máy gia công": "3D probes, edge finders, zero-point setters & on-machine measurement",
+  "Kẹp nhanh, khung kẹp, kẹp cạnh & kẹp xích cho khuôn, phôi và chi tiết gia công": "Quick clamps, clamping frames, side clamps & chain clamps for moulds, workpieces and machined parts",
+  "Tô vít công nghiệp, hệ thống siết tự động, dụng cụ siết lực & pa lăng cân bằng": "Industrial screwdrivers, automated screwdriving systems, torque tools & load balancers",
+  "Máy khắc số, mã, logo, mã QR, DataMatrix trên kim loại, nhựa và chi tiết công nghiệp": "Machines for marking numbers, codes, logos, QR and DataMatrix on metal, plastic and industrial parts",
+  "Thiết bị đo các thông số của máy hàn điểm, hàn lồi và các hệ thống hàn điện trở": "Instruments for measuring the parameters of spot welders, projection welders and resistance welding systems",
+  "Thiết bị phủ vật liệu cứng, chống mài mòn, tạo độ nhám & phục hồi kích thước bề mặt": "Equipment for hard-facing, wear protection, surface texturing & dimensional restoration",
+  "Khớp nối khí, nước, thủy lực; bộ chia dòng, ống dẫn & phụ kiện môi chất": "Air, water and hydraulic couplings; manifolds, hoses & fluid accessories"
  },
-
  "nhom_nho": {
   "Dao an toàn": "Safety cutters",
   "Kéo an toàn": "Safety scissors",
   "Lưỡi dao & phụ kiện": "Blades & accessories",
-
   "Mũi khoan": "Drill bits",
   "Dao phay": "End mills",
   "Ta rô & dụng cụ tạo ren": "Taps & thread tools",
   "Dao doa": "Reamers",
   "Mũi khoét & mũi cưa lỗ": "Counterbores & hole saws",
   "Dụng cụ gia công composite & honeycomb": "Composite & honeycomb tooling",
-
   "Máy mài & máy chà nhám khí nén": "Pneumatic grinders & sanders",
   "Mũi mài hợp kim": "Carbide burrs",
   "Các loại nhám & phụ kiện": "Abrasives & accessories",
-
   "Máy vát mép & bo cạnh cầm tay": "Handheld chamfering & deburring machines",
   "Máy vát mép để bàn": "Bench chamfering machines",
   "Dao vát mép, bo cạnh & phụ kiện": "Chamfering inserts, deburring tools & accessories",
-
   "Máy giũa & máy đánh bóng khuôn": "Filing & mould polishing machines",
   "Giũa, đá đánh bóng, dụng cụ kim cương & CBN": "Files, polishing stones, diamond & CBN tools",
   "Hóa chất bảo dưỡng, vệ sinh khuôn & trục vít": "Mould and screw cleaning & maintenance chemicals",
   "Thiết bị sửa chữa khuôn": "Mould repair equipment",
-
   "Đầu dò 3D & đầu dò tiếp xúc": "3D probes & touch probes",
   "Dụng cụ dò cạnh": "Edge finders",
   "Thiết bị xác định điểm 0": "Zero-point setters",
-
   "Kẹp nhanh Multi-Quick": "Multi-Quick quick clamps",
   "Khung kẹp S-Series": "S-Series clamping frames",
   "Kẹp cạnh": "Edge clamps",
   "Kẹp xích": "Chain clamps",
-
   "Tô vít công nghiệp cầm tay": "Handheld industrial screwdrivers",
   "Tô vít cầm tay cấp vít tự động": "Handheld screwdrivers with automatic screw feed",
   "Hệ thống siết tự động": "Automated screwdriving systems",
   "Tô vít lực, bộ dụng cụ & phụ kiện": "Torque screwdrivers, kits & accessories",
   "Pa lăng cân bằng": "Load balancers",
-
   "Máy khắc chấm": "Dot peen markers",
   "Máy khắc laser": "Laser markers",
-
   "Thiết bị đo thông số hàn": "Welding parameter testers",
   "Phụ kiện đo": "Measuring accessories",
-
   "Thiết bị Rocklinizer": "Rocklinizer units",
   "Điện cực & phụ kiện Rocklinizer": "Rocklinizer electrodes & accessories",
-
   "Khớp nối nhanh đơn": "Single quick couplings",
   "Khớp nối nhanh đa đường": "Multi-line quick couplings",
   "Bộ chia dòng & ống dẫn": "Manifolds & hoses",

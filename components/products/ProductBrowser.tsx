@@ -61,8 +61,18 @@ export function ProductBrowser({
 
   const [q, setQ] = useState(query)
   const [sheetOpen, setSheetOpen] = useState(false)
-  /** Những nhóm chính khách đã bấm mũi xổ để mở ra. */
-  const [moNhom, setMoNhom] = useState<string[]>([])
+  /**
+   * Nhóm chính đang xổ nhóm nhỏ ra. Mỗi lúc chỉ một nhóm mở — mục SP04 của
+   * "Sửa web 5": bấm tên nhóm chính là thấy ngay nhóm nhỏ, các nhóm khác tự
+   * thu lại.
+   *
+   * Giá trị đầu lấy từ địa chỉ trang, nên khách đi từ ô nhóm chính ở trang chủ
+   * (?category=...) hay mở lại một đường dẫn đã lọc cũng thấy nhóm nhỏ ngay.
+   */
+  const [moNhom, setMoNhom] = useState<string | null>(() => {
+    const dau = categories.find((c) => selectedCategories.includes(c.slug))
+    return dau ? (dau.parent ?? dau.slug) : null
+  })
   const [pending, setPending] = useState(false)
 
   const brandsAZ = [...brands].sort((a, b) => a.name.localeCompare(b.name, 'vi'))
@@ -89,6 +99,7 @@ export function ProductBrowser({
     .filter((c) => !c.parent)
     .map((cha) => {
       const con = categories.filter((c) => c.parent === cha.slug)
+      // Số đếm không còn hiện ra (SP04), chỉ dùng để ẩn nhóm trống khi đã chọn hãng.
       const tong = soCua(cha.slug) + con.reduce((n, c) => n + soCua(c.slug), 0)
       return { cha, con: con.filter((c) => !coHang || soCua(c.slug) > 0), tong }
     })
@@ -136,6 +147,15 @@ export function ProductBrowser({
     go({ [kind]: next })
   }
 
+  /** Xoá cả bộ lọc lẫn từ khoá, và thu mọi nhóm đang mở. */
+  const clearAll = () => {
+    setMoNhom(null)
+    setQ('')
+    clearTimeout(timer.current)
+    setPending(true)
+    router.push(path('/san-pham'), { scroll: false })
+  }
+
   const chips = [
     ...selectedBrands.map((v) => ({
       kind: 'brand' as const,
@@ -155,51 +175,37 @@ export function ProductBrowser({
         <span className="font-display text-base font-semibold text-ink-900">{t.products.filters}</span>
         <button
           type="button"
-          onClick={() => router.push(path('/san-pham'), { scroll: false })}
+          onClick={clearAll}
           className="text-[13px] text-ink-500 underline hover:text-ktd-600"
         >
           {t.products.clearFilters}
         </button>
       </div>
 
-      {/* Nhóm sản phẩm đặt TRÊN thương hiệu — đoạn 28: "Nhóm sản phẩm lớn có
-          mũi lọc bên cạnh (click vào mũi lọc sẽ xổ ra các nhóm con để chọn);
-          bên dưới là lọc thêm theo thương hiệu". */}
+      {/* Nhóm sản phẩm đặt TRÊN thương hiệu. Bấm tên (hoặc ô tích) của nhóm
+          chính là vừa lọc theo cả nhóm, vừa xổ các nhóm nhỏ ra để chọn tiếp —
+          mục SP04 của "Sửa web 5". Mũi xổ riêng và số đếm sản phẩm của bản
+          trước đã bỏ theo đúng mục đó. */}
       <FilterGroup title={t.products.category}>
         <div className="max-h-[460px] overflow-y-auto pr-1">
-          {cayDanhMuc.map(({ cha, con, tong }) => {
-            const dangMo =
-              moNhom.includes(cha.slug) ||
-              con.some((x) => selectedCategories.includes(x.slug))
+          {cayDanhMuc.map(({ cha, con }) => {
+            const dangMo = moNhom === cha.slug
+            const daChon = selectedCategories.includes(cha.slug)
             return (
               <div key={cha.slug} className={con.length ? 'mb-1' : undefined}>
-                <div className="flex items-center gap-1">
-                  <FilterRow
-                    label={cha.name}
-                    checked={selectedCategories.includes(cha.slug)}
-                    onChange={() => toggle('category', cha.slug)}
-                    dam={con.length > 0}
-                    so={tong}
-                  />
-                  {/* Mũi xổ tách riêng khỏi ô tích: bấm mũi để XEM các nhóm con,
-                      bấm ô tích để LỌC cả nhóm lớn. Gộp hai việc vào một chỗ thì
-                      khách muốn xem nhóm con buộc phải lọc theo cả nhóm. */}
-                  {con.length > 0 && (
-                    <button
-                      type="button"
-                      onClick={() =>
-                        setMoNhom((v) =>
-                          v.includes(cha.slug) ? v.filter((x) => x !== cha.slug) : [...v, cha.slug]
-                        )
-                      }
-                      aria-expanded={dangMo}
-                      aria-label={`${dangMo ? '▾' : '▸'} ${cha.name}`}
-                      className="flex h-7 w-7 flex-none items-center justify-center rounded text-[13px] text-ink-500 hover:bg-ink-100 hover:text-ktd-600"
-                    >
-                      <span aria-hidden="true">{dangMo ? '▾' : '▸'}</span>
-                    </button>
-                  )}
-                </div>
+                <FilterRow
+                  label={cha.name}
+                  checked={daChon}
+                  onChange={() => {
+                    // Bỏ tích một nhóm đang mở thì thu nó lại, trừ khi bên trong
+                    // còn nhóm nhỏ đang được chọn.
+                    const conDangChon = con.some((x) => selectedCategories.includes(x.slug))
+                    setMoNhom(daChon && !conDangChon ? null : cha.slug)
+                    toggle('category', cha.slug)
+                  }}
+                  dam={con.length > 0}
+                  expanded={con.length > 0 ? dangMo : undefined}
+                />
 
                 {con.length > 0 && dangMo && (
                   <div className="ml-6 border-l border-hairline pl-2">
@@ -209,7 +215,6 @@ export function ProductBrowser({
                         label={c.name}
                         checked={selectedCategories.includes(c.slug)}
                         onChange={() => toggle('category', c.slug)}
-                        so={soCua(c.slug)}
                       />
                     ))}
                   </div>
@@ -305,21 +310,30 @@ export function ProductBrowser({
           )}
 
           {total === 0 ? (
-            <div className="rounded-lg bg-ink-100 px-5 py-20 text-center">
-              <div className="mb-4 text-[44px] opacity-50" aria-hidden="true">🔍</div>
-              <p className="mb-2 font-display text-[22px] font-semibold text-ink-900">
+            // Mục SP09 của "Sửa web 5": không để khách hiểu rằng KTD không cung
+            // cấp được mã chưa có trên web. Luôn có lối xoá bộ lọc và lối gửi
+            // yêu cầu tìm hàng.
+            <div className="rounded-lg border border-hairline bg-white px-5 py-16 text-center md:py-20">
+              <div className="mb-5 text-[52px] leading-none opacity-60" aria-hidden="true">🔍</div>
+              <p className="mb-3 font-display text-[26px] font-bold leading-tight text-ink-900">
                 {t.products.emptyTitle}
               </p>
-              <p className="mb-6 text-[15px] text-ink-500">
+              <p className="mx-auto mb-7 max-w-[640px] text-[16px] leading-relaxed text-ink-700 [text-wrap:pretty]">
                 {t.products.emptyBody}
               </p>
-              <button
-                type="button"
-                onClick={() => openRfq(t.products.emptyNote)}
-                className="btn-quote"
-              >
-                {t.products.emptyCta}
-              </button>
+              <div className="flex flex-wrap justify-center gap-3">
+                <button type="button" onClick={clearAll} className="btn-secondary min-w-[180px]">
+                  {t.products.clearFilters}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => openRfq(q.trim() || undefined, 'find')}
+                  className="btn-primary min-w-[180px]"
+                >
+                  {t.products.emptyCta}
+                </button>
+              </div>
+              <p className="mt-6 text-[13px] text-ink-500">{t.products.emptyHint}</p>
             </div>
           ) : (
             <div className={cx('transition-opacity duration-150', pending && 'opacity-50')}>
@@ -357,7 +371,11 @@ export function ProductBrowser({
 function FilterGroup({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div className="mb-7">
-      <h2 className="label-caps mb-3 text-ink-900">▸ {title}</h2>
+      {/* Bỏ mũi tên "▸" vì tiêu đề không thu gọn được, và chữ to lên hai cỡ
+          (12px -> 15px) — mục SP05 của "Sửa web 5". */}
+      <h2 className="mb-3 font-display text-[15px] font-bold uppercase tracking-[0.08em] text-ink-900">
+        {title}
+      </h2>
       {children}
     </div>
   )
@@ -368,15 +386,15 @@ function FilterRow({
   checked,
   onChange,
   dam = false,
-  so,
+  expanded,
 }: {
   label: string
   checked: boolean
   onChange: () => void
   /** Nhóm chính in đậm để tách khỏi các nhóm nhỏ thụt vào bên dưới. */
   dam?: boolean
-  /** Số sản phẩm; bỏ trống thì không hiện. */
-  so?: number
+  /** Nhóm chính có nhóm nhỏ: đang xổ ra hay không, báo cho trình đọc màn hình. */
+  expanded?: boolean
 }) {
   return (
     <label
@@ -390,12 +408,10 @@ function FilterRow({
         type="checkbox"
         checked={checked}
         onChange={onChange}
+        aria-expanded={expanded}
         className="h-4 w-4 cursor-pointer accent-ktd-600"
       />
       <span className="flex-1">{label}</span>
-      {so !== undefined && (
-        <span className="font-mono text-[13px] text-ink-500">{so}</span>
-      )}
     </label>
   )
 }

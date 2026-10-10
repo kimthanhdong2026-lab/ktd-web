@@ -29,8 +29,8 @@ export const en: Dictionary = {
   },
 
   hero: {
-    badge: 'PROVEN SOLUTIONS · TRUSTED BRANDS · LONG-TERM PARTNERSHIP',
-    badgeShort: 'PROVEN · TRUSTED · LONG-TERM',
+    badge: 'THE RIGHT SOLUTION – TRUSTED BRANDS – LONG-TERM PARTNERSHIP',
+    badgeShort: 'RIGHT FIT – TRUSTED – LONG-TERM',
     title: 'Industrial tools & equipment distribution',
     subtitle:
       'Direct partnerships with manufacturers · Right-fit product advice · Fast support',
@@ -58,13 +58,13 @@ export const en: Dictionary = {
     heading: (n: number) => `${n} international brands we distribute`,
     intro:
       'Each brand Kim Thanh Dong distributes covers one specific strength. Together they form a complementary product range that spans many stages of industrial production.',
-    cta: 'Browse all products by brand →',
+    cta: 'View all products →',
     viewProducts: (name: string) => `View ${name} products →`,
     productsOf: (name: string) => `${name} products`,
   },
 
   categories: {
-    heading: 'Product categories',
+    heading: 'What type of equipment do you need?',
   },
 
   brandPage: {
@@ -77,7 +77,12 @@ export const en: Dictionary = {
     ungDung: 'Typical applications',
     productsHeading: (ten: string) => `${ten} products`,
     filterLabel: 'Product group',
-    filterAll: 'All',
+    filterAll: 'All product groups',
+    searchPlaceholder: (ten: string) => `Enter a ${ten} product name or part number…`,
+    searchButton: 'Search',
+    showing: (n: number) => `Showing ${n} products`,
+    clear: 'Clear search and filter',
+    noMatch: 'No products match. Try another keyword or pick a different group.',
     empty: 'No products from this brand on the site yet. Contact KTD for advice.',
     viewAll: (ten: string) => `View all ${ten} products`,
     count: (n: number) => `${n} products`,
@@ -116,7 +121,7 @@ export const en: Dictionary = {
   },
 
   why: {
-    heading: 'Why choose Kim Thanh Dong',
+    heading: 'Why choose Kim Thanh Dong?',
     items: [
       {
         title: 'Trusted brands',
@@ -183,9 +188,11 @@ export const en: Dictionary = {
       `Showing ${shown} of ${total} products. Use the filters to narrow your results.`,
     apply: (n: number) => `Apply (${n} products)`,
     viewAllOf: (name: string) => `View all ${name} products →`,
-    emptyTitle: 'No matching products',
-    emptyBody: 'Try removing some filters, or let our engineers find it for you.',
-    emptyCta: 'Ask an engineer',
+    emptyTitle: 'No matching products yet',
+    emptyBody:
+      'Try a different keyword or remove some filters. If you still cannot find the product you need, send us its details and KTD will check whether we can supply it.',
+    emptyCta: 'Send a sourcing request',
+    emptyHint: 'You can send a request even if the product is not on the website yet.',
     emptyNote: 'Please help me find a product that fits my requirements.',
     metaTitle: 'Products — Genuine industrial equipment',
     metaDesc: (brands: number, items: number) =>
@@ -260,8 +267,44 @@ export const en: Dictionary = {
     remove: (part: string) => `Remove ${part}`,
     added: (name: string) => `${name} added to your quote request`,
     errName: 'Please enter your name.',
+    errCompany: 'Please enter your company name.',
     errPhone: 'Please enter your phone number.',
     errEmail: 'That email address is not valid.',
+    errEmailRequired: 'Please enter your email address.',
+    subtitle: 'We will get back to you shortly.',
+    findTitle: 'Send a sourcing request',
+    findSubtitle:
+      'Tell us what you need: part number, brand, specifications or a picture. KTD will check availability and reply.',
+    findNote: 'Product you are looking for',
+    findNotePlaceholder: 'Part number, brand, specifications, expected quantity…',
+    findSubmit: 'Send sourcing request',
+    errNote: 'Please describe the product you need, or attach a file.',
+    notePlaceholder: 'Special requirements, delivery deadline, specifications you need advice on…',
+    emptyCart: 'No products yet. Add products from the catalogue, or describe what you need in the notes below.',
+    addMore: '+ Add another product',
+    attach: 'Attach files',
+    attachHint: (n: number, mb: number) => `Up to ${n} files, ${mb} MB each. Word, Excel, PDF and images accepted.`,
+    attachTooMany: (n: number) => `You can attach up to ${n} files.`,
+    attachTooBig: (ten: string, mb: number) => `"${ten}" is larger than ${mb} MB and was not added.`,
+    attachBadType: (ten: string) => `"${ten}" is not a Word, Excel, PDF or image file.`,
+    removeFile: (ten: string) => `Remove file ${ten}`,
+    qty: (part: string) => `Quantity of ${part}`,
+    required: 'required',
+    sentHeading: 'Your request has been sent!',
+    sentThanks: 'We will contact you as soon as possible. Thank you.',
+    codeLabel: 'Reference number:',
+    summaryItems: (sp: number, dv: number) => `${sp} products · ${dv} units`,
+    summaryGeneral: 'General enquiry',
+    summaryFind: 'Sourcing request',
+    summaryFiles: (n: number) => `${n} attached files`,
+    continueBrowsing: 'Continue browsing products',
+    close: 'Close',
+    failTitle: 'Your request was not sent',
+    failBody: (phone: string, email: string) =>
+      `Your request has NOT been sent. Please try again, or contact us directly at ${phone} · ${email}.`,
+    failUpload: 'The attachments could not be uploaded. Please try again, or remove some files and resend.',
+    failInvalid: 'Some details are not valid. Please check the fields marked *.',
+    retry: 'Send again',
   },
 
   footer: {
@@ -366,8 +409,9 @@ export const en: Dictionary = {
     email: 'Email',
     website: 'Website',
     hours: 'Opening hours:',
-    workingHours: ['7:30 – 17:00, Monday to Friday', '7:30 – 11:30, Saturday'],
-    mapPlaceholder: '[ EMBEDDED MAP — SEAVIEW 4 ]',
+    workingHours: ['7:30–11:30 & 13:00–17:00, Monday to Friday', '7:30–11:30, Saturday'],
+    mapTitle: 'Map',
+    openMap: 'Open in Google Maps',
   },
 
   cta: {
