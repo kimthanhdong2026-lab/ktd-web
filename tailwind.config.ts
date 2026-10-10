@@ -33,7 +33,13 @@ const config: Config = {
         // nữa: amphenol.com" — Sửa web 4, đoạn 4. Đã dựng thử cả hai sắc xám
         // của amphenol rồi trình BGĐ; BGĐ chốt ngày 03/10/2026 dùng ĐÚNG MỘT
         // màu nền là sắc nhạt, điểm nhấn để dành cho màu xanh logo.
-        surface: '#F8F8F8',
+        //
+        // Đậm lên từ #F8F8F8 thành #EBEEF1 ngày 10/10/2026: sau khi trang chủ
+        // chuyển sang các khối nền xám và trắng xen kẽ ("Sửa web 5"), sắc cũ
+        // chỉ tối hơn trắng 3% nên trên màn hình thật không thấy ranh giới
+        // giữa các khối. KTD xem ảnh so sánh ba mức và chọn mức này. Vẫn chỉ
+        // hai màu nền cho cả site: trắng và sắc xám này.
+        surface: '#EBEEF1',
         // Red is reserved for the quote CTA and "Mới" badges only (spec B1).
         quote: {
           DEFAULT: '#E30613',
