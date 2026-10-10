@@ -24,7 +24,7 @@ export function SectorMarquee({ lang = DEFAULT_LOCALE }: { lang?: Locale }) {
   const t = dict(lang)
   const CARDS = t.sectors.cards.map((s, i) => ({ ...s, image: imageOf(i) }))
   return (
-    <section className="overflow-hidden bg-white py-14 md:py-24">
+    <section className="overflow-hidden bg-surface py-14 md:py-24">
       <div className="container-ktd">
         <h2 className="mb-10 text-center font-display text-h2 text-ktd-600 md:mb-14">
           {t.sectors.heading}

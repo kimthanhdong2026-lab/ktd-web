@@ -19,6 +19,9 @@ export const KEEP_AS_IS = [
   'Morrisflex', 'ATA Air Tools', 'Karnasch', 'Hartner', 'Helical Solutions',
   'Technomark', 'Lenzkes', 'TSChorn', 'Fiam', 'Tecna', 'Corehog', 'Bevel Tools',
   'ROCKLIN', 'MoldMender', 'Rocklinizer', 'Buchem', 'Diprofil', 'RTC', 'Sloky',
+  // Cách viết chuẩn từ "Sửa web 5". Giữ cả cách cũ ở trên vì nội dung đã dịch
+  // trước đó còn dùng.
+  'Tschorn', 'CoreHog', 'Beveltools', 'Rocklin', 'Garryson',
   'Kim Thành Đông', 'Zalo', 'MTA Vietnam',
 ]
 

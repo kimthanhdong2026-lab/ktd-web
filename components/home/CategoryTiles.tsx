@@ -20,7 +20,10 @@ export async function CategoryTiles({ lang = DEFAULT_LOCALE }: { lang?: Locale }
   const categories = (await getCategories(lang)).filter((c) => !c.parent)
 
   return (
-    <section className="bg-surface py-14 md:py-24">
+    // Nền trắng — KTD yêu cầu ngày 10/10/2026. Khối thương hiệu ngay phía trên
+    // đã chuyển sang xám nhạt (TC07), để nguyên xám ở đây thì hai khối dính
+    // thành một dải. Từ đây xuống các khối đổi nền xen kẽ: trắng, xám, trắng, xám.
+    <section className="bg-white py-14 md:py-24">
       <div className="container-ktd">
         <h2 className="mb-10 text-center font-display text-h2 text-ktd-600 md:mb-14">
           {t.categories.heading}

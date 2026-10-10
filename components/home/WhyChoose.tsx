@@ -22,7 +22,7 @@ export function WhyChoose({ lang }: { lang: Locale }) {
   const t = dict(lang)
 
   return (
-    <section className="bg-surface py-14 md:py-24">
+    <section className="bg-white py-14 md:py-24">
       <div className="container-ktd">
         <h2 className="mb-10 text-center font-display text-h2 text-ktd-600 md:mb-12">
           {t.why.heading}

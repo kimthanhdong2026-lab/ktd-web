@@ -123,7 +123,7 @@ export default async function HomePage({ params }: { params: { lang: string } })
       <WhyChoose lang={lang} />
 
       {/* ---------- 7. News ---------- */}
-      <section className="bg-white py-14 md:py-24">
+      <section className="bg-surface py-14 md:py-24">
         <div className="container-ktd">
           <div className="mb-9 flex flex-wrap items-end justify-between gap-4">
             <h2 className="font-display text-h2 text-ktd-600">{t.news.heading}</h2>
