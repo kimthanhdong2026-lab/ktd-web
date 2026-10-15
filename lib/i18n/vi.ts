@@ -74,6 +74,7 @@ export const vi = {
     showing: (n: number) => `Hiển thị ${n} sản phẩm`,
     clear: 'Xóa tìm kiếm và bộ lọc',
     noMatch: 'Không có sản phẩm nào khớp. Thử từ khóa khác hoặc chọn nhóm khác.',
+    groupEmpty: 'Nhóm này chưa có sản phẩm trên website. Liên hệ KTD để được tư vấn và báo giá.',
     empty: 'Hãng này chưa có sản phẩm trên website. Liên hệ KTD để được tư vấn.',
     viewAll: (ten: string) => `Xem tất cả sản phẩm ${ten}`,
     count: (n: number) => `${n} sản phẩm`,

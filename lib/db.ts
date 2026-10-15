@@ -12,6 +12,7 @@
  * dùng, nên phần lớn giao diện không phải sửa gì.
  */
 import type { Brand, BrandPage, Category, Product } from './ktd-data'
+import { NHOM_THEO_HANG } from './ktd-data'
 import { DEFAULT_LOCALE, type Locale } from './i18n/config'
 
 const URL_ = process.env.NEXT_PUBLIC_SUPABASE_URL ?? ''
@@ -258,12 +259,14 @@ export async function getBrandCategories(
   )
   const dem = new Map<string, number>()
   for (const r of rows) dem.set(r.category_slug, (dem.get(r.category_slug) ?? 0) + 1)
-  if (!dem.size) return []
 
+  // Đủ mọi nhóm nhỏ hãng phân phối theo bảng của KTD, kể cả nhóm chưa có sản
+  // phẩm trên web, cộng thêm nhóm nào đang có sản phẩm mà bảng chưa ghi.
+  const coTrongBang = new Set(NHOM_THEO_HANG[brandSlug] ?? [])
   const cats = await getCategories(lang)
   return cats
-    .filter((c) => dem.has(c.slug))
-    .map((c) => ({ slug: c.slug, name: c.name, parent: c.parent ?? null, count: dem.get(c.slug)! }))
+    .filter((c) => dem.has(c.slug) || coTrongBang.has(c.slug))
+    .map((c) => ({ slug: c.slug, name: c.name, parent: c.parent ?? null, count: dem.get(c.slug) ?? 0 }))
 }
 
 export async function getCategories(lang: Locale = DEFAULT_LOCALE): Promise<Category[]> {

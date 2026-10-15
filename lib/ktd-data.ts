@@ -114,6 +114,44 @@ export const SLANG_MAP: Record<string, string> = {
 
 /** Ngành ứng dụng theo từng danh mục — dùng cho tab "Ứng dụng" ở trang chi
     tiết sản phẩm. Tên ngành khớp với SECTOR_CARDS trong lib/constants.ts. */
+/**
+ * Các NHÓM NHỎ mỗi hãng phân phối, theo sheet "Danh mục sản phẩm" của file
+ * "Danh sách thương hiệu.xlsx" KTD gửi (bản 10/10/2026). Khoá là slug hãng,
+ * giá trị là slug nhóm nhỏ.
+ *
+ * Ô chọn nhóm ở trang riêng của hãng đọc bảng này — góp ý "sửa nhỏ
+ * 15-10-2026": trang Martor thiếu nhóm "Kéo an toàn", và các hãng còn lại
+ * không có ô chọn nhóm. Trước đây danh sách nhóm chỉ rút ra từ sản phẩm đang
+ * có, nên hãng chưa có sản phẩm ở nhóm nào thì nhóm đó biến mất, và hãng chỉ
+ * có hàng ở một nhóm thì ô chọn bị ẩn hẳn.
+ *
+ * Sản phẩm nằm ở nhóm KHÔNG có trong bảng vẫn được thêm vào ô chọn (xem
+ * getBrandCategories), nên bảng này thiếu thì chỉ thiếu nhóm trống, không
+ * bao giờ giấu mất sản phẩm.
+ */
+export const NHOM_THEO_HANG: Record<string, string[]> = {
+  martor: ['dao-an-toan', 'keo-an-toan', 'luoi-dao-phu-kien'],
+  karnasch: ['mui-khoan', 'dao-phay', 'ta-ro-dung-cu-tao-ren', 'dao-doa', 'mui-khoet-mui-cua-lo', 'dung-cu-gia-cong-composite-honeycomb'],
+  hartner: ['mui-khoan', 'dao-phay', 'ta-ro-dung-cu-tao-ren', 'dao-doa'],
+  helical: ['dao-phay'],
+  corehog: ['dung-cu-gia-cong-composite-honeycomb'],
+  ata: ['may-mai-may-cha-nham-khi-nen'],
+  morrisflex: ['mui-mai-hop-kim'],
+  garryson: ['mui-mai-hop-kim', 'cac-loai-nham-phu-kien'],
+  'bevel-tools': ['may-vat-mep-bo-canh-cam-tay', 'may-vat-mep-de-ban', 'dao-vat-mep-bo-canh-phu-kien'],
+  diprofil: ['may-giua-may-danh-bong-khuon', 'giua-da-danh-bong-dung-cu-kim-cuong-cbn'],
+  buchem: ['hoa-chat-bao-duong-ve-sinh-khuon-truc-vit'],
+  // Rocklin gồm hai thương hiệu con: MoldMender (sửa khuôn) và Rocklinizer.
+  rocklinizer: ['thiet-bi-sua-chua-khuon', 'thiet-bi-rocklinizer', 'dien-cuc-phu-kien-rocklinizer'],
+  tschorn: ['dau-do-3d-dau-do-tiep-xuc', 'dung-cu-do-canh', 'thiet-bi-xac-dinh-diem-0'],
+  lenzkes: ['kep-nhanh-multi-quick', 'khung-kep-s-series', 'kep-canh', 'kep-xich'],
+  fiam: ['to-vit-cong-nghiep-cam-tay', 'to-vit-cam-tay-cap-vit-tu-dong', 'he-thong-siet-tu-dong'],
+  sloky: ['to-vit-luc-bo-dung-cu-phu-kien'],
+  tecna: ['pa-lang-can-bang', 'thiet-bi-do-thong-so-han', 'phu-kien-do'],
+  technomark: ['may-khac-cham', 'may-khac-laser'],
+  rtc: ['khop-noi-nhanh-don', 'khop-noi-nhanh-da-duong', 'bo-chia-dong-ong-dan', 'bo-dieu-khien-luu-luong-phu-kien'],
+}
+
 export const CATEGORY_SECTORS: Record<string, string[]> = {
   'an-toan': ['Ô tô & linh kiện', 'Điện tử & lắp ráp công nghiệp chính xác', 'Khuôn mẫu & ép nhựa'],
   'cat-got-cnc': ['Gia công cơ khí & CNC', 'Hàng không vũ trụ', 'Đóng tàu & kết cấu kim loại'],

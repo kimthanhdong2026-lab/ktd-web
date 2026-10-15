@@ -289,7 +289,13 @@ export default async function BrandPage({ params, searchParams }: PageProps) {
             </div>
           ) : (
             <p className="rounded-2xl border border-hairline bg-white px-5 py-16 text-center text-[16px] text-ink-600">
-              {tuKhoa || dangChon ? t.brandPage.noMatch : t.brandPage.empty}
+              {/* Nhóm trống là chuyện bình thường: ô chọn liệt kê đủ nhóm hãng
+                  phân phối, kể cả nhóm chưa đưa sản phẩm lên web. */}
+              {tuKhoa
+                ? t.brandPage.noMatch
+                : dangChon
+                  ? t.brandPage.groupEmpty
+                  : t.brandPage.empty}
             </p>
           )}
         </section>

@@ -1,6 +1,5 @@
 'use client'
 
-import Image from 'next/image'
 import { useEffect, useState } from 'react'
 import { useStore } from './StoreProvider'
 import { IconArrowUp, IconPhone, IconQuote, IconSearch } from './Icons'
@@ -79,8 +78,13 @@ export function FloatingCTA() {
       </Item>
 
       <Item>
-        {/* Logo Zalo thật, lấy từ chính ảnh trong "Sửa web 4" — bản cũ dùng
-            một bong bóng chat chung chung, khách không nhận ra là Zalo. */}
+        {/* Logo Zalo thật — bản cũ dùng một bong bóng chat chung chung, khách
+            không nhận ra là Zalo.
+
+            Dùng bản VECTOR gốc (Wikimedia Commons, "Icon of Zalo.svg") thay
+            cho ảnh PNG 125px cắt từ ảnh chụp trong "Sửa web 4": ảnh đó nhòe
+            khi hiện ở màn hình nét cao — góp ý "sửa nhỏ 15-10-2026". Vector
+            thì nét ở mọi cỡ. Thẻ img thường vì next/image không tối ưu SVG. */}
         <a
           href={ZALO_URL}
           target="_blank"
@@ -89,12 +93,12 @@ export function FloatingCTA() {
           title={t.cta.chatZalo}
           className={TILE}
         >
-          <Image
-            src="/assets/zalo-logo.png"
+          <img
+            src="/assets/zalo-logo.svg"
             alt=""
-            width={125}
-            height={128}
-            className="h-[34px] w-auto md:h-9"
+            width={36}
+            height={36}
+            className="h-[34px] w-[34px] md:h-9 md:w-9"
           />
         </a>
       </Item>

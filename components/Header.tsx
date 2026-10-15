@@ -53,6 +53,16 @@ export function Header({ brands }: { brands: Brand[] }) {
   const { openSearch, openRfq, cartCount, showToast } = useStore()
   const [scrolled, setScrolled] = useState(false)
   const [mobileNavOpen, setMobileNavOpen] = useState(false)
+  /**
+   * Ép menu xổ thương hiệu đóng lại ngay khi khách bấm chọn một hãng — yêu
+   * cầu "sửa nhỏ 15-10-2026".
+   *
+   * Menu mở bằng CSS (hover và focus-within). Bấm xong, trang hãng mở ra
+   * nhưng chuột vẫn đang nằm trên menu và liên kết vừa bấm vẫn giữ focus, nên
+   * menu cứ treo đó tới khi khách bấm ra ngoài. Cờ này giấu menu cho tới khi
+   * chuột rời khỏi vùng THƯƠNG HIỆU; lần rê vào sau menu lại mở bình thường.
+   */
+  const [dongMenuHang, setDongMenuHang] = useState(false)
   const [moHangDt, setMoHangDt] = useState(false)
 
   // Chỉ điều khiển bóng đổ — không đụng tới chiều cao, tránh vòng lặp giữa
@@ -124,14 +134,28 @@ export function Header({ brands }: { brands: Brand[] }) {
                trễ khi rê chuột. Bản thân mục THƯƠNG HIỆU vẫn là liên kết thật
                tới trang danh sách. */
             return (
-              <div key={item.href} className="group relative">
+              <div
+                key={item.href}
+                className="group relative"
+                onMouseLeave={() => setDongMenuHang(false)}
+              >
                 {lienKet}
-                <div className="invisible absolute left-0 top-full z-50 pt-2 opacity-0 transition-opacity duration-150 group-focus-within:visible group-focus-within:opacity-100 group-hover:visible group-hover:opacity-100">
+                <div
+                  className={cx(
+                    'invisible absolute left-0 top-full z-50 pt-2 opacity-0 transition-opacity duration-150',
+                    !dongMenuHang &&
+                      'group-focus-within:visible group-focus-within:opacity-100 group-hover:visible group-hover:opacity-100'
+                  )}
+                >
                   <ul className="grid max-h-[70vh] w-[520px] grid-cols-2 gap-x-2 overflow-y-auto rounded-xl border border-hairline bg-white p-3 shadow-lg">
                     {brands.map((b) => (
                       <li key={b.slug}>
                         <Link
                           href={path(`/thuong-hieu/${b.slug}`)}
+                          onClick={(e) => {
+                            setDongMenuHang(true)
+                            e.currentTarget.blur()
+                          }}
                           className="block truncate rounded-md px-3 py-2 text-sm font-medium text-ink-700 hover:bg-ktd-50 hover:text-ktd-600"
                         >
                           {b.name}

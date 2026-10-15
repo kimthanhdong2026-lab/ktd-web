@@ -83,6 +83,7 @@ export const en: Dictionary = {
     showing: (n: number) => `Showing ${n} products`,
     clear: 'Clear search and filter',
     noMatch: 'No products match. Try another keyword or pick a different group.',
+    groupEmpty: 'This group has no products on the website yet. Contact KTD for advice and a quotation.',
     empty: 'No products from this brand on the site yet. Contact KTD for advice.',
     viewAll: (ten: string) => `View all ${ten} products`,
     count: (n: number) => `${n} products`,

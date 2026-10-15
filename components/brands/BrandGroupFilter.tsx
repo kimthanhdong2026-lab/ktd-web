@@ -86,8 +86,9 @@ export function BrandGroupFilter({
           />
         </label>
 
-        {/* Hãng chỉ có một nhóm thì ô chọn không có gì để chọn — bỏ đi. */}
-        {nhoms.length > 1 && (
+        {/* Luôn hiện ô chọn, kể cả hãng chỉ có một nhóm — góp ý "sửa nhỏ
+            15-10-2026": mọi hãng phải có ô chọn nhóm như trang Martor. */}
+        {nhoms.length > 0 && (
           <select
             value={nhom}
             aria-label={nhan.nhom}
