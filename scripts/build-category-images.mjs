@@ -8,8 +8,11 @@
 // khối xám vuông nổi lên giữa thẻ trắng. Đoạn 13 nói rõ: "nên đồng bộ màu nền
 // của ảnh với nội dung bên dưới".
 //
-// Vì vậy ảnh được cắt về tỉ lệ 4:3 và chèn lên nền TRẮNG, rồi để giao diện phủ
-// một dải chuyển mờ ở đáy cho ảnh tan vào thẻ.
+// Ảnh giữ NGUYÊN KHUNG VUÔNG, không cắt — góp ý "sửa nhỏ 15-10-2026": chữ
+// che mất sản phẩm. Bản trước cắt về 4:3 bằng cách bỏ 12,5% trên và dưới,
+// nhưng sản phẩm trong ảnh gốc chiếm 85–100% chiều cao khung (đã đo), nên
+// cắt kiểu gì cũng mất chân sản phẩm và phần đáy còn lại thì sát ngay dòng
+// chữ. Giao diện lo phần làm ảnh tan vào thẻ trắng (xem CategoryTiles).
 //
 // Chạy: node scripts/build-category-images.mjs
 import sharp from 'sharp'
@@ -20,7 +23,7 @@ import { readFileSync } from 'node:fs'
 const SRC = 'Hop-thu-den/Ảnh danh mục sản phẩm-20261001T081011Z-1-001/Ảnh danh mục sản phẩm'
 const OUT = 'public/assets/categories'
 const RONG = 640
-const CAO = 480 // 4:3 — thấp hơn ảnh vuông gốc, để ô không quá cao
+const CAO = 640 // vuông như ảnh gốc — xem ghi chú đầu file
 
 /** Lặp lại cách đặt slug của gen-danh-muc-sql.mjs. */
 const SLUG_THEO_STT = {

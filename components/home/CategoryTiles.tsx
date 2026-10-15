@@ -43,30 +43,40 @@ export async function CategoryTiles({ lang = DEFAULT_LOCALE }: { lang?: Locale }
                 href={href(`/san-pham?category=${c.slug}`, lang)}
                 className="group flex h-full flex-col overflow-hidden rounded-[26px] border border-hairline bg-white transition duration-200 hover:-translate-y-0.5 hover:border-ktd-600 hover:shadow-md"
               >
-                <div className="relative aspect-[4/3] w-full overflow-hidden bg-white">
+                {/* Ảnh VUÔNG, giữ trọn khung ảnh gốc — góp ý "sửa nhỏ 15-10-2026":
+                    chữ che mất sản phẩm. Bản trước cắt ảnh về 4:3 rồi phủ thêm
+                    dải mờ trắng ở đáy, mất cả chân sản phẩm lẫn phần sát chữ. */}
+                <div className="relative aspect-square w-full overflow-hidden bg-white">
                   <Image
                     src={`/assets/categories/${c.slug}.webp`}
                     alt=""
                     width={640}
-                    height={480}
+                    height={640}
                     sizes="(max-width: 640px) 46vw, (max-width: 1024px) 30vw, 300px"
                     className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.04]"
                   />
-                  {/* Dải chuyển mờ sang trắng ở đáy ảnh. Nền ảnh gốc là xám xanh
-                      rất nhạt chứ không trắng hẳn, nên nếu để nguyên sẽ thấy một
-                      đường ranh giới ngang giữa ảnh và phần chữ.
-
-                      Thu từ 64px xuống 28px theo mục TC11 của "Sửa web 5": dải
-                      cũ phủ trắng gần một phần năm ảnh, che mất phần dưới của
-                      sản phẩm. 28px vừa đủ xoá đường ranh giới. */}
-                  <span
-                    aria-hidden="true"
-                    className="pointer-events-none absolute inset-x-0 bottom-0 h-7 bg-gradient-to-b from-transparent to-white"
+                </div>
+                {/* Dải nối ảnh với phần chữ. Nền ảnh gốc là xám xanh nhạt chứ
+                    không trắng, đặt sát thẻ trắng sẽ lộ một đường kẻ ngang. Thay
+                    vì phủ mờ lên đáy ảnh (che sản phẩm), dải này nằm DƯỚI ảnh:
+                    một bản lật ngược, nhoè và mờ dần của chính đáy ảnh, nên màu
+                    nền tan dần sang trắng mà không đè lên sản phẩm nào. */}
+                <div aria-hidden="true" className="relative h-6 w-full overflow-hidden">
+                  <Image
+                    src={`/assets/categories/${c.slug}.webp`}
+                    alt=""
+                    width={640}
+                    height={640}
+                    sizes="(max-width: 640px) 46vw, (max-width: 1024px) 30vw, 300px"
+                    className="absolute inset-x-0 top-0 h-auto w-full -scale-y-100 opacity-60 blur-[3px]"
+                    style={{
+                      WebkitMaskImage: 'linear-gradient(to bottom, #000, transparent)',
+                      maskImage: 'linear-gradient(to bottom, #000, transparent)',
+                    }}
                   />
                 </div>
 
-                {/* Chữ lùi xuống thêm (pt-3 -> pt-5) để tách hẳn khỏi ảnh — TC11. */}
-                <div className="flex flex-1 flex-col p-5 pt-5 md:p-6 md:pt-5">
+                <div className="flex flex-1 flex-col p-5 pt-2 md:p-6 md:pt-2">
                   <span className="mb-1.5 block font-display text-[17px] font-semibold leading-snug text-ink-900 md:text-[19px]">
                     {c.name}
                   </span>
