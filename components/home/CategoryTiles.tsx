@@ -56,27 +56,10 @@ export async function CategoryTiles({ lang = DEFAULT_LOCALE }: { lang?: Locale }
                     className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.04]"
                   />
                 </div>
-                {/* Dải nối ảnh với phần chữ. Nền ảnh gốc là xám xanh nhạt chứ
-                    không trắng, đặt sát thẻ trắng sẽ lộ một đường kẻ ngang. Thay
-                    vì phủ mờ lên đáy ảnh (che sản phẩm), dải này nằm DƯỚI ảnh:
-                    một bản lật ngược, nhoè và mờ dần của chính đáy ảnh, nên màu
-                    nền tan dần sang trắng mà không đè lên sản phẩm nào. */}
-                <div aria-hidden="true" className="relative h-6 w-full overflow-hidden">
-                  <Image
-                    src={`/assets/categories/${c.slug}.webp`}
-                    alt=""
-                    width={640}
-                    height={640}
-                    sizes="(max-width: 640px) 46vw, (max-width: 1024px) 30vw, 300px"
-                    className="absolute inset-x-0 top-0 h-auto w-full -scale-y-100 opacity-60 blur-[3px]"
-                    style={{
-                      WebkitMaskImage: 'linear-gradient(to bottom, #000, transparent)',
-                      maskImage: 'linear-gradient(to bottom, #000, transparent)',
-                    }}
-                  />
-                </div>
-
-                <div className="flex flex-1 flex-col p-5 pt-2 md:p-6 md:pt-2">
+                {/* Không còn dải đệm nào giữa ảnh và chữ — góp ý 20/10/2026: dải mờ lật
+                    ngược đặt dưới ảnh trông như "một đoạn đệm màu khác". Ảnh
+                    vuông dừng gọn ở mép, chữ bắt đầu ngay trên nền trắng. */}
+                <div className="flex flex-1 flex-col p-5 pt-4 md:p-6 md:pt-5">
                   <span className="mb-1.5 block font-display text-[17px] font-semibold leading-snug text-ink-900 md:text-[19px]">
                     {c.name}
                   </span>
