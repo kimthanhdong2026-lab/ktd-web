@@ -57,4 +57,5 @@ Hop-thu-den/
 # Bước trung gian của scripts/trong-hoa-nen-logo.mjs: bản logo trước khi bóc nền
 # và bản vừa bóc xong. Bản dùng thật nằm thẳng trong public/assets/brands/.
 public/assets/brands/goc-nen-trang/
+public/assets/brands/banner/goc-nen-trang/
 public/assets/brands/trong-suot/
