@@ -141,10 +141,11 @@ export default async function BrandListPage({ params }: PageProps) {
                       {t.brandPage.from(b.origin)}
                     </p>
 
-                    {/* Cắt đoạn giới thiệu cho các thẻ cao bằng nhau. Bản đầy đủ
-                        nằm ở trang riêng của hãng. */}
+                    {/* Câu mô tả ngắn team viết cho từng hãng (sheet "MTN - Brand",
+                        câu A2 vòng 2), vừa 3 dòng. Hãng nào chưa có câu ngắn thì
+                        lấy đoạn giới thiệu dài, cắt ở dòng thứ 3. */}
                     <p className="line-clamp-3 text-[16px] leading-relaxed text-ink-600">
-                      {b.intro}
+                      {b.desc || b.intro}
                     </p>
 
                     <span className="mt-auto pt-4 text-[16px] font-semibold text-ktd-600 group-hover:underline">

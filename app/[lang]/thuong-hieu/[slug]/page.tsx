@@ -44,7 +44,8 @@ export async function generateMetadata({
   if (!b) return {};
   return {
     title: `${b.name} — ${dict(lang).brandPage.from(b.origin)}`,
-    description: b.intro.slice(0, 160),
+    // Câu ngắn team viết cho hãng làm mô tả trên Google (A2 vòng 2, thay TH09).
+    description: (b.desc || b.intro).slice(0, 160),
     alternates: {
       canonical: href(`/thuong-hieu/${params.slug}`, lang),
       languages: {
