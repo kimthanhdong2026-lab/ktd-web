@@ -23,13 +23,41 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 }
 
 /**
- * Logo nhiều tầng — có biểu tượng hoặc dòng chữ phụ xếp trên dưới tên hãng.
+ * Chiều cao (px) của từng logo trên thẻ, để 19 logo NHÌN to bằng nhau — góp ý
+ * của KTD ngày 04/11/2026 (Beveltools, Buchem còn nhỏ).
  *
- * Thẻ chia cỡ logo theo CHIỀU CAO (32px). Logo một dòng chữ thì vừa, nhưng
- * logo nhiều tầng bị chia 32px đó cho hai ba dòng nên tên hãng còn bé xíu.
- * Mục TH02 của "Sửa web 5" nêu bốn hãng này; cho chúng cao 60px.
+ * Bản trước chỉ có hai cỡ: 32px cho mọi logo và 60px cho bốn logo nhiều tầng
+ * (TH02 của "Sửa web 5"). Cùng chiều cao nhưng logo vuông vức như Buchem trông
+ * nhỏ hơn hẳn logo dài như Karnasch.
+ *
+ * Các số dưới đây ĐO ĐƯỢC từ file logo gốc (đã cắt sát viền): mỗi logo được
+ * cho cùng một diện tích khung bao, rồi bù theo độ đậm nét — logo nét mảnh,
+ * nhiều khoảng trắng bên trong (Hartner, Rocklin, Tschorn) được to thêm, tối
+ * đa 25%. Rộng tối đa 220px, cao tối đa 60px để vừa thẻ.
+ *
+ * Thêm hãng mới mà chưa có số thì logo cao 34px.
  */
-const LOGO_CAO = new Set(['hartner', 'tschorn', 'rocklinizer', 'lenzkes'])
+const LOGO_CAO: Record<string, number> = {
+  martor: 32,
+  karnasch: 21,
+  hartner: 55,
+  helical: 26,
+  corehog: 33,
+  ata: 48,
+  morrisflex: 28,
+  garryson: 39,
+  'bevel-tools': 37,
+  diprofil: 25,
+  buchem: 42,
+  rocklinizer: 58,
+  tschorn: 56,
+  lenzkes: 48,
+  fiam: 43,
+  sloky: 34,
+  technomark: 33,
+  tecna: 36,
+  rtc: 58,
+}
 
 export default async function BrandListPage({ params }: PageProps) {
   const lang: Locale = isLocale(params.lang) ? params.lang : DEFAULT_LOCALE
@@ -77,16 +105,21 @@ export default async function BrandListPage({ params }: PageProps) {
                         theo chiều cao, nên logo chữ dài như Karnasch bị thu
                         còn một vệt mờ. Bản gốc giữ đúng tỉ lệ thật, cao bằng
                         nhau, rộng thì chặn bằng max-w. */}
+                    {/* Logo nằm trong một ô cao cố định 60px, căn giữa theo chiều
+                        dọc: logo cao thấp khác nhau nhưng dòng "Thương hiệu đến
+                        từ…" và đoạn chữ bên dưới của các thẻ cùng hàng vẫn
+                        thẳng hàng với nhau. */}
                     {b.logo ? (
-                      <Image
-                        src={`/assets/brands/${b.slug}.webp`}
-                        alt={b.name}
-                        width={320}
-                        height={128}
-                        className={`mb-3 w-auto self-start object-contain object-left ${
-                          LOGO_CAO.has(b.slug) ? 'h-[60px] max-w-[210px]' : 'h-8 max-w-[170px]'
-                        }`}
-                      />
+                      <div className="mb-3 flex h-[60px] items-center">
+                        <Image
+                          src={`/assets/brands/${b.slug}.webp`}
+                          alt={b.name}
+                          width={320}
+                          height={128}
+                          style={{ height: LOGO_CAO[b.slug] ?? 34 }}
+                          className="w-auto max-w-[220px] object-contain object-left"
+                        />
+                      </div>
                     ) : (
                       <span className="mb-3 font-display text-[18px] font-bold text-ink-900">
                         {b.name}
