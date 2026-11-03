@@ -191,31 +191,33 @@ export const ABOUT_TIMELINE = [
 ]
 
 /**
- * Liên kết mạng xã hội ở chân trang.
+ * Liên kết mạng xã hội ở chân trang và thanh đầu trang.
  *
- * Ba đường dẫn này hiện trỏ về TRANG CHỦ của từng mạng, chưa phải trang của
- * KTĐ. Ban Giám đốc biết điều đó và chọn để nguyên (trả lời ngày 03/10/2026:
- * "cứ để vậy, thay sau"), sẽ cấp đường dẫn thật sau.
+ * Từ 03/10 tới 24/10/2026 cả ba trỏ tạm về trang chủ của từng mạng (BGĐ chọn
+ * "cứ để vậy, thay sau"). Đường dẫn thật dưới đây do team gửi ngày 24/10/2026,
+ * mục 5 của file trao đổi ngày 04/10. LinkedIn thêm theo đoạn 39 của "Sửa web 4".
  *
- * LinkedIn thêm vào theo đoạn 39 của "Sửa web 4": thêm biểu tượng trước, gắn
- * link sau.
- *
- * Khi có đường dẫn thật thì sửa đúng ở đây, không phải lục trong giao diện.
+ * Đổi đường dẫn thì sửa đúng ở đây, không phải lục trong giao diện.
  */
 export const MANG_XA_HOI = [
-  { ten: 'Facebook', href: 'https://www.facebook.com' },
-  { ten: 'YouTube', href: 'https://www.youtube.com' },
-  { ten: 'LinkedIn', href: 'https://www.linkedin.com' },
+  { ten: 'Facebook', href: 'https://www.facebook.com/kimthanhdongthietbicongnghiepvietnam' },
+  { ten: 'YouTube', href: 'https://www.youtube.com/@kimthanhdong' },
+  { ten: 'LinkedIn', href: 'https://www.linkedin.com/company/kim-thanh-dong-co-ltd/' },
 ] as const
+
+/** Tra nhanh theo tên mạng, cho các chỗ chỉ cần một đường dẫn (thanh đầu trang). */
+export const LINK_MXH = Object.fromEntries(MANG_XA_HOI.map((m) => [m.ten, m.href])) as Record<
+  (typeof MANG_XA_HOI)[number]['ten'],
+  string
+>
 
 /**
  * Gian hàng Shopee của KTĐ, thay cho logo KTĐ ở chân trang (đoạn 24 của
  * "Sửa web 4": thay logo KTD bằng logo Shopee, gắn link Shopee vào).
  *
- * Đường dẫn hiện trỏ về trang chủ Shopee vì Ban Giám đốc chưa cấp địa chỉ gian
- * hàng. Có địa chỉ thật thì sửa đúng dòng này.
+ * Địa chỉ gian hàng thật do team gửi ngày 24/10/2026.
  */
 export const SHOPEE = {
-  href: 'https://shopee.vn',
+  href: 'https://shopee.vn/shop/961761465',
   logo: '/assets/shopee-logo.webp',
 }

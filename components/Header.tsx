@@ -5,7 +5,7 @@ import Image from 'next/image'
 import { usePathname, useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { useStore } from './StoreProvider'
-import { PHONES } from '@/lib/constants'
+import { LINK_MXH, PHONES } from '@/lib/constants'
 import { useLang } from './LangProvider'
 import { LOCALES, href as localeHref, stripLocale } from '@/lib/i18n'
 import { cx } from '@/lib/utils'
@@ -196,7 +196,7 @@ export function Header({ brands }: { brands: Brand[] }) {
               nên không còn chỗ; chân trang vẫn có đủ hai liên kết. */}
           <div className="hidden items-center gap-2 xl:flex">
             <a
-              href="https://www.facebook.com"
+              href={LINK_MXH.Facebook}
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Facebook"
@@ -205,7 +205,7 @@ export function Header({ brands }: { brands: Brand[] }) {
               f
             </a>
             <a
-              href="https://www.youtube.com"
+              href={LINK_MXH.YouTube}
               target="_blank"
               rel="noopener noreferrer"
               aria-label="YouTube"
@@ -325,7 +325,7 @@ export function Header({ brands }: { brands: Brand[] }) {
                   <span className={lang === 'en' ? 'text-ktd-600' : 'text-ink-500'}>EN</span>
                 </Link>
                 <a
-                  href="https://www.facebook.com"
+                  href={LINK_MXH.Facebook}
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="Facebook"
@@ -334,7 +334,7 @@ export function Header({ brands }: { brands: Brand[] }) {
                   f
                 </a>
                 <a
-                  href="https://www.youtube.com"
+                  href={LINK_MXH.YouTube}
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="YouTube"

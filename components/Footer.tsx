@@ -54,12 +54,8 @@ export async function Footer({ lang = DEFAULT_LOCALE }: { lang?: Locale }) {
                   className="h-[30px] w-auto"
                 />
               </a>
-              {/* Biểu tượng to lên 34 -> 42px cho dễ thấy (đoạn 24), và thêm
-                  LinkedIn để sau này gắn link (đoạn 39).
-
-                  Ba liên kết hiện trỏ về trang chủ của từng mạng, chưa phải
-                  trang của KTĐ — Ban Giám đốc biết và chọn để nguyên, sẽ cấp
-                  đường dẫn sau. Khai ở lib/constants.ts để lúc đó sửa một chỗ. */}
+              {/* Biểu tượng to lên 34 -> 42px cho dễ thấy (đoạn 24), thêm
+                  LinkedIn (đoạn 39). Đường dẫn khai ở lib/constants.ts. */}
               <div className="flex gap-2.5">
                 {MANG_XA_HOI.map((m) => (
                   <a
