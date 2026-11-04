@@ -202,6 +202,7 @@ export const en: Dictionary = {
 
   product: {
     partNo: 'Part number',
+    highlights: 'Key features',
     brand: 'Brand',
     origin: 'Origin',
     addToQuote: '+ ADD TO QUOTE REQUEST',

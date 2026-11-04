@@ -190,6 +190,7 @@ export const vi = {
 
   product: {
     partNo: 'Mã hàng',
+    highlights: 'Điểm nổi bật',
     brand: 'Thương hiệu',
     origin: 'Xuất xứ',
     addToQuote: '+ THÊM VÀO YÊU CẦU BÁO GIÁ',

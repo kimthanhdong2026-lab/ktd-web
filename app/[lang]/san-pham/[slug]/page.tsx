@@ -9,6 +9,7 @@ import { QuoteButton } from '@/components/QuoteButton'
 import { getAllProductSlugs, getProductBySlug, getRelatedProducts } from '@/lib/db'
 import { DEFAULT_LOCALE, LOCALES, dict, href, isLocale, type Locale } from '@/lib/i18n'
 import { PHONES, ZALO_URL } from '@/lib/constants'
+import { IconCheck } from '@/components/Icons'
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://kimthanhdong.vn'
 
@@ -116,6 +117,24 @@ export default async function ProductDetailPage({ params }: PageProps) {
           </dl>
 
           <p className="mb-7 text-body-lg text-ink-700">{product.desc}</p>
+
+          {/* Điểm nổi bật — team chốt 05/11/2026 cho lô 1. Cùng kiểu gạch đầu
+              dòng với khối "Điểm nổi bật" ở trang thương hiệu. */}
+          {product.highlights && (
+            <section className="mb-7">
+              <h2 className="mb-3 font-display text-[16px] font-bold text-ktd-600">
+                {t.product.highlights}
+              </h2>
+              <ul className="space-y-2">
+                {product.highlights.map((m) => (
+                  <li key={m} className="flex gap-3 text-[15px] leading-relaxed text-ink-700">
+                    <IconCheck className="mt-[5px] h-[15px] w-[15px] flex-none text-ktd-600" />
+                    <span>{m}</span>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
 
           <QuoteButton addPart={product.part} addName={product.name} addBrand={product.brandLabel} className="mb-3 w-full">
             {t.product.addToQuote}

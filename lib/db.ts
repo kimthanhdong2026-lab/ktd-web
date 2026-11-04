@@ -73,6 +73,9 @@ interface ProductRow {
   applications_en: string[] | null
   specs_vi: { label: string; value: string }[] | null
   specs_en: { label: string; value: string }[] | null
+  /** Có từ migration 0021. Các truy vấn qua hàm search không trả cột này. */
+  highlights_vi?: string[] | null
+  highlights_en?: string[] | null
   images: string[] | null
   doc_pdf: string | null
   doc_url: string | null
@@ -117,6 +120,9 @@ function toProduct(r: ProductRow, lang: Locale = DEFAULT_LOCALE): Product {
     applications: pick(r.applications_en, r.applications_vi ?? [], lang).length
       ? pick(r.applications_en, r.applications_vi ?? [], lang)
       : undefined,
+    highlights: pick(r.highlights_en, r.highlights_vi ?? [], lang).length
+      ? pick(r.highlights_en, r.highlights_vi ?? [], lang)
+      : undefined,
     specs: specs.length ? specs.map((s) => [s.label, s.value] as [string, string]) : undefined,
     // Ảnh lưu đường dẫn tương đối, dựng URL ở đây để bảng không phụ thuộc tên miền
     images: r.images?.length ? r.images.map((p) => fileUrl(p)!) : undefined,
@@ -132,7 +138,7 @@ function toProduct(r: ProductRow, lang: Locale = DEFAULT_LOCALE): Product {
 const PRODUCT_COLS =
   'part,slug,brand_slug,category_slug,name_vi,name_en,sub_vi,sub_en,series,' +
   'origin_vi,origin_en,desc_vi,desc_en,desc_full_vi,desc_full_en,' +
-  'applications_vi,applications_en,specs_vi,specs_en,' +
+  'applications_vi,applications_en,specs_vi,specs_en,highlights_vi,highlights_en,' +
   'images,doc_pdf,doc_url,catalog,keywords,featured,tag,' +
   'brands(name),categories(name_vi,name_en)'
 

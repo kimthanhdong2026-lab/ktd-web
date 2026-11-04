@@ -74,6 +74,8 @@ export interface Product {
   descFull?: string[]
   /** Ứng dụng thực tế do hãng cung cấp; thiếu thì suy ra từ danh mục. */
   applications?: string[]
+  /** Điểm nổi bật — gạch đầu dòng ở trang chi tiết, dưới câu mô tả ngắn. */
+  highlights?: string[]
   /** Ảnh sản phẩm thật, tối đa 5 (spec C3). Thiếu thì hiện ô placeholder. */
   images?: string[]
   specs?: [string, string][]
