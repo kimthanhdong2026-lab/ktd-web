@@ -394,9 +394,13 @@ def ghi_lo(hang, ban_ghi, se_xoa):
         goi('DELETE', f'/rest/v1/products?part=eq.{urllib.parse.quote(p)}&brand_slug=eq.{hang}')
         print(f'  xóa {p}')
 
-    # 4. ghi; không gửi featured/tag nên giá trị cũ được giữ
+    # 4. ghi; không gửi featured/tag/catalog/doc_pdf nên giá trị cũ được giữ —
+    #    trừ khi mã đổi hãng, khi đó xóa sạch phần của bản mẫu cũ.
     for b in ban_ghi:
-        goi('POST', '/rest/v1/products?on_conflict=part', body={k: b.get(k) for k in COT_GHI},
+        hang_ghi = {k: b.get(k) for k in COT_GHI}
+        if b['_doi_hang']:
+            hang_ghi.update(catalog=None, doc_pdf=None, featured=False, tag=None, sub_vi=None, sub_en=None)
+        goi('POST', '/rest/v1/products?on_conflict=part', body=hang_ghi,
             headers={'Prefer': 'resolution=merge-duplicates,return=minimal'})
     print(f'  ghi {len(ban_ghi)} sản phẩm')
 
@@ -467,8 +471,15 @@ for sheet in SHEETS:
         if THAY_MA.get(ma) in WEB:
             da_thay.add(THAY_MA[ma])
             canh.append(f'Thay mã cũ {THAY_MA[ma]} trên web (B4); giữ đường dẫn cũ')
+        # Mã đã có nhưng thuộc hãng KHÁC (sản phẩm mẫu gắn nhầm hãng, như SPM80R
+        # từng nằm ở Morrisflex): coi như sản phẩm mới — đường dẫn mới, không giữ
+        # ảnh, catalog, PDF, cờ nổi bật của bản cũ.
+        doi_hang = bool(cu) and cu['brand_slug'] != hang
+        if doi_hang:
+            canh.append(f'Mã đang ở hãng "{cu["brand_slug"]}" trên web — ghi đè toàn bộ, đường dẫn mới')
+            cu = None
         slug = cu['slug'] if cu else slugify(f'{ten} {ma}')
-        trang_thai = 'GHI ĐÈ (đã có trên web)' if cu else 'THÊM MỚI'
+        trang_thai = 'GHI ĐÈ (đã có trên web)' if cu else ('THÊM MỚI (thay mẫu khác hãng)' if doi_hang else 'THÊM MỚI')
 
         anh = ghep_anh.get(ma)
         if anh is None:
@@ -484,6 +495,7 @@ for sheet in SHEETS:
             'anh_thu_muc': anh, 'pdf_ten_file': chu(g('pdf')) or None,
             '_dong_excel': idx, '_trang_thai': trang_thai,
             '_anh_cu': (cu or {}).get('images') or [],
+            '_doi_hang': doi_hang,
         }
         if DICH:
             ghep_dich(b, loi, ud_en, full_en)
