@@ -2,9 +2,9 @@
 
 import { usePathname, useRouter } from 'next/navigation'
 import { useState, useTransition } from 'react'
-import { hoanTac, luuDanhMuc, luuKhoi, taiAnh, type DongDanhMuc } from '@/app/admin/actions'
+import { hoanTac, luuDanhMuc, luuKhoi, type DongDanhMuc } from '@/app/admin/actions'
+import { TaiAnh } from '@/components/admin/TaiTep'
 import type { GiaTriKhoi, GiaTriO, Muc, OChu, ODanhSach } from '@/lib/noi-dung'
-import { urlAnh } from '@/lib/noi-dung/anh'
 import { timKhoi, type Truong } from '@/lib/noi-dung/khoi'
 import { cx } from '@/lib/utils'
 
@@ -258,39 +258,16 @@ function ONhom({ tr, khoa, v, dat }: { tr: Truong; khoa: string; v: Muc[]; dat: 
   )
 }
 
-/** Ô ảnh: xem trước + chọn tệp. Tải xong mới lưu đường dẫn vào form; khối vẫn phải bấm Lưu. */
+/** Ô ảnh: tải xong mới lưu đường dẫn vào form; khối vẫn phải bấm Lưu. */
 export function OAnh({ tr, khoa, v, dat, thuMuc }: { tr: Truong; khoa: string; v: string; dat: (v: GiaTriO) => void; thuMuc?: string }) {
-  const [dangTai, setDangTai] = useState(false)
-  const [loi, setLoi] = useState<string | null>(null)
-  const chon = async (f: File | undefined) => {
-    if (!f) return
-    setDangTai(true)
-    setLoi(null)
-    const fd = new FormData()
-    fd.set('tep', f)
-    fd.set('thuMuc', thuMuc ?? `site/${khoa.replace(/^.*\./, '')}`)
-    if (tr.khungAnh) fd.set('khung', JSON.stringify(tr.khungAnh))
-    const r = await taiAnh(fd)
-    setDangTai(false)
-    if (r.ok) dat(r.duong)
-    else setLoi(r.loi)
-  }
-  const src = urlAnh(v)
   return (
-    <div>
-      <span className="mb-1 block text-[13px] font-medium text-ink-700">{tr.nhan}</span>
-      <div className="flex items-center gap-3">
-        <span className="placeholder-hatch flex h-16 w-24 flex-none items-center justify-center overflow-hidden rounded-md border border-hairline bg-white">
-          {src ? <img src={src} alt="" className="h-full w-full object-contain" /> : <span className="text-[11px] text-ink-500">Chưa có</span>}
-        </span>
-        <label className="btn-secondary min-h-[36px] cursor-pointer px-3 text-[13px]">
-          {dangTai ? 'Đang tải…' : 'Chọn ảnh…'}
-          <input type="file" accept="image/*" className="sr-only" disabled={dangTai} onChange={(e) => chon(e.target.files?.[0])} />
-        </label>
-        {tr.khungAnh && <span className="text-[12px] text-ink-500">Tự thu về {tr.khungAnh.rong}×{tr.khungAnh.cao}</span>}
-      </div>
-      {loi && <p className="mt-1 text-[12px] text-red-700">{loi}</p>}
-    </div>
+    <TaiAnh
+      nhan={tr.nhan}
+      thuMuc={thuMuc ?? `site/${khoa.replace(/^.*\./, '')}`}
+      khung={tr.khungAnh}
+      giaTri={v}
+      onDoi={(duong) => dat(duong)}
+    />
   )
 }
 

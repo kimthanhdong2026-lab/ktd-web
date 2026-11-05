@@ -339,9 +339,14 @@ export async function getCategories(lang: Locale = DEFAULT_LOCALE): Promise<Cate
 
 // -------------------------------------------------------------------- sản phẩm
 
-export async function getProductBySlug(slug: string, lang: Locale = DEFAULT_LOCALE): Promise<Product | undefined> {
+export async function getProductBySlug(
+  slug: string,
+  lang: Locale = DEFAULT_LOCALE,
+  tuyChon: { moi?: boolean } = {}
+): Promise<Product | undefined> {
   const rows = await rest<ProductRow[]>(
-    `products?select=${PRODUCT_COLS}&slug=eq.${encodeURIComponent(slug)}&limit=1`
+    `products?select=${PRODUCT_COLS}&slug=eq.${encodeURIComponent(slug)}&limit=1`,
+    tuyChon.moi ? { revalidate: 0 } : undefined
   )
   return rows[0] ? toProduct(rows[0], lang) : undefined
 }
