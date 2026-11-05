@@ -89,7 +89,7 @@ export function DanhSachDanhMuc({ nhoms, dangSua }: { nhoms: NhomTomTat[]; dangS
         </span>
       </td>
       <td className="px-3 py-2 text-right">
-        <Link href={`${pathname}?khoi=${encodeURIComponent(n.slug)}`} scroll={false} className="font-semibold text-ktd-600 hover:underline">Sửa →</Link>
+        <Link href={`${pathname}?khoi=${encodeURIComponent(n.slug)}`} scroll={false} className="whitespace-nowrap font-semibold text-ktd-600 hover:underline">Sửa →</Link>
       </td>
     </tr>
   )

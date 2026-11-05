@@ -107,7 +107,7 @@ export function DanhSachSanPham({
                 </label>
               </td>
               <td className="px-3 py-2 text-right">
-                <Link href={`/admin/san-pham/${r.slug}`} className="font-semibold text-ktd-600 hover:underline">Sửa →</Link>
+                <Link href={`/admin/san-pham/${r.slug}`} className="whitespace-nowrap font-semibold text-ktd-600 hover:underline">Sửa →</Link>
               </td>
             </tr>
           ))}

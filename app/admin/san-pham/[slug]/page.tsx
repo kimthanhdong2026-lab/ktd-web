@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { BangSuaSanPham, NHOM_SAN_PHAM, type SanPhamDangSua } from '@/components/admin/BangSuaSanPham'
+import { BangSuaSanPham, type SanPhamDangSua } from '@/components/admin/BangSuaSanPham'
+import { NHOM_SAN_PHAM } from '@/lib/admin/nhom-san-pham'
 import { KhungSua } from '@/components/admin/KhungSua'
 import { XemTruoc } from '@/components/admin/XemTruoc'
 import { LangProvider } from '@/components/LangProvider'
@@ -88,7 +89,7 @@ export default async function AdminSuaSanPham({ params, searchParams }: { params
                 lang={lang}
                 t={t}
                 khung={(k, node) => (
-                  <KhungSua key={k} {...khoi(k)} dangSua={nhom}>
+                  <KhungSua key={k} {...khoi(k)} dangSua={nhom} nhanNgoai={k !== 'sp.anh'}>
                     {node}
                   </KhungSua>
                 )}

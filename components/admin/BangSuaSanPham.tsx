@@ -5,6 +5,7 @@ import { useEffect, useState, useTransition } from 'react'
 import { hoanTacSanPham, luuSanPham, xoaSanPham, type DuLieuSanPham } from '@/app/admin/actions'
 import { Chu, ChuVE, DanhSach, KhungBang, NutDong, TieuDeNhom } from '@/components/admin/OChung'
 import { TaiAnh, TaiPdf } from '@/components/admin/TaiTep'
+import { NHOM_SAN_PHAM } from '@/lib/admin/nhom-san-pham'
 import { urlAnh } from '@/lib/noi-dung/anh'
 
 export interface SanPhamDangSua extends DuLieuSanPham {
@@ -12,12 +13,6 @@ export interface SanPhamDangSua extends DuLieuSanPham {
   slug: string
 }
 
-export const NHOM_SAN_PHAM = [
-  { id: 'sp.anh', so: 1, ten: 'Ảnh sản phẩm', moTa: 'Tối đa 5 ảnh; ảnh đầu là ảnh đại diện trên thẻ.' },
-  { id: 'sp.dau', so: 2, ten: 'Thông tin chính', moTa: 'Tên, hãng, nhóm, xuất xứ, câu mô tả ngắn, điểm nổi bật.' },
-  { id: 'sp.tab', so: 3, ten: 'Mô tả · Thông số · Ứng dụng · Tài liệu', moTa: 'Nội dung bốn tab bên dưới.' },
-  { id: 'sp.hien', so: 4, ten: 'Hiển thị & tìm kiếm', moTa: 'Ẩn/hiện, thứ tự ưu tiên, nhãn, từ khóa, trạng thái tiếng Anh.' },
-]
 
 /**
  * Bảng sửa một sản phẩm. Bốn nhóm ô ứng với bốn khung trên màn hình.
