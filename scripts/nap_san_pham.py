@@ -171,11 +171,22 @@ MA_RE = re.compile(r'[A-Z]{1,4}\d{2,}[\w./-]*|\d{3,}[\w./-]*', re.I)
 def tach_ma(o):
     """Ô MÃ HÀNG -> (mã chính, [mã biến thể])."""
     s = chu(o).lstrip('*').strip()
-    m = re.search(r'Mã chính\s*:\s*([^\s–,;]+)', s)
+    # Bộ mũi mài Morrisflex: "MORFLX-BK-5X6MM-6" rồi danh sách mũi trong bộ, có
+    # khi dính liền ("...MM-6KA30314-6KB30314-6"). Mũi trong bộ -> mã biến thể.
+    m = re.match(r'(MORL?FLX-[A-Z]{2}-\d+X\d+MM-\d)', s)
+    if m:
+        cac = []
+        for t in re.findall(r'K[A-Z]\d{5}\s*-\s*\d', s[m.end():]):
+            t = re.sub(r'\s', '', t)
+            if t not in cac:
+                cac.append(t)
+        return m.group(1), cac
+    m = re.search(r'Mã (?:chính|đại diện)\s*:\s*([^\s–,;]+)', s)
     if m:
         chinh = m.group(1).rstrip('.')
         cac = []
-        for t in re.findall(r'[A-Z]{2}\d{5}-[\w]+(?:\s+DIN)?(?:\s+ACC)?', s):
+        # "-NG6", "-6-175": không dùng [\w]+ vì ô hay dính chữ ("KE30610-2Cut 6")
+        for t in re.findall(r'[A-Z]{2}\d{5}-(?:NG)?\d+(?:-\d+)?(?:\s+DIN)?(?:\s+ACC)?', s):
             t = t.strip()
             if t != chinh and t not in cac:
                 cac.append(t)
@@ -186,15 +197,42 @@ def tach_ma(o):
     return s, []
 
 
+# Hết câu: dấu chấm sau chữ thường / số / ° / ), rồi chữ hoa. Không cắt số thập
+# phân ("12.7") hay chữ viết tắt toàn hoa ("O.A.L", "L.O.C").
+HET_CAU = re.compile(r'(?<=[a-zà-ỹ0-9°)%])\.\s*(?=[A-ZĐÀ-Ỹ])')
+
+
 def thong_so(o, canh):
-    out = []
-    for d in dong(o):
+    """Ô THÔNG SỐ -> [{label, value}].
+
+    Ô nhiều dòng: mỗi dòng một hàng, "nhãn: giá trị" (ATA: "SPM80R: 80.000 rpm; ...").
+    Ô một dòng có nhiều câu (Morrisflex: "Số lượng: 5 mũi.Kiểu răng: ...") tách
+    theo câu. Ô một dòng còn lại tách theo ";". Mẩu không có nhãn ("đầu phủ
+    quay") gom vào một hàng "Đặc điểm khác" — bảng không có hàng nhãn trống.
+    """
+    s = chu(o)
+    if '\n' in s.strip():
+        manh = dong(s)
+    elif HET_CAU.search(s):
+        manh = [x.strip() for x in HET_CAU.split(s) if x.strip()]
+    else:
+        manh = [x.strip() for x in s.split(';') if x.strip()]
+    out, le = [], []
+    for d in manh:
+        d = d.rstrip('.').strip()
         if ':' in d:
             k, v = d.split(':', 1)
             out.append({'label': k.strip(), 'value': v.strip()})
         else:
-            out.append({'label': '', 'value': d})
-            canh.append(f'Thông số không có dấu ":" — hiện thành một dòng không nhãn: "{d[:50]}"')
+            le.append(d)
+    if le:
+        if out:
+            out.append({'label': 'Đặc điểm khác', 'value': '; '.join(le)})
+        else:
+            out.append({'label': '', 'value': '; '.join(le)})
+            canh.append(f'Thông số không có dấu ":" — hiện thành một dòng không nhãn: "{le[0][:50]}"')
+    for t in out:
+        t['label'] = t['label'][:1].upper() + t['label'][1:]
     return out
 
 
@@ -353,7 +391,7 @@ def ghi_lo(hang, ban_ghi, se_xoa):
 
     # 3. xóa mẫu (B5) và mã cũ (B4) — trước khi ghi, vì bản mới dùng lại slug
     for p in se_xoa:
-        goi('DELETE', f'/rest/v1/products?part=eq.{urllib.parse.quote(p)}')
+        goi('DELETE', f'/rest/v1/products?part=eq.{urllib.parse.quote(p)}&brand_slug=eq.{hang}')
         print(f'  xóa {p}')
 
     # 4. ghi; không gửi featured/tag nên giá trị cũ được giữ
@@ -412,7 +450,10 @@ for sheet in SHEETS:
         ud, ud_en = tach_vi_en(dong(g('ud')))
         ts = thong_so(g('ts'), canh)
         if bien_the:
-            ts.append({'label': 'Các mã cùng dòng', 'value': ', '.join([ma] + bien_the)})
+            if ma.startswith('MOR'):
+                ts.append({'label': 'Các mũi trong bộ', 'value': ', '.join(bien_the)})
+            else:
+                ts.append({'label': 'Các mã cùng dòng', 'value': ', '.join([ma] + bien_the)})
         tk = [x.strip() for x in re.split(r'[,;\n]', chu(g('tk'))) if x.strip()]
         tk += [x for x in bien_the if x not in tk]
         link = chu(g('link'))
