@@ -291,7 +291,19 @@ def anh_webp(file_id):
     from PIL import Image
     req = urllib.request.Request(f'https://drive.google.com/uc?export=download&id={file_id}',
                                  headers={'User-Agent': 'Mozilla/5.0'})
-    im = Image.open(io.BytesIO(urllib.request.urlopen(req, timeout=120).read()))
+    raw = urllib.request.urlopen(req, timeout=300).read()
+    if raw[:15].lower().startswith(b'<!doctype html'):
+        # Tệp quá lớn để Drive quét virus (có ảnh Martor tới 103 MB): Drive trả
+        # trang hỏi "Download anyway" — gửi lại đúng các ô ẩn của form đó.
+        t = raw.decode('utf-8', 'ignore')
+        form = re.search(r'<form id="download-form" action="([^"]+)"(.*?)</form>', t, re.S)
+        if not form:
+            sys.exit(f'Drive không cho tải tệp {file_id}')
+        q = urllib.parse.urlencode(re.findall(r'name="([^"]+)" value="([^"]*)"', form.group(2)))
+        req = urllib.request.Request(form.group(1) + '?' + q, headers={'User-Agent': 'Mozilla/5.0'})
+        raw = urllib.request.urlopen(req, timeout=600).read()
+    Image.MAX_IMAGE_PIXELS = None  # ảnh gốc của hãng rất lớn, nguồn tin cậy
+    im = Image.open(io.BytesIO(raw))
     im.load()
     if im.mode in ('RGBA', 'LA', 'P'):
         im = im.convert('RGBA')
