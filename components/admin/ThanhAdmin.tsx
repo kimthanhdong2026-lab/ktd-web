@@ -10,6 +10,7 @@ const MUC = [
   { href: '/admin/trang-chu', ten: 'Trang chủ' },
   { href: '/admin/san-pham', ten: 'Sản phẩm' },
   { href: '/admin/danh-muc', ten: 'Danh mục' },
+  { href: '/admin/nhap-excel', ten: 'Nhập Excel' },
   { href: '/admin/thuong-hieu', ten: 'Thương hiệu' },
   { href: '/admin/tai-khoan', ten: 'Tài khoản' },
 ]
