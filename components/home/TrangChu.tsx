@@ -9,8 +9,8 @@ import { SectorMarquee } from '@/components/home/SectorMarquee'
 import { WhyChoose } from '@/components/home/WhyChoose'
 import { getBrands } from '@/lib/db'
 import type { Locale } from '@/lib/i18n'
-import { newsFor } from '@/lib/ktd-data'
 import { duongAnh, layChung, layChungO, tuDien } from '@/lib/noi-dung'
+import { layBaiViet } from '@/lib/tin-tuc'
 
 /**
  * Bọc một khối: trang chủ thật để nguyên, màn hình quản trị bọc thêm khung
@@ -34,12 +34,13 @@ export async function TrangChu({
   moi?: boolean
   khung?: Khung
 }) {
-  const [t, brands, soNam, soKhach, chungLinhVuc] = await Promise.all([
+  const [t, brands, soNam, soKhach, chungLinhVuc, news] = await Promise.all([
     tuDien(lang, moi),
     getBrands(lang),
     layChungO('trang-chu.dau-trang', 'soNam', moi),
     layChungO('trang-chu.dau-trang', 'soKhach', moi),
     layChung('trang-chu.linh-vuc', moi),
+    layBaiViet(lang, { moi }),
   ])
 
   // Ảnh thẻ lĩnh vực: admin tải lên thì dùng ảnh trên kho; không thì ảnh
@@ -76,7 +77,7 @@ export async function TrangChu({
       {khung('trang-chu.vi-sao', <WhyChoose t={t} />)}
 
       {/* ---------- 6. Tin tức ---------- */}
-      {khung('trang-chu.tin-tuc', <NewsBlock t={t} lang={lang} news={newsFor(lang)} />)}
+      {khung('trang-chu.tin-tuc', <NewsBlock t={t} lang={lang} news={news} />)}
     </>
   )
 }

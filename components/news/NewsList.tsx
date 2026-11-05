@@ -1,18 +1,19 @@
 'use client'
 
+import Image from 'next/image'
 import Link from 'next/link'
 import { useState } from 'react'
-import { NEWS_CATEGORIES, NEWS_CATEGORIES_EN, newsFor } from '@/lib/ktd-data'
-import { cx } from '@/lib/utils'
 import { useLang } from '@/components/LangProvider'
+import { NEWS_CATEGORIES, NEWS_CATEGORIES_EN } from '@/lib/ktd-data'
+import type { BaiViet } from '@/lib/tin-tuc'
+import { cx } from '@/lib/utils'
 
-
-export function NewsList() {
+/** Danh sách bài viết với tab chuyên mục. Bài do trang máy chủ đưa vào (bảng bai_viet). */
+export function NewsList({ items }: { items: BaiViet[] }) {
   const { lang, t, path } = useLang()
   const [tab, setTab] = useState<string>('all')
-  const NEWS = newsFor(lang)
   const TABS = ['all', ...(lang === 'en' ? NEWS_CATEGORIES_EN : NEWS_CATEGORIES)]
-  const items = NEWS.filter((n) => tab === 'all' || n.cat === tab)
+  const list = items.filter((n) => tab === 'all' || n.catLabel === tab)
 
   return (
     <>
@@ -36,29 +37,27 @@ export function NewsList() {
         ))}
       </div>
 
-      {items.length === 0 ? (
-        <p className="rounded-lg bg-ink-100 px-5 py-16 text-center text-ink-500">
-          {t.news.empty}
-        </p>
+      {list.length === 0 ? (
+        <p className="rounded-lg bg-ink-100 px-5 py-16 text-center text-ink-500">{t.news.empty}</p>
       ) : (
         <ul className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {items.map((n) => (
+          {list.map((n) => (
             <li key={n.slug}>
               <Link
                 href={path(`/tin-tuc/${n.slug}`)}
                 className="block h-full overflow-hidden rounded-xl border border-hairline transition duration-200 hover:shadow-md"
               >
                 <span className="placeholder-hatch relative flex aspect-video items-center justify-center bg-ink-100">
-                  <span className="relative font-mono text-[13px] text-[#9aa3ad]">{t.news.imagePlaceholder}</span>
+                  {n.image ? (
+                    <Image src={n.image} alt="" fill sizes="(max-width: 768px) 100vw, 400px" className="object-cover" />
+                  ) : (
+                    <span className="relative font-mono text-[13px] text-[#9aa3ad]">{t.news.imagePlaceholder}</span>
+                  )}
                 </span>
                 <span className="block p-5 md:p-6">
-                  <span className="label-caps mb-2.5 block text-ktd-600">{n.cat}</span>
-                  <span className="mb-3 block font-display text-[19px] font-semibold leading-snug text-ink-900">
-                    {n.title}
-                  </span>
-                  <span className="mb-3 block text-sm leading-relaxed text-ink-500">
-                    {n.excerpt}
-                  </span>
+                  <span className="label-caps mb-2.5 block text-ktd-600">{n.catLabel}</span>
+                  <span className="mb-3 block font-display text-[19px] font-semibold leading-snug text-ink-900">{n.title}</span>
+                  <span className="mb-3 block text-sm leading-relaxed text-ink-500">{n.excerpt}</span>
                   <span className="block text-[13px] text-[#9aa3ad]">{n.date}</span>
                 </span>
               </Link>
