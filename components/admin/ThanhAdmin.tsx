@@ -8,6 +8,8 @@ import { cx } from '@/lib/utils'
 
 const MUC = [
   { href: '/admin/trang-chu', ten: 'Trang chủ' },
+  { href: '/admin/gioi-thieu', ten: 'Giới thiệu' },
+  { href: '/admin/lien-he', ten: 'Liên hệ' },
   { href: '/admin/san-pham', ten: 'Sản phẩm' },
   { href: '/admin/danh-muc', ten: 'Danh mục' },
   { href: '/admin/nhap-excel', ten: 'Nhập Excel' },

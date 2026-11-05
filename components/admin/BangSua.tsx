@@ -174,15 +174,17 @@ function ODanhSachUI({ tr, v, dat }: { tr: Truong; v: ODanhSach; dat: (v: GiaTri
     ;[en[i], en[j]] = [en[j], en[i]]
     dat({ vi, en })
   }
+  const Tag = tr.dong ? 'textarea' : 'input'
+  const thuocTinh = tr.dong ? { rows: tr.dong } : {}
   return (
     <div>
       <span className="mb-1 block text-[13px] font-medium text-ink-700">{tr.nhan}</span>
       <div className="flex flex-col gap-2">
         {Array.from({ length: n }, (_, i) => (
-          <div key={i} className="grid grid-cols-[1fr_1fr_auto] items-center gap-2">
-            <input className="o-nhap" value={v.vi[i] ?? ''} onChange={(e) => doi(i, 'vi', e.target.value)} />
-            <input className="o-nhap" value={v.en[i] ?? ''} onChange={(e) => doi(i, 'en', e.target.value)} placeholder="English" />
-            <NutDong len={n} i={i} toiThieu={tr.toiThieu ?? 0} chuyen={chuyen} xoa={xoa} />
+          <div key={i} className="grid grid-cols-[1fr_1fr_auto] items-start gap-2">
+            <Tag className="o-nhap" value={v.vi[i] ?? ''} onChange={(e) => doi(i, 'vi', e.target.value)} {...thuocTinh} />
+            <Tag className="o-nhap" value={v.en[i] ?? ''} onChange={(e) => doi(i, 'en', e.target.value)} placeholder="English" {...thuocTinh} />
+            <span className="pt-2"><NutDong len={n} i={i} toiThieu={tr.toiThieu ?? 0} chuyen={chuyen} xoa={xoa} /></span>
           </div>
         ))}
       </div>

@@ -27,6 +27,8 @@ export interface Truong {
   toiDa?: number
   /** Mặc định cho ô chung; ô trong nhóm nhận thêm số thứ tự mục. */
   macDinhChung?: string | ((i: number) => string)
+  /** Ô nhiều dòng trong danh sách (đoạn văn): số dòng hiện. */
+  dong?: number
   /** Ảnh: khung để thu về khi tải lên (rộng × cao). */
   khungAnh?: { rong: number; cao: number; kieu?: 'cover' | 'contain' }
 }
@@ -169,7 +171,10 @@ export const KHOI_CHUNG: Khoi[] = [
       { duong: 'linkedin', nhan: 'Đường dẫn LinkedIn', kieu: 'text', chung: true,
         macDinhChung: 'https://www.linkedin.com/company/kim-thanh-dong-co-ltd/' },
       { duong: 'shopee', nhan: 'Đường dẫn gian hàng Shopee', kieu: 'text', chung: true, macDinhChung: 'https://shopee.vn/shop/961761465' },
+      { duong: 'website', nhan: 'Website (hiện ở trang Liên hệ)', kieu: 'text', chung: true, macDinhChung: 'kimthanhdong.vn · kimthanhdong.com' },
+      { duong: 'contact.offices', nhan: 'Tên ba địa điểm làm việc', kieu: 'danh-sach', toiThieu: 3, toiDa: 3 },
       { duong: 'company.addresses', nhan: 'Địa chỉ (ĐKKD, văn phòng, kho HCM, kho Hà Nội)', kieu: 'danh-sach', toiThieu: 4, toiDa: 4 },
+      { duong: 'contact.workingHours', nhan: 'Giờ làm việc', kieu: 'danh-sach', toiThieu: 1, toiDa: 4 },
     ],
   },
   {
@@ -186,7 +191,75 @@ export const KHOI_CHUNG: Khoi[] = [
   },
 ]
 
-export const TAT_CA_KHOI = [...KHOI_CHUNG, ...KHOI_TRANG_CHU]
+export const KHOI_GIOI_THIEU: Khoi[] = [
+  {
+    khoa: 'gioi-thieu.dau',
+    so: 1,
+    ten: 'Tiêu đề và bài giới thiệu',
+    truong: [
+      { duong: 'about.heading', nhan: 'Tiêu đề trang', kieu: 'text' },
+      { duong: 'about.story', nhan: 'Bài giới thiệu (mỗi dòng một đoạn)', kieu: 'danh-sach', dong: 4, toiThieu: 1, toiDa: 10 },
+    ],
+  },
+  {
+    khoa: 'gioi-thieu.anh',
+    so: 2,
+    ten: 'Ba ảnh giới thiệu',
+    moTa: 'Ảnh 4:3. Chưa có ảnh thì ô hiện nền kẻ và chú thích.',
+    truong: [
+      { duong: 'about.photos', nhan: 'Chú thích ba ảnh', kieu: 'danh-sach', toiThieu: 3, toiDa: 3 },
+      { duong: 'anh1', nhan: 'Ảnh 1', kieu: 'anh', chung: true, khungAnh: { rong: 1200, cao: 900, kieu: 'cover' } },
+      { duong: 'anh2', nhan: 'Ảnh 2', kieu: 'anh', chung: true, khungAnh: { rong: 1200, cao: 900, kieu: 'cover' } },
+      { duong: 'anh3', nhan: 'Ảnh 3', kieu: 'anh', chung: true, khungAnh: { rong: 1200, cao: 900, kieu: 'cover' } },
+    ],
+  },
+  {
+    khoa: 'gioi-thieu.tam-nhin',
+    so: 3,
+    ten: 'Tầm nhìn & Sứ mệnh',
+    truong: [
+      { duong: 'about.visionHeading', nhan: 'Tiêu đề ô 1', kieu: 'text' },
+      { duong: 'about.vision', nhan: 'Nội dung ô 1', kieu: 'textarea' },
+      { duong: 'about.missionHeading', nhan: 'Tiêu đề ô 2', kieu: 'text' },
+      { duong: 'about.mission', nhan: 'Nội dung ô 2', kieu: 'textarea' },
+    ],
+  },
+  {
+    khoa: 'gioi-thieu.gia-tri',
+    so: 4,
+    ten: 'Giá trị chúng tôi theo đuổi',
+    moTa: 'Các ô xanh đậm. Bố cục chịu được 2–4 ô.',
+    truong: [
+      { duong: 'about.valuesHeading', nhan: 'Tiêu đề', kieu: 'text' },
+      {
+        duong: 'about.values', nhan: 'Các ô', kieu: 'nhom', toiThieu: 2, toiDa: 4,
+        con: [
+          { duong: 'title', nhan: 'Tên giá trị', kieu: 'text' },
+          { duong: 'body', nhan: 'Nội dung', kieu: 'textarea' },
+        ],
+      },
+    ],
+  },
+  {
+    khoa: 'gioi-thieu.chang-duong',
+    so: 5,
+    ten: 'Chặng đường phát triển',
+    moTa: 'Trục thời gian. Máy tính xếp một hàng, nên nhiều hơn 10 mốc sẽ chật.',
+    truong: [
+      { duong: 'about.timelineHeading', nhan: 'Tiêu đề', kieu: 'text' },
+      {
+        duong: 'about.timeline', nhan: 'Các mốc', kieu: 'nhom', toiThieu: 2, toiDa: 12,
+        con: [
+          { duong: 'year', nhan: 'Năm', kieu: 'text' },
+          { duong: 'title', nhan: 'Tên mốc (hãng)', kieu: 'text' },
+          { duong: 'text', nhan: 'Một câu', kieu: 'text' },
+        ],
+      },
+    ],
+  },
+]
+
+export const TAT_CA_KHOI = [...KHOI_CHUNG, ...KHOI_TRANG_CHU, ...KHOI_GIOI_THIEU]
 
 export const timKhoi = (khoa: string) => TAT_CA_KHOI.find((k) => k.khoa === khoa)
 
