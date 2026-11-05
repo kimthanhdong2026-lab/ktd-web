@@ -74,8 +74,9 @@ export async function luuKhoi(khoa: string, giaTri: GiaTriKhoi): Promise<KetQua>
     const sb = supabaseServer()
     const duLieu = tachDuLieu(khoi, giaTri)
 
+    // Lần đầu lưu, "bản trước" là chữ gốc trong mã — ghi {} để Hoàn tác về được đó.
     const { data: cu } = await sb.from('noi_dung').select('du_lieu').eq('khoa', khoa).maybeSingle()
-    if (cu) await sb.from('noi_dung_lich_su').insert({ khoa, du_lieu: cu.du_lieu })
+    await sb.from('noi_dung_lich_su').insert({ khoa, du_lieu: cu?.du_lieu ?? {} })
 
     const { error } = await sb
       .from('noi_dung')
