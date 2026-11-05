@@ -1,5 +1,6 @@
 import { NextResponse, type NextRequest } from 'next/server'
 import { DEFAULT_LOCALE, LOCALES } from '@/lib/i18n/config'
+import { capNhatPhien } from '@/lib/supabase/middleware'
 
 /**
  * Ghép ngôn ngữ vào đường dẫn nội bộ mà không đổi đường dẫn khách nhìn thấy.
@@ -10,8 +11,18 @@ import { DEFAULT_LOCALE, LOCALES } from '@/lib/i18n/config'
  * Nhờ vậy toàn bộ đường dẫn tiếng Việt đang được Google lập chỉ mục không đổi
  * một chữ nào, mà mã nguồn chỉ cần một bản cho cả hai ngôn ngữ.
  */
-export function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
+
+  // Trang quản trị: không có ngôn ngữ, phải đăng nhập. Chưa đăng nhập thì đưa
+  // về trang đăng nhập; đã đăng nhập mà vào trang đăng nhập thì đưa vào trong.
+  if (pathname === '/admin' || pathname.startsWith('/admin/')) {
+    const { response, user } = await capNhatPhien(request)
+    const oTrangDangNhap = pathname === '/admin/dang-nhap'
+    if (!user && !oTrangDangNhap) return NextResponse.redirect(new URL('/admin/dang-nhap', request.url))
+    if (user && oTrangDangNhap) return NextResponse.redirect(new URL('/admin/trang-chu', request.url))
+    return response
+  }
 
   // Đã có tiền tố ngôn ngữ thì để nguyên
   for (const l of LOCALES) {

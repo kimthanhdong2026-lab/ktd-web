@@ -5,8 +5,8 @@ import Image from 'next/image'
 import { usePathname, useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { useStore } from './StoreProvider'
-import { LINK_MXH, PHONES } from '@/lib/constants'
 import { useLang } from './LangProvider'
+import type { LienHe } from '@/lib/noi-dung'
 import { LOCALES, href as localeHref, stripLocale } from '@/lib/i18n'
 import { cx } from '@/lib/utils'
 import type { Brand } from '@/lib/ktd-data'
@@ -16,7 +16,7 @@ import type { Brand } from '@/lib/ktd-data'
  * nó đẩy chiều cao header lên gần gấp đôi mà nội dung lại trùng với footer —
  * nên đã gộp: chọn ngôn ngữ và mạng xã hội chuyển xuống thanh trắng này.
  */
-export function Header({ brands }: { brands: Brand[] }) {
+export function Header({ brands, lienHe }: { brands: Brand[]; lienHe: LienHe }) {
   const pathname = usePathname()
   const { lang, t, path } = useLang()
 
@@ -172,11 +172,11 @@ export function Header({ brands }: { brands: Brand[] }) {
         <div className="ml-auto flex items-center gap-2 md:gap-3">
           {/* Hotline: chỉ hiện khi còn đủ chỗ, để thanh không bị chật */}
           <a
-            href={`tel:${PHONES.hotline.tel}`}
+            href={`tel:${lienHe.hotlineTel}`}
             className="hidden items-center gap-1.5 whitespace-nowrap text-sm font-semibold text-ink-700 hover:text-ktd-600 tel:flex"
           >
             <span aria-hidden="true">☎</span>
-            {PHONES.hotline[lang]}
+            {lienHe.hotline}
           </a>
 
           {/* Chuyển sang trang tương ứng ở ngôn ngữ kia, không quăng về trang chủ */}
@@ -196,7 +196,7 @@ export function Header({ brands }: { brands: Brand[] }) {
               nên không còn chỗ; chân trang vẫn có đủ hai liên kết. */}
           <div className="hidden items-center gap-2 xl:flex">
             <a
-              href={LINK_MXH.Facebook}
+              href={lienHe.facebook}
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Facebook"
@@ -205,7 +205,7 @@ export function Header({ brands }: { brands: Brand[] }) {
               f
             </a>
             <a
-              href={LINK_MXH.YouTube}
+              href={lienHe.youtube}
               target="_blank"
               rel="noopener noreferrer"
               aria-label="YouTube"
@@ -309,8 +309,8 @@ export function Header({ brands }: { brands: Brand[] }) {
             )}
 
             <div className="flex items-center justify-between border-t border-hairline py-3">
-              <a href={`tel:${PHONES.hotline.tel}`} className="text-sm font-semibold text-ink-700">
-                ☎ {PHONES.hotline[lang]}
+              <a href={`tel:${lienHe.hotlineTel}`} className="text-sm font-semibold text-ink-700">
+                ☎ {lienHe.hotline}
               </a>
               <div className="flex items-center gap-4">
                 <Link
@@ -325,7 +325,7 @@ export function Header({ brands }: { brands: Brand[] }) {
                   <span className={lang === 'en' ? 'text-ktd-600' : 'text-ink-500'}>EN</span>
                 </Link>
                 <a
-                  href={LINK_MXH.Facebook}
+                  href={lienHe.facebook}
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="Facebook"
@@ -334,7 +334,7 @@ export function Header({ brands }: { brands: Brand[] }) {
                   f
                 </a>
                 <a
-                  href={LINK_MXH.YouTube}
+                  href={lienHe.youtube}
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="YouTube"

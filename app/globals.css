@@ -75,6 +75,13 @@
     @apply text-label-caps uppercase;
   }
 
+  /* Ô nhập của trang quản trị. */
+  .o-nhap {
+    @apply w-full rounded-md border border-ink-300 bg-white px-3 py-2 text-[14px] text-ink-900
+           outline-none transition-colors placeholder:text-ink-300 focus:border-ktd-600
+           focus:ring-2 focus:ring-ktd-600/20 disabled:bg-surface;
+  }
+
   /* Giữ chữ trắng đọc được khi đè lên video mà không phải làm tối cả khung
      hình — thay cho lớp phủ dày (spec C1: không để chữ trắng trên vùng sáng
      mà thiếu bảo vệ). */

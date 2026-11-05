@@ -1,16 +1,11 @@
-import { existsSync } from 'node:fs'
-import { join } from 'node:path'
 import Image from 'next/image'
-import { DEFAULT_LOCALE, dict, type Locale } from '@/lib/i18n'
 
-/** Ảnh ngành đặt tên theo số thứ tự trong SECTOR_CARDS: public/sectors/1.webp …
- *  Kiểm tra lúc build, chưa có file thì ô dùng nền kẻ nhạt thay ảnh. */
-const imageOf = (i: number) => {
-  const rel = `/sectors/${i + 1}.webp`
-  return existsSync(join(process.cwd(), 'public', rel)) ? rel : null
+export interface TheLinhVuc {
+  name: string
+  desc: string
+  /** URL ảnh 3:2; null thì ô dùng nền kẻ nhạt. */
+  image: string | null
 }
-
-
 
 /**
  * Lĩnh vực phục vụ — băng ảnh tự chạy ngang, không cần bấm hay kéo.
@@ -19,25 +14,26 @@ const imageOf = (i: number) => {
  * trùng khít với lúc bắt đầu, mắt không thấy điểm nối. Rê chuột thì dừng lại
  * để khách đọc kịp; máy bật "giảm chuyển động" thì tắt hẳn và chuyển sang kéo
  * ngang bằng tay.
+ *
+ * Chữ và ảnh do TrangChu đưa vào (từ điển đã đè phần admin sửa, ảnh admin tải
+ * lên hoặc public/sectors/N.webp).
  */
-export function SectorMarquee({ lang = DEFAULT_LOCALE }: { lang?: Locale }) {
-  const t = dict(lang)
-  const CARDS = t.sectors.cards.map((s, i) => ({ ...s, image: imageOf(i) }))
+export function SectorMarquee({ heading, cards }: { heading: string; cards: TheLinhVuc[] }) {
   return (
     <section className="overflow-hidden bg-surface py-14 md:py-24">
       <div className="container-ktd">
         <h2 className="mb-10 text-center font-display text-h2 text-ktd-600 md:mb-14">
-          {t.sectors.heading}
+          {heading}
         </h2>
       </div>
 
       {/* Mờ dần hai mép để ô không bị cắt cụt ở rìa màn hình */}
       <div className="group overflow-hidden [mask-image:linear-gradient(90deg,transparent_0,#000_5%,#000_95%,transparent_100%)] motion-reduce:overflow-x-auto">
         <ul className="flex w-max animate-marquee gap-5 px-2.5 group-hover:[animation-play-state:paused] motion-reduce:animate-none">
-          {[...CARDS, ...CARDS].map((s, i) => (
+          {[...cards, ...cards].map((s, i) => (
             <li
               key={i}
-              aria-hidden={i >= CARDS.length || undefined}
+              aria-hidden={i >= cards.length || undefined}
               className="w-[280px] flex-none overflow-hidden rounded-xl border border-hairline bg-white sm:w-[340px]"
             >
               <span className="placeholder-hatch relative block aspect-[3/2] bg-ink-100">

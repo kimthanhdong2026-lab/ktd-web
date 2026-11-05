@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
-import { Be_Vietnam_Pro, Inter, JetBrains_Mono } from 'next/font/google'
 import '../globals.css'
+import { fontClass } from '@/lib/fonts'
 
 import { StoreProvider } from '@/components/StoreProvider'
 import { Header } from '@/components/Header'
@@ -13,28 +13,7 @@ import { RFQModal } from '@/components/RFQModal'
 import { LangProvider } from '@/components/LangProvider'
 import { COMPANY_EMAIL, COMPANY_NAME, COMPANY_PHONE, OFFICES } from '@/lib/constants'
 import { DEFAULT_LOCALE, LOCALES, dict, href, isLocale, type Locale } from '@/lib/i18n'
-
-// Spec B2: three families, only the weights actually used, font-display: swap.
-const display = Be_Vietnam_Pro({
-  subsets: ['latin', 'vietnamese'],
-  weight: ['500', '600', '700'],
-  variable: '--font-display',
-  display: 'swap',
-})
-
-const body = Inter({
-  subsets: ['latin', 'vietnamese'],
-  weight: ['400', '500', '600'],
-  variable: '--font-body',
-  display: 'swap',
-})
-
-const mono = JetBrains_Mono({
-  subsets: ['latin'],
-  weight: ['500'],
-  variable: '--font-mono',
-  display: 'swap',
-})
+import { ghiDeCho, lienHe } from '@/lib/noi-dung'
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://kimthanhdong.vn'
 
@@ -113,18 +92,20 @@ export default async function RootLayout({
   const lang: Locale = isLocale(params.lang) ? params.lang : DEFAULT_LOCALE
   // Danh sách hãng cho menu xổ ở thanh điều hướng (đoạn 3 của "Sửa web 4").
   // Lấy ở layout để mọi trang đều có, không phải truyền qua từng trang.
-  const brands = await getBrands(lang)
+  // Phần admin đã sửa (bảng noi_dung) đè lên từ điển; thông tin liên hệ cho
+  // thanh đầu trang. Cả hai đều có mặc định nên bảng rỗng vẫn chạy.
+  const [brands, ghiDe, lh] = await Promise.all([getBrands(lang), ghiDeCho(lang), lienHe(lang)])
 
   return (
-    <html lang={lang} className={`${display.variable} ${body.variable} ${mono.variable}`}>
+    <html lang={lang} className={fontClass}>
       <body>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
         />
-        <LangProvider lang={lang}>
+        <LangProvider lang={lang} ghiDe={ghiDe}>
           <StoreProvider>
-            <Header brands={brands} />
+            <Header brands={brands} lienHe={lh} />
             <main id="main">{children}</main>
             <Footer lang={lang} />
             <FloatingCTA />

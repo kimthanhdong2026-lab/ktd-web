@@ -1,7 +1,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { getCategories } from '@/lib/db'
-import { DEFAULT_LOCALE, dict, href, type Locale } from '@/lib/i18n'
+import { DEFAULT_LOCALE, type Dictionary, type Locale } from '@/lib/i18n'
 
 /**
  * Danh mục sản phẩm dạng ô lớn — 12 nhóm chính, mỗi ô dẫn tới trang Sản phẩm đã
@@ -10,14 +10,17 @@ import { DEFAULT_LOCALE, dict, href, type Locale } from '@/lib/i18n'
  * Bố cục theo đoạn 13 của "Sửa web 4": ảnh ở trên, tên nhóm và dòng chữ nhỏ đẩy
  * xuống dưới ảnh.
  *
- * Ảnh do scripts/build-category-images.mjs dựng ra ở
- * public/assets/categories/{slug}.webp, đặt tên theo slug nhóm chính.
+ * Ảnh: admin tải lên ở trang quản trị thì dùng ảnh trên kho (categories.image);
+ * chưa có thì dùng ảnh scripts/build-category-images.mjs dựng sẵn ở
+ * public/assets/categories/{slug}.webp.
+ *
+ * Chữ (`t`) do trang truyền vào — là từ điển đã đè phần admin sửa.
  */
-export async function CategoryTiles({ lang = DEFAULT_LOCALE }: { lang?: Locale }) {
-  const t = dict(lang)
+export async function CategoryTiles({ lang = DEFAULT_LOCALE, t }: { lang?: Locale; t: Dictionary }) {
   // Chỉ ô của NHÓM CHÍNH. Từ khi danh mục có hai cấp, getCategories trả về cả
   // 41 nhóm nhỏ — để nguyên thì trang chủ bày ra 53 ô, không ai đọc nổi.
   const categories = (await getCategories(lang)).filter((c) => !c.parent)
+  const duong = (p: string) => (lang === DEFAULT_LOCALE ? p : `/${lang}${p}`)
 
   return (
     // Nền trắng — KTD yêu cầu ngày 10/10/2026. Khối thương hiệu ngay phía trên
@@ -40,7 +43,7 @@ export async function CategoryTiles({ lang = DEFAULT_LOCALE }: { lang?: Locale }
                   lục giác, vì tên nhóm dài tới hai dòng và hình lục giác sẽ cắt
                   mất chữ ở hai góc. */}
               <Link
-                href={href(`/san-pham?category=${c.slug}`, lang)}
+                href={duong(`/san-pham?category=${c.slug}`)}
                 className="group flex h-full flex-col overflow-hidden rounded-[26px] border border-hairline bg-white transition duration-200 hover:-translate-y-0.5 hover:border-ktd-600 hover:shadow-md"
               >
                 {/* Ảnh VUÔNG, giữ trọn khung ảnh gốc — góp ý "sửa nhỏ 15-10-2026":
@@ -48,7 +51,7 @@ export async function CategoryTiles({ lang = DEFAULT_LOCALE }: { lang?: Locale }
                     dải mờ trắng ở đáy, mất cả chân sản phẩm lẫn phần sát chữ. */}
                 <div className="relative aspect-square w-full overflow-hidden bg-white">
                   <Image
-                    src={`/assets/categories/${c.slug}.webp`}
+                    src={c.image ?? `/assets/categories/${c.slug}.webp`}
                     alt=""
                     width={640}
                     height={640}

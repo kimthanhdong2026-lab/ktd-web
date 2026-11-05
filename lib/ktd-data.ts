@@ -28,6 +28,8 @@ export interface Brand {
 export interface BrandPage extends Brand {
   /** Ảnh banner 1200x900 ở đầu trang. */
   banner?: string
+  /** Logo giữ tỉ lệ gốc do admin tải lên; thiếu thì dùng public/assets/brands/<slug>.webp. */
+  logoGoc?: string
   /** Đoạn giới thiệu dài, một đoạn văn. */
   intro: string
   /** Dòng sản phẩm KTĐ cung cấp. */
@@ -45,6 +47,8 @@ export interface Category {
   sub: string
   /** Có nằm trong bộ lọc rút gọn và cột Danh mục ở chân trang không. */
   featured?: boolean
+  /** Ảnh ô danh mục ở trang chủ, URL đầy đủ; thiếu thì dùng public/assets/categories/<slug>.webp. */
+  image?: string
   /**
    * Nhóm chính chứa nhóm này. null hoặc thiếu nghĩa là chính nó đã là nhóm
    * chính. Danh mục chỉ sâu đúng hai cấp — cơ sở dữ liệu có trigger chặn.

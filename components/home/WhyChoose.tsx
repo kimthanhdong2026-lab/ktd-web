@@ -1,4 +1,4 @@
-import { dict, type Locale } from '@/lib/i18n'
+import type { Dictionary } from '@/lib/i18n'
 
 /**
  * Khối "Vì sao chọn Kim Thành Đông?" ở trang chủ.
@@ -17,10 +17,10 @@ import { dict, type Locale } from '@/lib/i18n'
  *
  * Bốn cột chỉ bật từ 1280px. Hẹp hơn thì mỗi lục giác không đủ 280px bề ngang
  * và chữ bị bóp, nên xếp hai cột.
+ *
+ * Chữ (`t`) do trang truyền vào — là từ điển đã đè phần admin sửa.
  */
-export function WhyChoose({ lang }: { lang: Locale }) {
-  const t = dict(lang)
-
+export function WhyChoose({ t }: { t: Dictionary }) {
   return (
     <section className="bg-white py-14 md:py-24">
       <div className="container-ktd">
@@ -29,8 +29,8 @@ export function WhyChoose({ lang }: { lang: Locale }) {
         </h2>
 
         <ul className="mx-auto grid max-w-[640px] justify-items-center gap-x-5 gap-y-7 sm:grid-cols-2 xl:max-w-none xl:grid-cols-4">
-          {t.why.items.map((w) => (
-            <li key={w.title} className="w-full max-w-[320px]">
+          {t.why.items.map((w, i) => (
+            <li key={i} className="w-full max-w-[320px]">
               {/* Tỉ lệ 1,1547 : 1 là lục giác ĐỀU nằm ngang. clip-path cắt theo
                   sáu đỉnh; nền và chữ dùng đúng bộ màu của chân trang. */}
               <div

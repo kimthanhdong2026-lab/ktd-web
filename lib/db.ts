@@ -28,16 +28,36 @@ export const missingConfig = !URL_ || !KEY
 export const fileUrl = (path?: string | null): string | undefined =>
   path ? `${URL_}/storage/v1/object/public/${BUCKET}/${path.replace(/^\/+/, '')}` : undefined
 
-async function rest<T>(path: string, init?: RequestInit & { revalidate?: number }): Promise<T> {
+/**
+ * Thẻ chung cho mọi lần đọc Supabase. Trang quản trị gọi revalidateTag(THE_DU_LIEU)
+ * sau khi lưu, nên thứ admin vừa sửa lên web ngay chứ không chờ hết 5 phút.
+ */
+export const THE_DU_LIEU = 'du-lieu'
+
+export async function rest<T>(path: string, init?: RequestInit & { revalidate?: number }): Promise<T> {
   if (missingConfig) throw new Error('Thiếu NEXT_PUBLIC_SUPABASE_URL hoặc NEXT_PUBLIC_SUPABASE_ANON_KEY')
   const { revalidate, ...rest } = init ?? {}
   const res = await fetch(`${URL_}/rest/v1/${path}`, {
     ...rest,
     headers: { apikey: KEY, Authorization: `Bearer ${KEY}`, ...(rest.headers ?? {}) },
-    next: { revalidate: revalidate ?? REVALIDATE },
+    next: { revalidate: revalidate ?? REVALIDATE, tags: [THE_DU_LIEU] },
   })
   if (!res.ok) throw new Error(`Supabase ${res.status} trên ${path}: ${await res.text()}`)
   return res.json() as Promise<T>
+}
+
+/**
+ * Đọc với bộ cột mới; cơ sở dữ liệu chưa có cột (chưa chạy migration — mã
+ * 42703 của Postgres) thì đọc lại bằng bộ cột cũ. Nhờ vậy đẩy mã lên trước
+ * hay chạy SQL trước đều không làm web sập.
+ */
+export async function restCoThe<T>(moi: string, cu: string, init?: RequestInit & { revalidate?: number }): Promise<T> {
+  try {
+    return await rest<T>(moi, init)
+  } catch (e) {
+    if (String(e).includes('42703')) return rest<T>(cu, init)
+    throw e
+  }
 }
 
 async function rpc<T>(fn: string, args: Record<string, unknown>, revalidate = REVALIDATE): Promise<T> {
@@ -170,8 +190,10 @@ export async function getBrands(lang: Locale = DEFAULT_LOCALE): Promise<Brand[]>
 
 /** Các cột dựng nên một trang thương hiệu. */
 const BRAND_PAGE_COLS =
-  'slug,name,origin_vi,origin_en,desc_vi,desc_en,logo,banner,' +
+  'slug,name,origin_vi,origin_en,desc_vi,desc_en,logo,logo_goc,banner,' +
   'intro_vi,intro_en,dong_sp_vi,dong_sp_en,noi_bat_vi,noi_bat_en,ung_dung_vi,ung_dung_en'
+/** Bộ cột trước migration 0022 (chưa có logo_goc). */
+const BRAND_PAGE_COLS_CU = BRAND_PAGE_COLS.replace('logo_goc,', '')
 
 interface BrandPageRow {
   slug: string
@@ -181,6 +203,8 @@ interface BrandPageRow {
   desc_vi: string
   desc_en: string | null
   logo: string | null
+  /** Có từ migration 0022; admin tải logo lên thì mới có. */
+  logo_goc?: string | null
   banner: string | null
   intro_vi: string | null
   intro_en: string | null
@@ -198,6 +222,7 @@ const toBrandPage = (b: BrandPageRow, lang: Locale): BrandPage => ({
   origin: pick(b.origin_en, b.origin_vi, lang),
   desc: pick(b.desc_en, b.desc_vi, lang),
   logo: fileUrl(b.logo),
+  logoGoc: fileUrl(b.logo_goc),
   banner: fileUrl(b.banner),
   intro: pick(b.intro_en, b.intro_vi ?? '', lang),
   dongSp: pick(b.dong_sp_en, b.dong_sp_vi, lang),
@@ -205,20 +230,28 @@ const toBrandPage = (b: BrandPageRow, lang: Locale): BrandPage => ({
   ungDung: pick(b.ung_dung_en, b.ung_dung_vi, lang),
 })
 
+/**
+ * Trang riêng của một hãng. Trang quản trị gọi với `moi` (đọc thẳng, không qua
+ * bộ đệm) và `caAn` (hãng đang ẩn vẫn sửa được).
+ */
 export async function getBrandPage(
   slug: string,
-  lang: Locale = DEFAULT_LOCALE
+  lang: Locale = DEFAULT_LOCALE,
+  tuyChon: { moi?: boolean; caAn?: boolean } = {}
 ): Promise<BrandPage | undefined> {
-  const rows = await rest<BrandPageRow[]>(
-    `brands?select=${BRAND_PAGE_COLS}&slug=eq.${encodeURIComponent(slug)}` +
-      '&visible=eq.true&limit=1'
+  const duoi = `&slug=eq.${encodeURIComponent(slug)}` + (tuyChon.caAn ? '' : '&visible=eq.true') + '&limit=1'
+  const rows = await restCoThe<BrandPageRow[]>(
+    `brands?select=${BRAND_PAGE_COLS}${duoi}`,
+    `brands?select=${BRAND_PAGE_COLS_CU}${duoi}`,
+    tuyChon.moi ? { revalidate: 0 } : undefined
   )
   return rows[0] ? toBrandPage(rows[0], lang) : undefined
 }
 
 export async function getBrandPages(lang: Locale = DEFAULT_LOCALE): Promise<BrandPage[]> {
-  const rows = await rest<BrandPageRow[]>(
-    `brands?select=${BRAND_PAGE_COLS}&visible=eq.true&order=sort_order`
+  const rows = await restCoThe<BrandPageRow[]>(
+    `brands?select=${BRAND_PAGE_COLS}&visible=eq.true&order=sort_order`,
+    `brands?select=${BRAND_PAGE_COLS_CU}&visible=eq.true&order=sort_order`
   )
   return rows.map((b) => toBrandPage(b, lang))
 }
@@ -284,13 +317,14 @@ export async function getCategories(lang: Locale = DEFAULT_LOCALE): Promise<Cate
     sub_en: string | null
     featured: boolean
     parent_slug?: string | null
+    image?: string | null
   }[]
 
   // Chỉ lấy danh mục đang hiện: nhóm bị ẩn thì không được xuất hiện ở bộ lọc,
   // ở ô danh mục trang chủ, hay ở cột Danh mục chân trang.
-  const rows = await rest<Hang>(
-    'categories?select=slug,name_vi,name_en,sub_vi,sub_en,featured,parent_slug' +
-      '&visible=eq.true&order=sort_order'
+  const rows = await restCoThe<Hang>(
+    'categories?select=slug,name_vi,name_en,sub_vi,sub_en,featured,parent_slug,image&visible=eq.true&order=sort_order',
+    'categories?select=slug,name_vi,name_en,sub_vi,sub_en,featured,parent_slug&visible=eq.true&order=sort_order'
   )
 
   return rows.map((c) => ({
@@ -299,6 +333,7 @@ export async function getCategories(lang: Locale = DEFAULT_LOCALE): Promise<Cate
     sub: pick(c.sub_en, c.sub_vi, lang),
     featured: c.featured,
     parent: c.parent_slug ?? null,
+    image: fileUrl(c.image),
   }))
 }
 

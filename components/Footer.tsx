@@ -1,20 +1,19 @@
 import Link from 'next/link'
 import Image from 'next/image'
-import {
-  COMPANY_EMAIL,
-  COMPANY_NAME,
-  PHONES,
-  MANG_XA_HOI,
-  OFFICES,
-  SHOPEE,
-} from '@/lib/constants'
+import { SHOPEE } from '@/lib/constants'
 import { getCategories } from '@/lib/db'
-import { DEFAULT_LOCALE, dict, href, type Locale } from '@/lib/i18n'
+import { DEFAULT_LOCALE, href, type Locale } from '@/lib/i18n'
+import { lienHe, tuDien } from '@/lib/noi-dung'
 
+/**
+ * Chân trang. Chữ lấy từ từ điển đã đè phần admin sửa; số điện thoại, email và
+ * đường dẫn mạng xã hội từ khối "Thông tin liên hệ" (chung.lien-he), có mặc
+ * định trong lib/noi-dung/khoi.ts.
+ */
 export async function Footer({ lang = DEFAULT_LOCALE }: { lang?: Locale }) {
-  const t = dict(lang)
+  const [t, lh, cats] = await Promise.all([tuDien(lang), lienHe(lang), getCategories(lang)])
   const path = (p: string) => href(p, lang)
-  const categories = (await getCategories(lang)).filter((c) => c.featured)
+  const categories = cats.filter((c) => c.featured)
 
   const NAV = [
     { label: t.nav.home, href: '/' },
@@ -24,6 +23,11 @@ export async function Footer({ lang = DEFAULT_LOCALE }: { lang?: Locale }) {
     { label: t.brandPage.navLabel, href: '/thuong-hieu' },
     { label: t.nav.news, href: '/tin-tuc' },
     { label: t.nav.contact, href: '/lien-he' },
+  ]
+  const MANG_XA_HOI = [
+    { ten: 'Facebook', href: lh.facebook },
+    { ten: 'YouTube', href: lh.youtube },
+    { ten: 'LinkedIn', href: lh.linkedin },
   ]
 
   return (
@@ -37,7 +41,7 @@ export async function Footer({ lang = DEFAULT_LOCALE }: { lang?: Locale }) {
                   Tên công ty vẫn còn ở dòng giới thiệu ngay bên dưới và ở dòng
                   bản quyền cuối trang, nên không mất nhận diện. */}
               <a
-                href={SHOPEE.href}
+                href={lh.shopee}
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Shopee"
@@ -55,7 +59,7 @@ export async function Footer({ lang = DEFAULT_LOCALE }: { lang?: Locale }) {
                 />
               </a>
               {/* Biểu tượng to lên 34 -> 42px cho dễ thấy (đoạn 24), thêm
-                  LinkedIn (đoạn 39). Đường dẫn khai ở lib/constants.ts. */}
+                  LinkedIn (đoạn 39). */}
               <div className="flex gap-2.5">
                 {MANG_XA_HOI.map((m) => (
                   <a
@@ -118,23 +122,23 @@ export async function Footer({ lang = DEFAULT_LOCALE }: { lang?: Locale }) {
             <h2 className="mb-4 font-display text-sm font-semibold text-white">{t.footer.contact}</h2>
             <ul className="flex flex-col gap-2.5 text-sm text-[#8fb3cf]">
               <li>
-                <a href={`tel:${PHONES.hotline.tel}`} className="text-[#8fb3cf] hover:text-white">
-                  ☎ {PHONES.hotline[lang]}
+                <a href={`tel:${lh.hotlineTel}`} className="text-[#8fb3cf] hover:text-white">
+                  ☎ {lh.hotline}
                 </a>
               </li>
               <li>
-                <a href={`tel:${PHONES.phone.tel}`} className="text-[#8fb3cf] hover:text-white">
-                  ☎ {PHONES.phone[lang]}
+                <a href={`tel:${lh.dienThoaiTel}`} className="text-[#8fb3cf] hover:text-white">
+                  ☎ {lh.dienThoai}
                 </a>
               </li>
               <li>
-                <a href={`tel:${PHONES.hotline2.tel}`} className="text-[#8fb3cf] hover:text-white">
-                  ☎ {PHONES.hotline2[lang]}
+                <a href={`tel:${lh.hotline2Tel}`} className="text-[#8fb3cf] hover:text-white">
+                  ☎ {lh.hotline2}
                 </a>
               </li>
               <li>
-                <a href={`mailto:${COMPANY_EMAIL}`} className="text-[#8fb3cf] hover:text-white">
-                  ✉ {COMPANY_EMAIL}
+                <a href={`mailto:${lh.email}`} className="text-[#8fb3cf] hover:text-white">
+                  ✉ {lh.email}
                 </a>
               </li>
               <li className="leading-relaxed">
