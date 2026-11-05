@@ -127,7 +127,7 @@ ${itemRows}</table>`
 }
 
 /** Ghi một dòng vào bảng yeu_cau_bao_gia. Trả về lỗi dạng chữ, hoặc '' nếu xong. */
-async function luuYeuCau(code: string, p: RfqPayload, items: RfqItem[], files: RfqFile[]): Promise<string> {
+async function luuYeuCau(code: string, p: RfqPayload, items: RfqItem[], files: RfqFile[], emailLoi: string | null): Promise<string> {
   const base = process.env.NEXT_PUBLIC_SUPABASE_URL
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
   if (!base || !key) return 'thiếu cấu hình Supabase'
@@ -145,6 +145,8 @@ async function luuYeuCau(code: string, p: RfqPayload, items: RfqItem[], files: R
       ghi_chu: p.note,
       san_pham: items,
       tep: files,
+      email_da_gui: false,
+      email_loi: emailLoi,
     }),
     cache: 'no-store',
   })
@@ -195,16 +197,16 @@ export async function POST(request: Request) {
 
   const code = makeCode()
 
-  // 1. Lưu vào hộp thư trong trang quản trị.
-  const loiLuu = await luuYeuCau(code, p, items, files)
+  // 1. Lưu vào hộp thư trong trang quản trị. Trạng thái email ghi luôn lúc này
+  //    vì không có khóa service role thì không sửa lại dòng được nữa.
+  const resendKey = process.env.RESEND_API_KEY
+  const loiLuu = await luuYeuCau(code, p, items, files, resendKey ? 'Đang gửi…' : 'Chưa bật gửi email (RESEND_API_KEY)')
   if (loiLuu) console.error('[rfq] Không lưu được yêu cầu:', loiLuu)
 
   // 2. Gửi email nếu đã bật Resend.
-  const resendKey = process.env.RESEND_API_KEY
   if (!resendKey) {
     if (loiLuu) return fail('not-configured', 503)
     console.warn('[rfq] Chưa đặt RESEND_API_KEY — yêu cầu chỉ nằm ở /admin/bao-gia, không có email báo.')
-    await ghiKetQuaEmail(code, false, 'Chưa bật gửi email (RESEND_API_KEY)')
     return NextResponse.json({ ok: true, code })
   }
 
