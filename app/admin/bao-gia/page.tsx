@@ -93,7 +93,7 @@ export default async function AdminBaoGia({ searchParams }: { searchParams: { lo
               <td className="whitespace-nowrap px-3 py-2 text-ink-700">{gioVN(y.tao_luc)}</td>
               <td className="whitespace-nowrap px-3 py-2 font-mono text-[13px] text-ink-700">{y.ma}</td>
               <td className="px-3 py-2">
-                <span className={cx('rounded px-2 py-0.5 text-[12px] font-semibold', y.loai === 'find' ? 'bg-amber-100 text-amber-800' : 'bg-ktd-50 text-ktd-600')}>{tenLoai(y.loai)}</span>
+                <span className={cx('whitespace-nowrap rounded px-2 py-0.5 text-[12px] font-semibold', y.loai === 'find' ? 'bg-amber-100 text-amber-800' : 'bg-ktd-50 text-ktd-600')}>{tenLoai(y.loai)}</span>
               </td>
               <td className="px-3 py-2 text-ink-900">
                 {y.ten}
