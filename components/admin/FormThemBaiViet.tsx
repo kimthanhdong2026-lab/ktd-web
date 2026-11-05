@@ -3,6 +3,7 @@
 import { useFormState, useFormStatus } from 'react-dom'
 import { themBaiViet } from '@/app/admin/tin-tuc/actions'
 import { NEWS_CATEGORIES } from '@/lib/ktd-data'
+import { homNayVN } from '@/lib/utils'
 
 function NutGui() {
   const { pending } = useFormStatus()
@@ -15,7 +16,7 @@ function NutGui() {
 
 export function FormThemBaiViet() {
   const [state, action] = useFormState(themBaiViet, {})
-  const homNay = new Date().toISOString().slice(0, 10)
+  const homNay = homNayVN()
   return (
     <form action={action} className="flex flex-wrap items-end gap-3 rounded-xl border border-dashed border-ink-300 bg-white p-4">
       <label className="block min-w-[300px] flex-1">

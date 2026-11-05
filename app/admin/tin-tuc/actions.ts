@@ -6,7 +6,7 @@ import { redirect } from 'next/navigation'
 import { THE_DU_LIEU } from '@/lib/db'
 import { nguoiDung, supabaseServer } from '@/lib/supabase/server'
 import { CHUYEN_MUC, type MaChuyenMuc } from '@/lib/tin-tuc'
-import { slugify } from '@/lib/utils'
+import { homNayVN, slugify } from '@/lib/utils'
 
 export type KetQua = { ok: true; thongBao?: string } | { ok: false; loi: string }
 const loiCua = (e: unknown) => (e instanceof Error ? e.message : String(e))
@@ -100,7 +100,7 @@ export async function themBaiViet(_: unknown, formData: FormData): Promise<{ loi
     await batBuocDangNhap()
     const title = String(formData.get('title') ?? '').trim()
     const cat = String(formData.get('cat') ?? 'tin-tuc')
-    const ngay = String(formData.get('ngay') ?? '').trim() || new Date().toISOString().slice(0, 10)
+    const ngay = String(formData.get('ngay') ?? '').trim() || homNayVN()
     if (!title) return { loi: 'Cần tiêu đề.' }
     const sb = supabaseServer()
     let slug = slugify(title).slice(0, 80)
@@ -119,8 +119,10 @@ export async function themBaiViet(_: unknown, formData: FormData): Promise<{ loi
 export async function xoaBaiViet(slug: string): Promise<KetQua> {
   try {
     await batBuocDangNhap()
-    const { error } = await supabaseServer().from('bai_viet').delete().eq('slug', slug)
+    const sb = supabaseServer()
+    const { error } = await sb.from('bai_viet').delete().eq('slug', slug)
     if (error) return { ok: false, loi: error.message }
+    await sb.from('noi_dung_lich_su').delete().eq('khoa', `bai.${slug}`)
     lamTuoi()
     return { ok: true }
   } catch (e) {

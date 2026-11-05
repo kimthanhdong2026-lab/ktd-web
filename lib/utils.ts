@@ -47,3 +47,8 @@ export function levenshtein(a: string, b: string): number {
 export function cx(...parts: Array<string | false | null | undefined>): string {
   return parts.filter(Boolean).join(' ')
 }
+
+/** Hôm nay theo giờ Việt Nam, dạng yyyy-mm-dd. (`toISOString()` lấy giờ UTC nên sau 19h tối bị lùi một ngày.) */
+export function homNayVN(): string {
+  return new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Ho_Chi_Minh', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date())
+}

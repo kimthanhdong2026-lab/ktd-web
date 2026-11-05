@@ -394,6 +394,7 @@ export async function xoaDanhMuc(slug: string): Promise<KetQua> {
     if (con) return { ok: false, loi: `Nhóm còn ${con} nhóm nhỏ bên trong.` }
     const { error } = await sb.from('categories').delete().eq('slug', slug)
     if (error) return { ok: false, loi: error.message }
+    await sb.from('noi_dung_lich_su').delete().eq('khoa', `dm.${slug}`)
     lamTuoi()
     return { ok: true }
   } catch (e) {
@@ -699,8 +700,10 @@ export async function themSanPham(_: unknown, formData: FormData): Promise<{ loi
 export async function xoaSanPham(part: string): Promise<KetQua> {
   try {
     await batBuocDangNhap()
-    const { error } = await supabaseServer().from('products').delete().eq('part', part)
+    const sb = supabaseServer()
+    const { error } = await sb.from('products').delete().eq('part', part)
     if (error) return { ok: false, loi: error.message }
+    await sb.from('noi_dung_lich_su').delete().eq('khoa', `sp.${part}`)
     lamTuoi()
     return { ok: true }
   } catch (e) {
