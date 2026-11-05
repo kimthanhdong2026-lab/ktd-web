@@ -7,6 +7,7 @@ import { dangXuat } from '@/app/admin/actions'
 import { cx } from '@/lib/utils'
 
 const MUC = [
+  { href: '/admin/bao-gia', ten: 'Báo giá' },
   { href: '/admin/trang-chu', ten: 'Trang chủ' },
   { href: '/admin/gioi-thieu', ten: 'Giới thiệu' },
   { href: '/admin/lien-he', ten: 'Liên hệ' },
@@ -19,7 +20,7 @@ const MUC = [
 ]
 
 /** Thanh trên cùng của trang quản trị: tên mục, "Xem web", đăng xuất. */
-export function ThanhAdmin({ email }: { email: string }) {
+export function ThanhAdmin({ email, soBaoGiaMoi = 0 }: { email: string; soBaoGiaMoi?: number }) {
   const pathname = usePathname()
   return (
     <div className="sticky top-0 z-[60] border-b border-ktd-700 bg-ktd-800 text-white">
@@ -41,6 +42,9 @@ export function ThanhAdmin({ email }: { email: string }) {
               )}
             >
               {m.ten}
+              {m.href === '/admin/bao-gia' && soBaoGiaMoi > 0 && (
+                <span className="ml-1.5 inline-flex min-w-[20px] items-center justify-center rounded-full bg-quote px-1.5 text-[11px] font-bold leading-[18px] text-white">{soBaoGiaMoi}</span>
+              )}
             </Link>
           ))}
         </nav>

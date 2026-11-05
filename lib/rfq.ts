@@ -53,7 +53,7 @@ export interface RfqItem {
 }
 
 export interface RfqFile {
-  /** Đường dẫn trong bucket, do /api/rfq/upload cấp. */
+  /** Đường dẫn trong bucket "rfq" (yyyy-mm/uuid.ext), trình duyệt đặt lúc tải lên. */
   path: string
   /** Tên gốc khách đặt, dùng làm tên tệp đính kèm trong email. */
   name: string

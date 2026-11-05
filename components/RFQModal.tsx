@@ -8,6 +8,7 @@ import { COMPANY_EMAIL, COMPANY_HOTLINE } from '@/lib/constants'
 import {
   EMAIL_RE,
   RFQ_ACCEPT,
+  RFQ_BUCKET,
   RFQ_FILE_TYPES,
   RFQ_MAX_FILES,
   RFQ_MAX_FILE_BYTES,
@@ -16,6 +17,7 @@ import {
   type RfqError,
   type RfqFile,
 } from '@/lib/rfq'
+import { supabaseBrowser } from '@/lib/supabase/browser'
 
 interface FormState {
   name: string
@@ -40,27 +42,23 @@ class SendError extends Error {
 }
 
 /**
- * Đẩy một tệp thẳng lên kho riêng tư rồi trả về đường dẫn của nó.
+ * Đẩy một tệp thẳng lên bucket riêng tư "rfq" rồi trả về đường dẫn của nó.
  *
  * Tệp không đi qua máy chủ của website: Vercel chặn yêu cầu trên 4,5 MB, mà
- * khách được đính tới 5 tệp × 3 MB. Xem app/api/rfq/upload/route.ts.
+ * khách được đính tới 5 tệp × 3 MB. Khách (chưa đăng nhập) chỉ được GHI vào
+ * thư mục "yyyy-mm/" với tên do máy đặt (policy ở migration 0024); không ai
+ * đọc được tệp khi chưa đăng nhập trang quản trị. Tên khách đặt có thể chứa
+ * dấu hay "../" nên chỉ giữ để hiển thị, không đưa vào đường dẫn.
  */
 async function uploadFile(file: File): Promise<RfqFile> {
-  const sign = await fetch('/api/rfq/upload', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ name: file.name, size: file.size }),
-  })
-  const signed = await sign.json().catch(() => null)
-  if (!sign.ok || !signed?.ok) throw new SendError(signed?.error ?? 'upload-failed')
-
-  const put = await fetch(signed.uploadUrl, {
-    method: 'PUT',
-    headers: { 'Content-Type': signed.contentType, 'x-upsert': 'false' },
-    body: file,
-  })
-  if (!put.ok) throw new SendError('upload-failed')
-  return { path: signed.path, name: file.name }
+  const ext = fileExt(file.name)
+  const d = new Date()
+  const path = `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, '0')}/${crypto.randomUUID()}.${ext}`
+  const { error } = await supabaseBrowser()
+    .storage.from(RFQ_BUCKET)
+    .upload(path, file, { upsert: false, contentType: RFQ_FILE_TYPES[ext] })
+  if (error) throw new SendError('upload-failed')
+  return { path, name: file.name }
 }
 
 /**
