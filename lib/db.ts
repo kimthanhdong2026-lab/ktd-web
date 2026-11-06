@@ -339,13 +339,20 @@ export async function getCategories(lang: Locale = DEFAULT_LOCALE): Promise<Cate
 
 // -------------------------------------------------------------------- sản phẩm
 
+/**
+ * Sản phẩm đang ẩn (visible = false) không hiện ở bất kỳ chỗ nào của web công
+ * khai: trang chi tiết, dải liên quan, sản phẩm nổi bật, sitemap, số đếm.
+ * Trang quản trị gọi với `caAn` để vẫn mở sửa được.
+ */
+const CHI_HIEN = '&visible=eq.true'
+
 export async function getProductBySlug(
   slug: string,
   lang: Locale = DEFAULT_LOCALE,
-  tuyChon: { moi?: boolean } = {}
+  tuyChon: { moi?: boolean; caAn?: boolean } = {}
 ): Promise<Product | undefined> {
   const rows = await rest<ProductRow[]>(
-    `products?select=${PRODUCT_COLS}&slug=eq.${encodeURIComponent(slug)}&limit=1`,
+    `products?select=${PRODUCT_COLS}&slug=eq.${encodeURIComponent(slug)}${tuyChon.caAn ? '' : CHI_HIEN}&limit=1`,
     tuyChon.moi ? { revalidate: 0 } : undefined
   )
   return rows[0] ? toProduct(rows[0], lang) : undefined
@@ -353,14 +360,14 @@ export async function getProductBySlug(
 
 export async function getProductByPart(part: string, lang: Locale = DEFAULT_LOCALE): Promise<Product | undefined> {
   const rows = await rest<ProductRow[]>(
-    `products?select=${PRODUCT_COLS}&part=eq.${encodeURIComponent(part)}&limit=1`
+    `products?select=${PRODUCT_COLS}&part=eq.${encodeURIComponent(part)}${CHI_HIEN}&limit=1`
   )
   return rows[0] ? toProduct(rows[0], lang) : undefined
 }
 
 export async function getFeaturedProducts(limit = 4, lang: Locale = DEFAULT_LOCALE): Promise<Product[]> {
   const rows = await rest<ProductRow[]>(
-    `products?select=${PRODUCT_COLS}&featured=is.true&order=priority.nullslast,name_vi&limit=${limit}`
+    `products?select=${PRODUCT_COLS}&featured=is.true${CHI_HIEN}&order=priority.nullslast,name_vi&limit=${limit}`
   )
   return rows.map((r) => toProduct(r, lang))
 }
@@ -369,18 +376,18 @@ export async function getFeaturedProducts(limit = 4, lang: Locale = DEFAULT_LOCA
 export async function getRelatedProducts(brand: string, exceptPart: string, limit = 4, lang: Locale = DEFAULT_LOCALE): Promise<Product[]> {
   const rows = await rest<ProductRow[]>(
     `products?select=${PRODUCT_COLS}&brand_slug=eq.${encodeURIComponent(brand)}` +
-      `&part=neq.${encodeURIComponent(exceptPart)}&order=priority.nullslast,name_vi&limit=${limit}`
+      `&part=neq.${encodeURIComponent(exceptPart)}${CHI_HIEN}&order=priority.nullslast,name_vi&limit=${limit}`
   )
   return rows.map((r) => toProduct(r, lang))
 }
 
 export async function getAllProductSlugs(): Promise<string[]> {
-  const rows = await rest<{ slug: string }[]>('products?select=slug&order=slug')
+  const rows = await rest<{ slug: string }[]>(`products?select=slug${CHI_HIEN}&order=slug`)
   return rows.map((r) => r.slug)
 }
 
 export async function countProducts(): Promise<number> {
-  const res = await fetch(`${URL_}/rest/v1/products?select=part`, {
+  const res = await fetch(`${URL_}/rest/v1/products?select=part${CHI_HIEN}`, {
     headers: { apikey: KEY, Authorization: `Bearer ${KEY}`, Prefer: 'count=exact', Range: '0-0' },
     next: { revalidate: REVALIDATE },
   })
@@ -436,7 +443,10 @@ export async function browseProducts(a: BrowseArgs = {}): Promise<BrowseResult> 
 /** Tìm chịu được gõ sai, dùng cho ô tìm kiếm nổi — xem 0003_search.sql. */
 export async function searchFuzzy(q: string, limit = 8, lang: Locale = DEFAULT_LOCALE): Promise<Product[]> {
   if (!q.trim()) return []
-  const rows = await rpc<ProductRow[]>('search_products_fuzzy', { q, max_rows: limit }, 60)
+  // Hàm SQL (0003) không lọc sản phẩm ẩn — lọc ở đây.
+  const rows = (await rpc<(ProductRow & { visible?: boolean })[]>('search_products_fuzzy', { q, max_rows: limit }, 60)).filter(
+    (r) => r.visible !== false
+  )
   if (!rows.length) return []
   // RPC trả về setof products nên không kèm tên hãng; tra thêm một lượt cho nhãn
   const [brands, cats] = await Promise.all([getBrands(lang), getCategories(lang)])

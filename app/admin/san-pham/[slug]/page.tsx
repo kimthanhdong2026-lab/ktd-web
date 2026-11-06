@@ -27,7 +27,7 @@ export default async function AdminSuaSanPham({ params, searchParams }: { params
   const nhom = searchParams.khoi && NHOM_SAN_PHAM.some((n) => n.id === searchParams.khoi) ? searchParams.khoi : undefined
 
   const [product, t, ghiDe, { data: hangs }, { data: nhoms }] = await Promise.all([
-    getProductBySlug(params.slug, lang, { moi: true }),
+    getProductBySlug(params.slug, lang, { moi: true, caAn: true }),
     tuDien(lang, true),
     ghiDeCho(lang, true),
     sb.from('brands').select('slug,name').order('sort_order'),
