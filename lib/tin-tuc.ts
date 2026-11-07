@@ -52,6 +52,10 @@ const ddmmyyyy = (iso: string) => {
   return `${d}/${m}/${y}`
 }
 
+/** Ảnh trong thân bài ghi đường dẫn trong kho ("site/tin-tuc/…") → URL đầy đủ. */
+const anhTrongBai = (dong: string) =>
+  dong.replace(/^!\[([^\]]*)\]\((?!https?:)(\S+)\)$/, (_, alt: string, duong: string) => `![${alt}](${fileUrl(duong)})`)
+
 const pick = <T>(en: T | null | undefined, vi: T, lang: Locale): T =>
   lang === 'en' && en !== null && en !== undefined && (!Array.isArray(en) || en.length > 0) ? en : vi
 
@@ -63,7 +67,7 @@ const tuDong = (r: Dong, lang: Locale): BaiViet => ({
   ngay: r.ngay.slice(0, 10),
   title: pick(r.title_en, r.title_vi, lang),
   excerpt: pick(r.excerpt_en, r.excerpt_vi, lang),
-  body: pick(r.body_en, r.body_vi ?? [], lang),
+  body: pick(r.body_en, r.body_vi ?? [], lang).map(anhTrongBai),
   image: fileUrl(r.image),
   visible: r.visible,
 })

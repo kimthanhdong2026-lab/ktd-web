@@ -5,6 +5,7 @@ import { QuoteButton } from '@/components/QuoteButton'
 import { href, type Dictionary, type Locale } from '@/lib/i18n'
 import type { Product } from '@/lib/ktd-data'
 import type { BaiViet } from '@/lib/tin-tuc'
+import { ThanBai } from './ThanBai'
 
 /** Bọc một phần của bài: web để nguyên, màn hình quản trị bọc khung "Sửa". */
 export type KhungBai = (khoa: 'bai.dau' | 'bai.than', node: ReactNode) => ReactNode
@@ -53,9 +54,7 @@ export function TrangBaiViet({
         <div>
           <p className="mb-5 text-lg leading-[1.8] text-ink-700">{bai.excerpt}</p>
           {bai.body.length ? (
-            bai.body.map((doan, i) => (
-              <p key={i} className="mb-5 text-[17px] leading-[1.8] text-ink-700">{doan}</p>
-            ))
+            <ThanBai doan={bai.body} />
           ) : (
             <p className="mb-5 text-[17px] leading-[1.8] text-ink-700">{t.news.bodyPlaceholder}</p>
           )}

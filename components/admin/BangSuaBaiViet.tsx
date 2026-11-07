@@ -88,7 +88,8 @@ export function BangSuaBaiViet({ bai, nhom, soBanTruoc }: { bai: BaiDangSua; nho
       <TieuDeNhom n={NHOM_BAI[1]} dang={nhom} />
       <div className="flex flex-col gap-4">
         <ChuVE nhan="Tóm tắt (hiện ở thẻ và đầu bài)" vi={b.excerpt_vi} en={b.excerpt_en} dong={3} dat={(vi, en) => dat({ excerpt_vi: vi, excerpt_en: en })} />
-        <DanhSach nhan="Thân bài (mỗi dòng một đoạn)" vi={b.body_vi} en={b.body_en} dong={5} dat={(vi, en) => dat({ body_vi: vi, body_en: en })} />
+        <DanhSach nhan="Thân bài (mỗi dòng một đoạn)" vi={b.body_vi} en={b.body_en} dong={5} dat={(vi, en) => dat({ body_vi: vi, body_en: en })}
+          goiY={'Đầu dòng gõ "## " = tiêu đề mục, "### " = tiêu đề nhỏ, "- " = gạch đầu dòng, "| ô | ô |" = một hàng bảng, ![](link ảnh) = ảnh. **chữ** = in đậm.'} />
       </div>
     </KhungBang>
   )
