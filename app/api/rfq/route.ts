@@ -23,8 +23,11 @@ import {
  *
  * Biến môi trường (đặt ở Vercel, KHÔNG có tiền tố NEXT_PUBLIC_):
  *   RESEND_API_KEY              khoá của tài khoản Resend — thiếu thì không gửi email
- *   RFQ_INBOX                   hộp thư nhận, mặc định sales@kimthanhdong.com
- *   RFQ_FROM                    địa chỉ gửi, phải thuộc tên miền đã xác minh ở Resend
+ *   RFQ_INBOX                   hộp thư nhận, mặc định info@kimthanhdong.com (KTD chốt 08/11/2026)
+ *   RFQ_FROM                    địa chỉ gửi, phải thuộc tên miền đã xác minh ở Resend; mặc định cũng là info@
+ *
+ * Gửi được email về công ty thì gửi thêm một thư xác nhận cho khách (theo ngôn ngữ
+ * khách đang xem), trả lời thư đó là về thẳng RFQ_INBOX. Thư cho khách lỗi thì bỏ qua.
  *   SUPABASE_SERVICE_ROLE_KEY   (tuỳ chọn) có thì tệp đính kèm được gắn vào email;
  *                               không có thì email chỉ ghi tên tệp, admin tải ở trang quản trị
  */
@@ -32,8 +35,8 @@ import {
 export const runtime = 'nodejs'
 export const maxDuration = 30
 
-const INBOX = process.env.RFQ_INBOX || 'sales@kimthanhdong.com'
-const FROM = process.env.RFQ_FROM || 'Website Kim Thành Đông <website@kimthanhdong.com>'
+const INBOX = process.env.RFQ_INBOX || 'info@kimthanhdong.com'
+const FROM = process.env.RFQ_FROM || 'Kim Thành Đông <info@kimthanhdong.com>'
 
 const fail = (error: RfqError, status: number) => NextResponse.json({ ok: false, error }, { status })
 
@@ -166,6 +169,37 @@ async function ghiKetQuaEmail(code: string, daGui: boolean, loi: string | null) 
   }).catch(() => undefined)
 }
 
+/** Thư xác nhận cho khách: "đã nhận yêu cầu", mã, tóm tắt. Không kèm tệp. */
+async function guiXacNhanChoKhach(resendKey: string, code: string, p: RfqPayload, items: RfqItem[], files: RfqFile[]) {
+  const en = p.lang === 'en'
+  const tim = p.kind === 'find'
+  const tieuDe = en
+    ? `[${code}] We have received your ${tim ? 'product search request' : 'quotation request'} — Kim Thanh Dong`
+    : `[${code}] Kim Thành Đông đã nhận ${tim ? 'yêu cầu tìm hàng' : 'yêu cầu báo giá'} của quý khách`
+  const dong = items
+    .map((it) => `<tr><td style="padding:6px 10px;border:1px solid #d4d9de">${esc(it.name || it.part)}</td><td style="padding:6px 10px;border:1px solid #d4d9de;font-family:Consolas,monospace">${esc(it.part)}</td><td style="padding:6px 10px;border:1px solid #d4d9de;text-align:right"><b>${it.qty}</b></td></tr>`)
+    .join('')
+  const html = `<div style="font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.6;color:#111418;max-width:640px">
+<p>${en ? `Dear ${esc(p.name)},` : `Kính gửi anh/chị ${esc(p.name)},`}</p>
+<p>${en
+    ? `Thank you for contacting Kim Thanh Dong. We have received your ${tim ? 'product search request' : 'quotation request'} and our sales team will get back to you as soon as possible.`
+    : `Cảm ơn quý khách đã liên hệ Kim Thành Đông. Chúng tôi đã nhận ${tim ? 'yêu cầu tìm hàng' : 'yêu cầu báo giá'} và bộ phận kinh doanh sẽ phản hồi trong thời gian sớm nhất.`}</p>
+<p style="margin:16px 0;padding:10px 14px;background:#f3f5f7;border-radius:6px">${en ? 'Reference number' : 'Mã yêu cầu'}: <b>${code}</b></p>
+${items.length ? `<table style="border-collapse:collapse;margin-bottom:14px;font-size:13.5px"><tr style="background:#005E96;color:#fff"><th style="padding:6px 10px;text-align:left">${en ? 'Product' : 'Sản phẩm'}</th><th style="padding:6px 10px;text-align:left">${en ? 'Part no.' : 'Mã hàng'}</th><th style="padding:6px 10px;text-align:right">${en ? 'Qty' : 'SL'}</th></tr>${dong}</table>` : ''}
+${p.note ? `<p style="margin:0 0 6px"><b>${en ? 'Your note' : 'Ghi chú của quý khách'}</b></p><p style="margin:0 0 14px;white-space:pre-wrap;color:#3d444d">${esc(p.note)}</p>` : ''}
+${files.length ? `<p style="color:#5a636d">${en ? 'Attached files received' : 'Tệp đính kèm đã nhận'}: ${files.map((f) => esc(f.name)).join(', ')}</p>` : ''}
+<p>${en ? 'To add information, simply reply to this email.' : 'Cần bổ sung thông tin, quý khách chỉ cần trả lời thư này.'}</p>
+<p style="margin-top:20px;color:#5a636d;font-size:13px">Kim Thành Đông · ${INBOX} · www.kimthanhdong.com</p>
+</div>`
+  const res = await fetch('https://api.resend.com/emails', {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${resendKey}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ from: FROM, to: [p.email], reply_to: INBOX, subject: tieuDe, html }),
+    cache: 'no-store',
+  })
+  if (!res.ok) throw new Error(`Resend ${res.status}: ${(await res.text()).slice(0, 200)}`)
+}
+
 export async function POST(request: Request) {
   let raw: Partial<RfqPayload>
   try {
@@ -249,5 +283,6 @@ export async function POST(request: Request) {
   }
 
   await ghiKetQuaEmail(code, true, null)
+  await guiXacNhanChoKhach(resendKey, code, p, items, files).catch((e) => console.error('[rfq] Thư xác nhận cho khách lỗi:', e))
   return NextResponse.json({ ok: true, code })
 }
