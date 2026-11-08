@@ -113,7 +113,7 @@ export default async function AdminChiTietBaoGia({ params }: { params: { ma: str
           </section>
 
           <p className="text-[13px] text-ink-500">
-            Email báo về hộp thư công ty: {y.email_da_gui ? <span className="text-green-700">đã gửi</span> : <span>chưa gửi{y.email_loi ? ` — ${y.email_loi}` : ''}</span>}
+            Email báo về {process.env.RFQ_INBOX || 'info@kimthanhdong.com'}: {y.email_da_gui ? <span className="text-green-700">đã gửi</span> : <span>chưa gửi{y.email_loi ? ` — ${y.email_loi}` : ''}</span>}
             {y.xu_ly_luc && <> · Đánh dấu xử lý lúc {gioVN(y.xu_ly_luc)}</>}
           </p>
         </div>

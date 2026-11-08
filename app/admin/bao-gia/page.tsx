@@ -30,7 +30,9 @@ export default async function AdminBaoGia({ searchParams }: { searchParams: { lo
   const tong = count ?? 0
   const soTrang = Math.max(1, Math.ceil(tong / MOI_TRANG))
   const link = (l: Loc, t = 1) => `/admin/bao-gia?loc=${l}&q=${encodeURIComponent(q)}&trang=${t}`
-  const chuaBatEmail = ds.some((y) => !y.email_da_gui && y.email_loi?.startsWith('Chưa bật'))
+  // Kiểm cấu hình thật của máy chủ, không suy từ các yêu cầu cũ.
+  const chuaBatEmail = !process.env.RESEND_API_KEY
+  const hopThu = process.env.RFQ_INBOX || 'info@kimthanhdong.com'
 
   return (
     <main className="mx-auto max-w-[1200px] px-4 py-6">
@@ -51,6 +53,11 @@ export default async function AdminBaoGia({ searchParams }: { searchParams: { lo
       {chuaBatEmail && (
         <p className="mb-3 rounded-md bg-amber-50 px-3 py-2 text-[13px] text-amber-800">
           Web chưa bật gửi email (chưa có tài khoản Resend) nên yêu cầu mới <b>chỉ hiện ở trang này</b>, không có email báo. Nhớ vào xem mỗi ngày.
+        </p>
+      )}
+      {!chuaBatEmail && (
+        <p className="mb-3 rounded-md bg-green-50 px-3 py-2 text-[13px] text-green-700">
+          Mỗi yêu cầu mới được gửi email báo về <b>{hopThu}</b>, và khách nhận thư xác nhận kèm mã yêu cầu.
         </p>
       )}
 
