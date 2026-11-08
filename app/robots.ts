@@ -1,6 +1,6 @@
 import type { MetadataRoute } from 'next'
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://kimthanhdong.vn'
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.kimthanhdong.com'
 
 /** Spec D4 — index everything except the search and quote endpoints. */
 export default function robots(): MetadataRoute.Robots {

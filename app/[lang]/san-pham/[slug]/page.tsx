@@ -5,7 +5,7 @@ import { getAllProductSlugs, getProductBySlug, getRelatedProducts } from '@/lib/
 import { DEFAULT_LOCALE, LOCALES, dict, href, isLocale, type Locale } from '@/lib/i18n'
 import { tuDien } from '@/lib/noi-dung'
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://kimthanhdong.vn'
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.kimthanhdong.com'
 
 interface PageProps {
   params: { slug: string; lang: string }

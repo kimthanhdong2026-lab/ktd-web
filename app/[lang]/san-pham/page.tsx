@@ -23,7 +23,7 @@ export async function generateMetadata({
   }
 }
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://kimthanhdong.vn'
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.kimthanhdong.com'
 
 /** Nhận cả `?brand=a&brand=b` lẫn `?brand=a` — Next đưa về string hoặc string[]. */
 const many = (v: string | string[] | undefined): string[] =>

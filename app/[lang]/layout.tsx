@@ -15,7 +15,7 @@ import { COMPANY_EMAIL, COMPANY_NAME, COMPANY_PHONE, OFFICES } from '@/lib/const
 import { DEFAULT_LOCALE, LOCALES, dict, href, isLocale, type Locale } from '@/lib/i18n'
 import { ghiDeCho, lienHe } from '@/lib/noi-dung'
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://kimthanhdong.vn'
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.kimthanhdong.com'
 
 /** Dựng sẵn cả hai ngôn ngữ lúc build. */
 export function generateStaticParams() {

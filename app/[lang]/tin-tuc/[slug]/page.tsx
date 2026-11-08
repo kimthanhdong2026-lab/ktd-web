@@ -6,7 +6,7 @@ import { DEFAULT_LOCALE, dict, isLocale, type Locale } from '@/lib/i18n'
 import { tuDien } from '@/lib/noi-dung'
 import { layBai, layBaiViet } from '@/lib/tin-tuc'
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://kimthanhdong.vn'
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.kimthanhdong.com'
 
 interface PageProps {
   params: { slug: string; lang: string }

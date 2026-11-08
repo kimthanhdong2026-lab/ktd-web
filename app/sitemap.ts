@@ -3,7 +3,7 @@ import { NEWS } from '@/lib/ktd-data'
 import { getAllProductSlugs, getBrandPages } from '@/lib/db'
 import { LOCALES, href } from '@/lib/i18n'
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://kimthanhdong.vn'
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.kimthanhdong.com'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date()
