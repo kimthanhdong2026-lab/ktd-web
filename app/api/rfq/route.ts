@@ -130,7 +130,7 @@ ${itemRows}</table>`
 }
 
 /** Ghi một dòng vào bảng yeu_cau_bao_gia. Trả về lỗi dạng chữ, hoặc '' nếu xong. */
-async function luuYeuCau(code: string, p: RfqPayload, items: RfqItem[], files: RfqFile[], emailLoi: string | null): Promise<string> {
+async function luuYeuCau(code: string, p: RfqPayload, items: RfqItem[], files: RfqFile[], daGui: boolean, emailLoi: string | null): Promise<string> {
   const base = process.env.NEXT_PUBLIC_SUPABASE_URL
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
   if (!base || !key) return 'thiếu cấu hình Supabase'
@@ -148,25 +148,12 @@ async function luuYeuCau(code: string, p: RfqPayload, items: RfqItem[], files: R
       ghi_chu: p.note,
       san_pham: items,
       tep: files,
-      email_da_gui: false,
+      email_da_gui: daGui,
       email_loi: emailLoi,
     }),
     cache: 'no-store',
   })
   return res.ok ? '' : `${res.status} ${await res.text()}`
-}
-
-async function ghiKetQuaEmail(code: string, daGui: boolean, loi: string | null) {
-  const base = process.env.NEXT_PUBLIC_SUPABASE_URL
-  const key = process.env.SUPABASE_SERVICE_ROLE_KEY
-  // Chỉ service_role mới sửa được dòng đã ghi (anon chỉ được thêm). Không có thì thôi.
-  if (!base || !key) return
-  await fetch(`${base}/rest/v1/yeu_cau_bao_gia?ma=eq.${encodeURIComponent(code)}`, {
-    method: 'PATCH',
-    headers: { apikey: key, Authorization: `Bearer ${key}`, 'Content-Type': 'application/json', Prefer: 'return=minimal' },
-    body: JSON.stringify({ email_da_gui: daGui, email_loi: loi }),
-    cache: 'no-store',
-  }).catch(() => undefined)
 }
 
 /** Thư xác nhận cho khách: "đã nhận yêu cầu", mã, tóm tắt. Không kèm tệp. */
@@ -231,58 +218,66 @@ export async function POST(request: Request) {
 
   const code = makeCode()
 
-  // 1. Lưu vào hộp thư trong trang quản trị. Trạng thái email ghi luôn lúc này
-  //    vì không có khóa service role thì không sửa lại dòng được nữa.
+  // Gửi email TRƯỚC rồi mới lưu, để dòng lưu mang đúng kết quả gửi: trên Vercel không
+  // có khóa service role nên không sửa lại dòng đã lưu được (khách chỉ được THÊM).
   const resendKey = process.env.RESEND_API_KEY
-  const loiLuu = await luuYeuCau(code, p, items, files, resendKey ? 'Đang gửi…' : 'Chưa bật gửi email (RESEND_API_KEY)')
+  let daGui = false
+  let loiEmail: string | null = 'Chưa bật gửi email (RESEND_API_KEY)'
+
+  if (resendKey) {
+    const base = process.env.NEXT_PUBLIC_SUPABASE_URL
+    const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY
+    let attachments: { filename: string; content: string }[] = []
+    if (files.length && base && serviceKey) {
+      try {
+        attachments = await Promise.all(files.map((f) => loadAttachment(base, serviceKey, f)))
+      } catch (e) {
+        // Tệp vẫn còn trong kho và xem được ở trang quản trị; email đi không kèm tệp.
+        console.error('[rfq] Không đính kèm được tệp:', e)
+        attachments = []
+      }
+    }
+    const loai = p.kind === 'find' ? 'Yêu cầu tìm hàng' : 'Yêu cầu báo giá'
+    const linkAdmin = `${new URL(request.url).origin}/admin/bao-gia/${code}`
+    try {
+      const res = await fetch('https://api.resend.com/emails', {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${resendKey}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          from: FROM,
+          to: [INBOX],
+          reply_to: p.email,
+          subject: `[${code}] ${loai} — ${p.company}`,
+          html: buildHtml(code, p, items, files, attachments.length > 0, linkAdmin),
+          attachments: attachments.length ? attachments : undefined,
+        }),
+        cache: 'no-store',
+      })
+      if (res.ok) {
+        daGui = true
+        loiEmail = null
+      } else {
+        const chiTiet = await res.text()
+        console.error('[rfq] Resend từ chối:', res.status, chiTiet)
+        loiEmail = `Resend ${res.status}: ${chiTiet.slice(0, 300)}`
+      }
+    } catch (e) {
+      console.error('[rfq] Không gọi được Resend:', e)
+      loiEmail = `Không gọi được Resend: ${String(e).slice(0, 200)}`
+    }
+  } else {
+    console.warn('[rfq] Chưa đặt RESEND_API_KEY — yêu cầu chỉ nằm ở /admin/bao-gia, không có email báo.')
+  }
+
+  // Lưu vào hộp thư trong trang quản trị, kèm kết quả gửi email.
+  const loiLuu = await luuYeuCau(code, p, items, files, daGui, loiEmail)
   if (loiLuu) console.error('[rfq] Không lưu được yêu cầu:', loiLuu)
 
-  // 2. Gửi email nếu đã bật Resend.
-  if (!resendKey) {
-    if (loiLuu) return fail('not-configured', 503)
-    console.warn('[rfq] Chưa đặt RESEND_API_KEY — yêu cầu chỉ nằm ở /admin/bao-gia, không có email báo.')
-    return NextResponse.json({ ok: true, code })
+  // Khách chỉ thấy "đã gửi" khi yêu cầu đến được công ty bằng ít nhất một đường.
+  if (loiLuu && !daGui) return fail(resendKey ? 'send-failed' : 'not-configured', resendKey ? 502 : 503)
+
+  if (daGui && resendKey) {
+    await guiXacNhanChoKhach(resendKey, code, p, items, files).catch((e) => console.error('[rfq] Thư xác nhận cho khách lỗi:', e))
   }
-
-  const base = process.env.NEXT_PUBLIC_SUPABASE_URL
-  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY
-  let attachments: { filename: string; content: string }[] = []
-  if (files.length && base && serviceKey) {
-    try {
-      attachments = await Promise.all(files.map((f) => loadAttachment(base, serviceKey, f)))
-    } catch (e) {
-      // Tệp vẫn còn trong kho và xem được ở trang quản trị; email đi không kèm tệp.
-      console.error('[rfq] Không đính kèm được tệp:', e)
-      attachments = []
-    }
-  }
-
-  const loai = p.kind === 'find' ? 'Yêu cầu tìm hàng' : 'Yêu cầu báo giá'
-  const linkAdmin = `${new URL(request.url).origin}/admin/bao-gia/${code}`
-
-  const res = await fetch('https://api.resend.com/emails', {
-    method: 'POST',
-    headers: { Authorization: `Bearer ${resendKey}`, 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      from: FROM,
-      to: [INBOX],
-      reply_to: p.email,
-      subject: `[${code}] ${loai} — ${p.company}`,
-      html: buildHtml(code, p, items, files, attachments.length > 0, linkAdmin),
-      attachments: attachments.length ? attachments : undefined,
-    }),
-    cache: 'no-store',
-  })
-
-  if (!res.ok) {
-    const chiTiet = await res.text()
-    console.error('[rfq] Resend từ chối:', res.status, chiTiet)
-    await ghiKetQuaEmail(code, false, `Resend ${res.status}: ${chiTiet.slice(0, 300)}`)
-    // Đã lưu được thì khách vẫn coi là gửi xong; chỉ khi cả hai đều hỏng mới báo thất bại.
-    return loiLuu ? fail('send-failed', 502) : NextResponse.json({ ok: true, code })
-  }
-
-  await ghiKetQuaEmail(code, true, null)
-  await guiXacNhanChoKhach(resendKey, code, p, items, files).catch((e) => console.error('[rfq] Thư xác nhận cho khách lỗi:', e))
   return NextResponse.json({ ok: true, code })
 }
