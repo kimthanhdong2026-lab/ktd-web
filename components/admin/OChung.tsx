@@ -187,7 +187,14 @@ export function KhungBang({
             {dangLuu ? 'Đang lưu…' : 'Lưu — lên web ngay'}
           </button>
           {hoanTac && (
-            <button type="button" onClick={hoanTac} disabled={dangLuu || !soBanTruoc} className="btn-secondary min-h-[40px] px-4">
+            <button
+              type="button"
+              onClick={() => {
+                if (window.confirm('Quay về bản đã lưu trước đó?\nNội dung hiện tại trên web (chữ và ảnh của phần này) sẽ bị thay bằng bản cũ.')) hoanTac()
+              }}
+              disabled={dangLuu || !soBanTruoc}
+              className="btn-secondary min-h-[40px] px-4"
+            >
               ↶ Hoàn tác{soBanTruoc ? ` (${soBanTruoc})` : ''}
             </button>
           )}

@@ -75,9 +75,9 @@ export function BangSuaHang({ hang, nhom, soBanTruoc }: { hang: HangDangSua; nho
         </Chu>
         <TaiLogo slug={h.slug} logo={h.logo} logoGoc={h.logo_goc} onDoi={(logo, goc) => dat({ logo, logo_goc: goc })} />
         <TaiAnh
-          nhan="Banner (4:3, hiện bên phải phần đầu và trên thẻ)"
+          nhan="Banner (4:3, hiện bên phải phần đầu và trên thẻ; ảnh PNG nền trong suốt được giữ nguyên nền trong suốt)"
           thuMuc={`brands/banner-${h.slug}`}
-          khung={{ rong: 1200, cao: 900, kieu: 'cover' }}
+          khung={{ rong: 1200, cao: 900, kieu: 'cover', trongSuot: true }}
           giaTri={h.banner}
           onDoi={(banner) => dat({ banner })}
         />

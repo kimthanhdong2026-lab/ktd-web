@@ -155,13 +155,16 @@ export async function taiAnh(formData: FormData): Promise<KetQuaAnh> {
     if (tep.size > ANH_TOI_DA) return { ok: false, loi: 'Ảnh nặng quá 4 MB. Thu nhỏ rồi tải lại.' }
     const thuMuc = String(formData.get('thuMuc') ?? 'site/khac').replace(/[^a-z0-9/_-]/gi, '').replace(/^\/+|\/+$/g, '')
     const khungRaw = formData.get('khung')
-    const khung = khungRaw ? (JSON.parse(String(khungRaw)) as { rong: number; cao: number; kieu?: string }) : null
+    const khung = khungRaw ? (JSON.parse(String(khungRaw)) as { rong: number; cao: number; kieu?: string; trongSuot?: boolean }) : null
 
     let img = sharp(Buffer.from(await tep.arrayBuffer())).rotate()
+    const trongSuot = Boolean(khung?.trongSuot)
+    const nen = trongSuot ? { r: 255, g: 255, b: 255, alpha: 0 } : '#ffffff'
     img = khung
-      ? img.resize({ width: khung.rong, height: khung.cao, fit: khung.kieu === 'contain' ? 'contain' : 'cover', background: '#ffffff' })
+      ? img.resize({ width: khung.rong, height: khung.cao, fit: khung.kieu === 'contain' ? 'contain' : 'cover', background: nen })
       : img.resize({ width: 1600, withoutEnlargement: true })
-    const buf = await img.flatten({ background: '#ffffff' }).webp({ quality: 86 }).toBuffer()
+    if (!trongSuot) img = img.flatten({ background: '#ffffff' })
+    const buf = await img.webp({ quality: 86, alphaQuality: 100 }).toBuffer()
 
     const duong = `${thuMuc}/${Date.now().toString(36)}.webp`
     const { error } = await supabaseServer().storage.from(BUCKET).upload(duong, buf, { contentType: 'image/webp', upsert: true })
@@ -176,6 +179,11 @@ export interface KhungAnh {
   rong: number
   cao: number
   kieu?: 'cover' | 'contain'
+  /**
+   * Giữ nền trong suốt của ảnh PNG/WebP (không đổ nền trắng). Dùng cho banner hãng:
+   * ảnh nằm trên dải màu #EEF4F9, nền trắng sẽ thành một ô trắng lộ ra.
+   */
+  trongSuot?: boolean
 }
 
 const urlKho = (duong: string) =>
@@ -195,10 +203,13 @@ export async function xuLyAnh(tam: string, thuMuc: string, khung?: KhungAnh | nu
     if (!res.ok) return { ok: false, loi: `Không đọc được file tạm (${res.status}).` }
     const goc = Buffer.from(await res.arrayBuffer())
     let img = sharp(goc, { limitInputPixels: false }).rotate()
+    const trongSuot = Boolean(khung?.trongSuot)
+    const nen = trongSuot ? { r: 255, g: 255, b: 255, alpha: 0 } : '#ffffff'
     img = khung
-      ? img.resize({ width: khung.rong, height: khung.cao, fit: khung.kieu === 'contain' ? 'contain' : 'cover', background: '#ffffff' })
+      ? img.resize({ width: khung.rong, height: khung.cao, fit: khung.kieu === 'contain' ? 'contain' : 'cover', background: nen })
       : img.resize({ width: 1600, withoutEnlargement: true })
-    const buf = await img.flatten({ background: '#ffffff' }).webp({ quality: 86 }).toBuffer()
+    if (!trongSuot) img = img.flatten({ background: '#ffffff' })
+    const buf = await img.webp({ quality: 86, alphaQuality: 100 }).toBuffer()
     const sach = thuMuc.replace(/[^a-z0-9/_-]/gi, '').replace(/^\/+|\/+$/g, '')
     const duong = `${sach}/${Date.now().toString(36)}.webp`
     const { error } = await kho.upload(duong, buf, { contentType: 'image/webp', upsert: true })
