@@ -20,10 +20,13 @@ type Mode = 'pending' | 'desktop' | 'mobile' | 'poster-only'
  * Chọn bản phát theo thiết bị: desktop dùng bản 16:9 (8.8MB), điện thoại dùng
  * bản dọc 4:5 (5.9MB) để không bị cắt mất hai bên khi phủ kín màn hình.
  *
- * Không tải video khi:
- *  - người dùng bật prefers-reduced-motion
- *  - trình duyệt báo Save-Data (đang tiết kiệm dung lượng)
- * Khi đó chỉ hiện poster tĩnh (~48KB), Hero vẫn đủ đẹp.
+ * Không tải video khi trình duyệt báo Save-Data (đang tiết kiệm dung lượng):
+ * khi đó chỉ hiện poster tĩnh (~48KB), Hero vẫn đủ đẹp.
+ *
+ * KHÔNG còn bỏ video khi máy bật prefers-reduced-motion (19/11/2026, anh Nam
+ * chọn): máy văn phòng KTD — và nhiều máy doanh nghiệp của khách — tắt "Hiệu
+ * ứng hoạt ảnh" của Windows nên trình duyệt báo reduced-motion, cả công ty chỉ
+ * thấy ảnh tĩnh. Video chậm, không tiếng, không nhấp nháy.
  *
  * Poster luôn được vẽ ngay dưới video nên không bao giờ lộ khung đen trong
  * lúc video còn đang tải.
@@ -34,11 +37,10 @@ export function HeroVideo() {
   const ref = useRef<HTMLVideoElement>(null)
 
   useEffect(() => {
-    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const saveData = Boolean((navigator as any).connection?.saveData)
 
-    if (reduced || saveData) {
+    if (saveData) {
       setMode('poster-only')
       return
     }
