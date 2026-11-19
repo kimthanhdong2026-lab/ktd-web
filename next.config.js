@@ -14,6 +14,14 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
+    /**
+     * Không dùng bộ tối ưu ảnh của Vercel (19/11/2026): gói Hobby có hạn mức
+     * tối ưu ảnh mỗi tháng; hết hạn mức thì /_next/image trả 402 "Payment
+     * required" và MỌI ảnh mới (sản phẩm, banner, logo) hiện thành ảnh vỡ.
+     * Ảnh trên kho đã được trang quản trị / chương trình nạp thu về khung và nén
+     * webp lúc tải lên, ảnh trong public/ đều dưới 300 KB — phục vụ thẳng là đủ.
+     */
+    unoptimized: true,
     formats: ['image/webp', 'image/avif'],
     remotePatterns: [
       {
