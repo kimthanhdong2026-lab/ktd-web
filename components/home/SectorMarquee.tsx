@@ -12,8 +12,10 @@ export interface TheLinhVuc {
  *
  * Danh sách được nhân đôi rồi dịch trái đúng 50% nên tới cuối vòng khung hình
  * trùng khít với lúc bắt đầu, mắt không thấy điểm nối. Rê chuột thì dừng lại
- * để khách đọc kịp; máy bật "giảm chuyển động" thì tắt hẳn và chuyển sang kéo
- * ngang bằng tay.
+ * để khách đọc kịp. Chạy cả khi máy bật "giảm chuyển động" (anh Nam chốt
+ * 24/11/2026): máy văn phòng/doanh nghiệp hay tắt hiệu ứng Windows, khi đó dải
+ * đứng yên trông như web hỏng. Lớp `luon-chay` miễn quy tắc giảm chuyển động
+ * chung trong globals.css.
  *
  * Chữ và ảnh do TrangChu đưa vào (từ điển đã đè phần admin sửa, ảnh admin tải
  * lên hoặc public/sectors/N.webp).
@@ -28,8 +30,8 @@ export function SectorMarquee({ heading, cards }: { heading: string; cards: TheL
       </div>
 
       {/* Mờ dần hai mép để ô không bị cắt cụt ở rìa màn hình */}
-      <div className="group overflow-hidden [mask-image:linear-gradient(90deg,transparent_0,#000_5%,#000_95%,transparent_100%)] motion-reduce:overflow-x-auto">
-        <ul className="flex w-max animate-marquee gap-5 px-2.5 group-hover:[animation-play-state:paused] motion-reduce:animate-none">
+      <div className="group overflow-hidden [mask-image:linear-gradient(90deg,transparent_0,#000_5%,#000_95%,transparent_100%)] ">
+        <ul className="luon-chay flex w-max animate-marquee gap-5 px-2.5 group-hover:[animation-play-state:paused]">
           {[...cards, ...cards].map((s, i) => (
             <li
               key={i}

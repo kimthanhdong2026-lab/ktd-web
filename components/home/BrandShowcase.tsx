@@ -95,7 +95,7 @@ export function BrandShowcase({ brands }: { brands: Brand[]; lang?: Locale }) {
 
   useEffect(() => {
     if (paused || !visible) return
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    // Tự đổi hãng cả khi máy bật "giảm chuyển động" (anh Nam chốt 24/11/2026).
     const id = window.setInterval(() => setActive((i) => (i + 1) % brands.length), ROTATE_MS)
     return () => window.clearInterval(id)
   }, [paused, visible])

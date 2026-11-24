@@ -116,10 +116,12 @@
   }
 }
 
+/* Máy bật "giảm chuyển động": tắt hiệu ứng, TRỪ phần tử có lớp .luon-chay
+   (dải Lĩnh vực hoạt động — anh Nam chốt 24/11/2026 cho chạy ở mọi máy). */
 @media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
+  *:not(.luon-chay),
+  *:not(.luon-chay)::before,
+  *:not(.luon-chay)::after {
     animation-duration: 0.001ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;

@@ -51,7 +51,16 @@ export function HeroVideo() {
   useEffect(() => {
     if (mode === 'desktop' || mode === 'mobile') {
       ref.current?.play().catch(() => {
-        /* Trình duyệt chặn autoplay: giữ poster, không coi là lỗi. */
+        // Trình duyệt chặn tự phát (iPhone bật Chế độ nguồn điện thấp…): giữ
+        // poster, rồi phát ngay ở lần chạm/bấm đầu tiên — iOS cho phép phát
+        // khi có thao tác của người dùng.
+        const phat = () => {
+          ref.current?.play().catch(() => {})
+          window.removeEventListener('touchend', phat)
+          window.removeEventListener('click', phat)
+        }
+        window.addEventListener('touchend', phat, { passive: true })
+        window.addEventListener('click', phat)
       })
     }
   }, [mode])
