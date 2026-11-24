@@ -3,12 +3,12 @@
 import { useEffect, useRef, useState } from 'react'
 
 const DESKTOP = {
-  src: '/hero/ktd-hero-1920x1080.mp4',
+  src: '/hero/ktd-hero-1600x900-v2.mp4',
   poster: '/hero/ktd-hero-poster-1920x1080.webp',
 }
 
 const MOBILE = {
-  src: '/hero/ktd-hero-mobile-1080x1350.mp4',
+  src: '/hero/ktd-hero-mobile-720x900-v2.mp4',
   poster: '/hero/ktd-hero-poster-mobile-1080x1350.webp',
 }
 
@@ -17,8 +17,10 @@ type Mode = 'pending' | 'desktop' | 'mobile' | 'poster-only'
 /**
  * Video nền Hero — loop 15 giây, không tiếng.
  *
- * Chọn bản phát theo thiết bị: desktop dùng bản 16:9 (8.8MB), điện thoại dùng
- * bản dọc 4:5 (5.9MB) để không bị cắt mất hai bên khi phủ kín màn hình.
+ * Chọn bản phát theo thiết bị: desktop dùng bản 16:9 (1600×900, 2,8 MB), điện
+ * thoại dùng bản dọc 4:5 (720×900, 1,5 MB) để không bị cắt mất hai bên khi phủ
+ * kín màn hình. Nén lại 24/11/2026 từ bản 8,7 MB / 5,8 MB (H.264 CRF 27,
+ * faststart): mạng chậm tải bản cũ mất hơn một phút nên trông như video đứng.
  *
  * Không tải video khi trình duyệt báo Save-Data (đang tiết kiệm dung lượng):
  * khi đó chỉ hiện poster tĩnh (~48KB), Hero vẫn đủ đẹp.
